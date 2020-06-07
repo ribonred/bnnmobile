@@ -17,6 +17,9 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  flutter_secure_storage: ^3.3.1+1
+  dio: ^3.0.0
+  http: ^0.12.1
   ff_navigation_bar: ^0.0.1
   flutter:
     sdk: flutter

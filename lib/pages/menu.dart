@@ -3,6 +3,7 @@ import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import './newuser.page.dart';
 import './login.page.dart';
 import './lknlist.page.dart';
+import '../widget/getlkn.dart';
 
 
 
@@ -16,7 +17,7 @@ class Navbarbottom extends State<Dashboard> {
     var _pages = [
 
       LknListView(),
-      LoginPage(),
+      GetLkn(),
 
   ];
   @override
