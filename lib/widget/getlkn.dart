@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async'; 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
+import '../pages/login.page.dart';
 
 class GetLkn extends StatefulWidget {
   @override
@@ -20,7 +20,8 @@ class LknState extends State<GetLkn> {
   Future<String> getData() async {
     // MEMINTA DATA KE SERVER DENGAN KETENTUAN YANG DI ACCEPT ADALAH JSON
     var res = await http.get(Uri.encodeFull(url), headers: { 'accept':'application/json' });
-    print(res.body);
+    var token = await storage.read(key: 'token');
+    print(token);
     
     setState(() {
       //RESPONSE YANG DIDAPATKAN DARI API TERSEBUT DI DECODE
@@ -97,7 +98,7 @@ class LknState extends State<GetLkn> {
                     ButtonTheme.bar(
                       child: ButtonBar(
                         children: <Widget>[
-                          // BUTTON PERTAMA 
+                          // BUTTON PERTAMA f
                           FlatButton(
                             //DENGAN TEXT LIHAT DETAIL
                             child: const Text('LIHAT DETAIL'),

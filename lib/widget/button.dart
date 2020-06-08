@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import '../pages/menu.dart';
+import 'inputEmail.dart';
+
 
 class ButtonLogin extends StatefulWidget {
+  
   @override
   _ButtonLoginState createState() => _ButtonLoginState();
 }
 
 class _ButtonLoginState extends State<ButtonLogin> {
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,8 +36,7 @@ class _ButtonLoginState extends State<ButtonLogin> {
         ),
         child: FlatButton(
           onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Dashboard()));
+                
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -14,10 +14,11 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
-
+  sdk: ">=2.6.0 <3.0.0"
+module:
+  androidX: true
 dependencies:
-  flutter_secure_storage: ^3.3.1+1
+  flutter_secure_storage: ^3.3.3
   dio: ^3.0.0
   http: ^0.12.1
   ff_navigation_bar: ^0.0.1

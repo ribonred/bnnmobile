@@ -21,7 +21,7 @@ class _TextLoginState extends State<TextLogin> {
             ),
             Center(
               child: Text(
-                'A world of possibility in an app',
+                'E-Manajemen Tahti BNNP Kepri',
                 style: TextStyle(
                   fontSize: 24,
                   color: Colors.white,
