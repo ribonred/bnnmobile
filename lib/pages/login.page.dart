@@ -3,13 +3,8 @@ import '../widget/first.dart';
 import '../widget/forgot.dart';
 import '../widget/textLogin.dart';
 import '../widget/verticalText.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../pages/menu.dart';
-
-// Create storage
-final storage = new FlutterSecureStorage();
+import '../services/request.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -49,24 +44,24 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 
-  authenticate() async {
-    http.post(url, headers: {
-      'Accept': 'application/json'
-    }, body: {
-      "username": _usernamecontroller.text,
-      "password": _passwordcontroller.text
-    }).then((response) async {
-      print(response.statusCode);
-      if (response.statusCode == 200){
-        var content = json.decode(response.body);
-        await storage.write(key: 'token', value: content['token']);
-        Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Dashboard()));
-      } else {
-        showMyDialog();
-      }
-    }
-    );}
+  // authenticate() async {
+  //   http.post(url, headers: {
+  //     'Accept': 'application/json'
+  //   }, body: {
+  //     "username": _usernamecontroller.text,
+  //     "password": _passwordcontroller.text
+  //   }).then((response) async {
+  //     print(response.statusCode);
+  //     if (response.statusCode == 200){
+  //       var content = json.decode(response.body);
+  //       await storage.write(key: 'token', value: content['token']);
+  //       Navigator.push(context,
+  //                   MaterialPageRoute(builder: (context) => Dashboard()));
+  //     } else {
+  //       showMyDialog();
+  //     }
+  //   }
+  //   );}
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +147,15 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: FlatButton(
           onPressed: () {
-                authenticate();
+              login(_usernamecontroller.text,_passwordcontroller.text).then((response){
+                print('response');
+                print(response);
+                if(response){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
+                } else {
+                  showMyDialog();
+                }
+              });
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
