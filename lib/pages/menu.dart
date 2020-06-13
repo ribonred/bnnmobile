@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import './newuser.page.dart';
 import './login.page.dart';
+import './main.menu.dart';
 import './lknlist.page.dart';
 import '../widget/getlkn.dart';
 
@@ -15,6 +16,7 @@ class Dashboard extends StatefulWidget {
 class Navbarbottom extends State<Dashboard> {
   int _index = 0;
     var _pages = [
+      MainMenu(),
       GetLkn(),
       LknListView(),
       
