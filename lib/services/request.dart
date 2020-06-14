@@ -62,7 +62,7 @@ Future<Map> pnkp(String lknId) async {
   await http.get('${baseUrl}mobile-api/penangkapan/', headers: {
     'Accept': 'application/json',
     'Authorization':'Bearer $token'
-  }).then((response) {
+  }).then((response) async {
     print(response.statusCode);
     if (response.statusCode == 200){
       content = json.decode(response.body);

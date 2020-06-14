@@ -21,7 +21,7 @@ class _TextLoginState extends State<TextLogin> {
             ),
             Center(
               child: Text(
-                'E-Manajemen Tahti BNNP Kepri',
+                'SIMANTATI BNNP Kepri',
                 style: TextStyle(
                   fontSize: 24,
                   color: Colors.white,
