@@ -75,3 +75,83 @@ Future<Map> pnkp(String lknId) async {
   });
   return Future.value(content);
 }
+
+Future<Map> bb(String bbId) async {
+  String token = await getToken();
+  Map content;
+  await http.get('${baseUrl}mobile-api/barangbukti/', headers: {
+    'Accept': 'application/json',
+    'Authorization':'Bearer $token'
+  }).then((response) async {
+    print(response.statusCode);
+    if (response.statusCode == 200){
+      content = json.decode(response.body);
+      // await storage.write(key: 'token', value: content['token']);
+      // Navigator.push(context,
+      //             MaterialPageRoute(builder: (context) => Dashboard()));
+    } else {
+      content = json.decode(response.body);
+    }
+  });
+  return Future.value(content);
+}
+
+Future<List> bbStatus(String bbId) async {
+  String token = await getToken();
+  List content;
+  await http.get('${baseUrl}api/bb-status-app/', headers: {
+    'Accept': 'application/json',
+    'Authorization':'Bearer $token'
+  }).then((response) async {
+    print(response.statusCode);
+    if (response.statusCode == 200){
+      content = json.decode(response.body);
+      // await storage.write(key: 'token', value: content['token']);
+      // Navigator.push(context,
+      //             MaterialPageRoute(builder: (context) => Dashboard()));
+    } else {
+      content = json.decode(response.body);
+    }
+  });
+  return Future.value(content);
+}
+
+Future<Map> tsk(String tskId) async {
+  String token = await getToken();
+  Map content;
+  await http.get('${baseUrl}mobile-api/tersangka/', headers: {
+    'Accept': 'application/json',
+    'Authorization':'Bearer $token'
+  }).then((response) async {
+    print(response.statusCode);
+    if (response.statusCode == 200){
+      content = json.decode(response.body);
+      // await storage.write(key: 'token', value: content['token']);
+      // Navigator.push(context,
+      //             MaterialPageRoute(builder: (context) => Dashboard()));
+    } else {
+      content = json.decode(response.body);
+    }
+  });
+  return Future.value(content);
+}
+
+Future<List> tskProses(String tskId) async {
+  String token = await getToken();
+  List content;
+  await http.get('${baseUrl}api/tsk-proses/', headers: {
+    'Accept': 'application/json',
+    'Authorization':'Bearer $token'
+  }).then((response) async {
+    print(response.statusCode);
+    if (response.statusCode == 200){
+      content = json.decode(response.body);
+      // await storage.write(key: 'token', value: content['token']);
+      // Navigator.push(context,
+      //             MaterialPageRoute(builder: (context) => Dashboard()));
+    } else {
+      content = json.decode(response.body);
+    }
+  });
+  return Future.value(content);
+}

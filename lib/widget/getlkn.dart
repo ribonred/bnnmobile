@@ -57,12 +57,12 @@ class LknState extends State<GetLkn> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min, children: <Widget>[
                     ListTile(
-                      title: Text(widget.data[index][widget.judul], style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
+                      title: Text(widget.data[index][widget.judul].toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
                       subtitle: Column(children: <Widget>[
                         Row(
                           children: <Widget>[
                             Text('di buat : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text(widget.data[index][widget.created], style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                            Text(widget.data[index][widget.created].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
                           ],
                         ),
                       ],),
