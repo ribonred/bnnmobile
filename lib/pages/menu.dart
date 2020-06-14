@@ -3,6 +3,8 @@ import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import './newuser.page.dart';
 import './login.page.dart';
 import './main.menu.dart';
+import './main.input.dart';
+import './main.edit.dart';
 import './lknlist.page.dart';
 import '../widget/getlkn.dart';
 
@@ -11,6 +13,8 @@ import '../widget/getlkn.dart';
 class Dashboard extends StatefulWidget {
   @override
   Navbarbottom createState() => Navbarbottom();
+  final String text;
+  Dashboard({Key key, @required this.text}) : super(key: key);
 }
 
 class Navbarbottom extends State<Dashboard> {
@@ -19,8 +23,8 @@ class Navbarbottom extends State<Dashboard> {
       MainMenu(),
       GetLkn(),
       LknListView(),
-      
-
+      MainInput(),
+      MainEdit(),
   ];
   @override
   Widget build(BuildContext context) {

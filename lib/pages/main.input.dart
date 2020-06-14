@@ -1,27 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:getflutter/getflutter.dart';
-import 'package:ff_navigation_bar/ff_navigation_bar.dart';
-import '../services/request.dart';
-import '../widget/getlkn.dart';
 
-final List<String> imageList = [
-  "https://cdn.pixabay.com/photo/2017/12/03/18/04/christmas-balls-2995437_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2017/12/13/00/23/christmas-3015776_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2019/12/19/10/55/christmas-market-4705877_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2019/12/20/00/03/road-4707345_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2019/12/22/04/18/x-mas-4711785__340.jpg",
-  "https://cdn.pixabay.com/photo/2016/11/22/07/09/spruce-1848543__340.jpg"
-];
-
-class MainMenu extends StatefulWidget{
+class MainInput extends StatefulWidget{
   
   
   @override
-  _MainMenuState createState() => _MainMenuState();
+  _MainInputState createState() => _MainInputState();
 }
 
-class _MainMenuState extends State<MainMenu>{
-  var data;
+class _MainInputState extends State<MainInput>{
    @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -44,32 +31,8 @@ class _MainMenuState extends State<MainMenu>{
           children:<Widget>[
             Column(children: <Widget>[
               AppBar(
-                title: Text('Menu')
+                title: Text('Edit')
                 ,),
-              SizedBox(height: 30),
-          GFCarousel(
-            viewportFraction: 1.0,
-    items: imageList.map(
-     (url) {
-     return Container(
-         margin: EdgeInsets.only(top: 1.0, bottom: 1.0, right: 1.0, left: 1.0),
-         child: ClipRRect(
-           borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            child: Image.network(
-               url,
-               fit: BoxFit.cover,
-                width: 1000.0,
-             ),
-          ),
-        );
-        },
-     ).toList(),
-    onPageChanged: (index) {
-        setState(() {
-          
-        });
-    },
- ),
 
           Container(
           height:600,
@@ -82,7 +45,7 @@ class _MainMenuState extends State<MainMenu>{
           GridView.count(
             padding: const EdgeInsets.only(top: 50, right: 5, left: 5),
             shrinkWrap: true,
-            crossAxisCount: 3,
+            crossAxisCount: 2,
             crossAxisSpacing: 10.0,
             mainAxisSpacing: 10.0,
             children: <Widget>[
@@ -104,26 +67,17 @@ class _MainMenuState extends State<MainMenu>{
                          borderRadius: BorderRadius.circular(1000),
                          border: Border.all(
                           color: Colors.blue[800],
-                          width: 5,
+                          width: 10,
                          ),
                       ),
                       child: new IconButton(icon: new Icon(Icons.assignment),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {
-                          lkn('').then((response){
-                            if (response['results'] != null){
-                              setState(() {
-                              data = response['results'];
-                               });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'LKN',created:'created')));
-                            }
-                          });
-                        }
+                        onPressed: () {print('Icon tapped.');}
                       )
                     ),
                     SizedBox(height: 15),
-                    Text('LKN',style: TextStyle(fontWeight: FontWeight.bold),),
+                    Text('LKN'),
                   ]
                 ),
               ),
@@ -145,26 +99,17 @@ class _MainMenuState extends State<MainMenu>{
                          borderRadius: BorderRadius.circular(1000),
                          border: Border.all(
                           color: Colors.blue[800],
-                          width: 5,
+                          width: 10,
                          ),
                       ),
                       child: new IconButton(icon: new Icon(Icons.search),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {
-                          pnkp('').then((response){
-                            if (response['results'] != null){
-                              setState(() {
-                              data = response['results'];
-                               });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan')));
-                            }
-                          });
-                        }
-                      ),
+                        onPressed: () {print('Icon tapped.');}
+                      )
                     ),
                     SizedBox(height: 15),
-                    Text('SP KAP',style: TextStyle(fontWeight: FontWeight.bold),),
+                    Text('SP KAP'),
                   ]
                 ),
               ),
@@ -186,7 +131,7 @@ class _MainMenuState extends State<MainMenu>{
                          borderRadius: BorderRadius.circular(1000),
                          border: Border.all(
                           color: Colors.blue[800],
-                          width: 5,
+                          width: 10,
                          ),
                       ),
                       child: new IconButton(icon: new Icon(Icons.business_center),
@@ -196,7 +141,7 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    Text('BB',style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('BB'),
                   ]
                 ),
               ),
@@ -218,7 +163,7 @@ class _MainMenuState extends State<MainMenu>{
                          borderRadius: BorderRadius.circular(1000),
                          border: Border.all(
                           color: Colors.blue[800],
-                          width: 5,
+                          width: 10,
                          ),
                       ),
                       child: new IconButton(icon: new Icon(Icons.person_pin),
@@ -228,7 +173,7 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    Text('TERSANGKA',style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('TERSANGKA'),
                   ]
                 ),
               ),
@@ -250,7 +195,7 @@ class _MainMenuState extends State<MainMenu>{
                          borderRadius: BorderRadius.circular(1000),
                          border: Border.all(
                           color: Colors.blue[800],
-                          width: 5,
+                          width: 10,
                          ),
                       ),
                       child: new IconButton(icon: new Icon(Icons.account_balance),
@@ -260,7 +205,7 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    Text('PROSES',style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('PROSES'),
                   ]
                 ),
               ),
@@ -282,7 +227,7 @@ class _MainMenuState extends State<MainMenu>{
                          borderRadius: BorderRadius.circular(1000),
                          border: Border.all(
                           color: Colors.blue[800],
-                          width: 5,
+                          width: 10,
                          ),
                       ),
                       child: new IconButton(icon: new Icon(Icons.swap_horiz),
@@ -292,7 +237,7 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    Text('STATUS',style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('STATUS'),
                   ]
                 ),
               ),

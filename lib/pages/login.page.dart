@@ -147,15 +147,13 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: FlatButton(
           onPressed: () {
-              login(_usernamecontroller.text,_passwordcontroller.text).then((response){
-                print('response');
-                print(response);
-                if(response){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
-                } else {
-                  showMyDialog();
-                }
-              });
+            login(_usernamecontroller.text,_passwordcontroller.text).then((response){
+              if(response){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(text: 'Hello',)));
+              } else {
+                showMyDialog();
+              }
+            });
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
