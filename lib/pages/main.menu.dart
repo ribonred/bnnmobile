@@ -192,7 +192,16 @@ class _MainMenuState extends State<MainMenu>{
                       child: new IconButton(icon: new Icon(Icons.business_center),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {
+                          bb('').then((response){
+                            if (response['results'] != null){
+                              setState(() {
+                              data = response['results'];
+                               });
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang')));
+                            }
+                          });
+                        }
                       ),
                     ),
                     SizedBox(height: 15),
@@ -224,7 +233,16 @@ class _MainMenuState extends State<MainMenu>{
                       child: new IconButton(icon: new Icon(Icons.person_pin),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {
+                          tsk('').then((response){
+                            if (response['results'] != null){
+                              setState(() {
+                              data = response['results'];
+                               });
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_tersangka', created:'jenis_kelamin')));
+                            }
+                          });
+                        }
                       ),
                     ),
                     SizedBox(height: 15),
@@ -256,7 +274,16 @@ class _MainMenuState extends State<MainMenu>{
                       child: new IconButton(icon: new Icon(Icons.account_balance),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {
+                          tskProses('').then((response){
+                            if (response != null){
+                              setState(() {
+                              data = response;
+                               });
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'proses_tersangka', created:'jenis_proses')));
+                            }
+                          });
+                        }
                       ),
                     ),
                     SizedBox(height: 15),
@@ -288,7 +315,16 @@ class _MainMenuState extends State<MainMenu>{
                       child: new IconButton(icon: new Icon(Icons.swap_horiz),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {
+                          bbStatus('').then((response){
+                            if (response != null){
+                              setState(() {
+                              data = response;
+                               });
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'status', created:'tanggal_status')));
+                            }
+                          });
+                        }
                       ),
                     ),
                     SizedBox(height: 15),
