@@ -31,8 +31,6 @@ Future<bool> login(String username, String password) async {
       status = false;
     }
   });
-  print('status');
-  print(status);
   return Future.value(status);
 }
 
@@ -43,7 +41,7 @@ Future<Map> lkn(String lknId) async {
     'Accept': 'application/json',
     'Authorization': 'Bearer $token'
   }).then((response) async {
-    print(response.statusCode);
+    print('LKN'+ response.statusCode.toString());
     if (response.statusCode == 200){
       content = json.decode(response.body);
       // await storage.write(key: 'token', value: content['token']);

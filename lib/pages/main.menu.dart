@@ -153,7 +153,7 @@ class _MainMenuState extends State<MainMenu>{
                         iconSize: 40,
                         onPressed: () {
                           pnkp('').then((response){
-                            if (response['results'] != null){
+                            if (response['results'] != ''){
                               setState(() {
                               data = response['results'];
                                });
