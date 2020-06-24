@@ -4,19 +4,21 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../services/request.dart';
+import '../pages/lkn.view.dart';
 
 class GetLkn extends StatefulWidget {
   final data;
   final judul;
   final created;
-  const GetLkn({Key key,this.data,this.judul, this.created}) : super(key: key);
+  final title;
+  const GetLkn({Key key,this.data,this.judul, this.created, this.title}) : super(key: key);
   @override
   LknState createState() => LknState();
 }
 
 
 class LknState extends State<GetLkn> {
-  
+  var data;
   //DEFINE VARIABLE url UNTUK MENAMPUNG END POINT
   // final String url = 'http://178.128.80.233:8000/mobile-api/lkn/';
   // Map data; //DEFINE VARIABLE data DENGAN TYPE List AGAR DAPAT MENAMPUNG COLLECTION / ARRAY
@@ -45,7 +47,7 @@ class LknState extends State<GetLkn> {
   Widget build(context){
     return Scaffold(
         appBar: AppBar(
-          title: Text('LKN LIST')
+          title: Text(widget.title.toString())
         ),
         body: Container(
           margin: EdgeInsets.all(10.0), //SET MARGIN DARI CONTAINER
@@ -53,41 +55,61 @@ class LknState extends State<GetLkn> {
             itemCount: widget.data == null ? 0:widget.data.length, //KETIKA DATANYA KOSONG KITA ISI DENGAN 0 DAN APABILA ADA MAKA KITA COUNT JUMLAH DATA YANG ADA
             itemBuilder: (BuildContext context, int index) { 
               return Container(
-                child: Card(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min, children: <Widget>[
-                    ListTile(
-                      title: Text(widget.data[index][widget.judul].toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
-                      subtitle: Column(children: <Widget>[
-                        Row(
+                child: GestureDetector(
+                  onTap: () { 
+                    if (widget.title.toString()=='LKN')
+                    {
+                      // print(widget.data[index]['id']);
+                      lkn(widget.data[index]['id']).then((response){
+                        if (response != null){
+                          setState(() {
+                          data = response;
+                            });
+                          // print(data);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
+                        }
+                      });
+                    } else
+                    {
+                      print('bukan lkn');
+                    }
+                   },
+                  child: Card(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min, children: <Widget>[
+                      ListTile(
+                        title: Text(widget.data[index][widget.judul].toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
+                        subtitle: Column(children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text('di buat : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                              Text(widget.data[index][widget.created].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                            ],
+                          ),
+                        ],),
+                      ),
+                      //TERAKHIR, MEMBUAT BUTTON
+                      ButtonTheme.bar(
+                        child: ButtonBar(
                           children: <Widget>[
-                            Text('di buat : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text(widget.data[index][widget.created].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                            // BUTTON PERTAMA f
+                            FlatButton(
+                              //DENGAN TEXT LIHAT DETAIL
+                              child: const Text('LIHAT DETAIL'),
+                              onPressed: () { print(widget.data[index]['id']); },
+                            ),
+                            //BUTTON KEDUA
+                            FlatButton(
+                              //DENGAN TEXT DENGARKAN
+                              child: const Text('EDIT'),
+                              onPressed: () { /* ... */ },
+                            ),
                           ],
                         ),
-                      ],),
-                    ),
-                    //TERAKHIR, MEMBUAT BUTTON
-                    ButtonTheme.bar(
-                      child: ButtonBar(
-                        children: <Widget>[
-                          // BUTTON PERTAMA f
-                          FlatButton(
-                            //DENGAN TEXT LIHAT DETAIL
-                            child: const Text('LIHAT DETAIL'),
-                            onPressed: () { /* ... */ },
-                          ),
-                          //BUTTON KEDUA
-                          FlatButton(
-                            //DENGAN TEXT DENGARKAN
-                            child: const Text('EDIT'),
-                            onPressed: () { /* ... */ },
-                          ),
-                        ],
                       ),
-                    ),
-                  ],),
-                )
+                    ],),
+                  )
+                ),
               );
             },
           ),

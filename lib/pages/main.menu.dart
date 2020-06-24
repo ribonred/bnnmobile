@@ -111,12 +111,12 @@ class _MainMenuState extends State<MainMenu>{
                         color: Colors.white,
                         iconSize: 40,
                         onPressed: () {
-                          lkn('').then((response){
+                          lkn(null).then((response){
                             if (response['results'] != null){
                               setState(() {
                               data = response['results'];
                                });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'LKN',created:'created')));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'LKN',created:'created', title:'LKN')));
                             }
                           });
                         }
@@ -152,12 +152,12 @@ class _MainMenuState extends State<MainMenu>{
                         color: Colors.white,
                         iconSize: 40,
                         onPressed: () {
-                          pnkp('').then((response){
+                          pnkp(null).then((response){
                             if (response['results'] != null){
                               setState(() {
                               data = response['results'];
                                });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan')));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan', title:'PENANGKAPAN')));
                             }
                           });
                         }
@@ -198,7 +198,7 @@ class _MainMenuState extends State<MainMenu>{
                               setState(() {
                               data = response['results'];
                                });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang')));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang', title:'BARANG BUKTI')));
                             }
                           });
                         }
@@ -239,7 +239,7 @@ class _MainMenuState extends State<MainMenu>{
                               setState(() {
                               data = response['results'];
                                });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_tersangka', created:'jenis_kelamin')));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_tersangka', created:'jenis_kelamin', title:'TERSANGKA')));
                             }
                           });
                         }
@@ -280,7 +280,7 @@ class _MainMenuState extends State<MainMenu>{
                               setState(() {
                               data = response;
                                });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'proses_tersangka', created:'jenis_proses')));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'proses_tersangka', created:'jenis_proses', title:'PROSES TERSANGKA')));
                             }
                           });
                         }
@@ -321,7 +321,7 @@ class _MainMenuState extends State<MainMenu>{
                               setState(() {
                               data = response;
                                });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'status', created:'tanggal_status')));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'status', created:'tanggal_status', title:'STATUS BB')));
                             }
                           });
                         }

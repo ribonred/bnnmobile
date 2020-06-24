@@ -36,43 +36,80 @@ Future<bool> login(String username, String password) async {
   return Future.value(status);
 }
 
-Future<Map> lkn(String lknId) async {
+Future<Map> lkn(int lknId) async {
   String token = await getToken();
   Map content;
-  await http.get('${baseUrl}mobile-api/lkn/', headers: {
-    'Accept': 'application/json',
-    'Authorization': 'Bearer $token'
-  }).then((response) async {
-    print(response.statusCode);
-    if (response.statusCode == 200){
-      content = json.decode(response.body);
-      // await storage.write(key: 'token', value: content['token']);
-      // Navigator.push(context,
-      //             MaterialPageRoute(builder: (context) => Dashboard()));
-    } else {
-      content = json.decode(response.body);
-    }
-  });
+  if (lknId==null) {
+    await http.get('${baseUrl}mobile-api/lkn/', headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+  } else
+  {
+    await http.get('${baseUrl}api/lkn-detail/$lknId', headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+  }
+  
   return Future.value(content);
 }
 
-Future<Map> pnkp(String lknId) async {
+Future<Map> pnkp(int pnkpId) async {
   String token = await getToken();
   Map content;
-  await http.get('${baseUrl}mobile-api/penangkapan/', headers: {
-    'Accept': 'application/json',
-    'Authorization':'Bearer $token'
-  }).then((response) async {
-    print(response.statusCode);
-    if (response.statusCode == 200){
-      content = json.decode(response.body);
-      // await storage.write(key: 'token', value: content['token']);
-      // Navigator.push(context,
-      //             MaterialPageRoute(builder: (context) => Dashboard()));
-    } else {
-      content = json.decode(response.body);
-    }
-  });
+  if (pnkpId==null) {
+    await http.get('${baseUrl}mobile-api/penangkapan/', headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+  } else
+  {
+    await http.get('${baseUrl}mobile-api/penangkapan/$pnkpId', headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+  }
   return Future.value(content);
 }
 
