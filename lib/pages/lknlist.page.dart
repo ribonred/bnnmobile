@@ -23,7 +23,6 @@ class _LknListView extends State <LknListView>{
                   var content = json.decode(snapshot.data);
                     message = content['message'];
             
-                  print(content['message']);
                 }
                 return Padding(
                   padding: const EdgeInsets.all(30.0),
