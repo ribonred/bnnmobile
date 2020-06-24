@@ -31,8 +31,6 @@ Future<bool> login(String username, String password) async {
       status = false;
     }
   });
-  print('status');
-  print(status);
   return Future.value(status);
 }
 
