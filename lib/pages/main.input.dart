@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:getflutter/getflutter.dart';
+import '../widget/inputForm/lknForm.dart';
+import '../widget/inputForm/spkapForm.dart';
+import '../widget/inputForm/bbForm.dart';
+import '../widget/inputForm/tersangkaForm.dart';
+import '../widget/inputForm/prosesTersangkaForm.dart';
+import '../widget/inputForm/statusTersangkaForm.dart';
 
 class MainInput extends StatefulWidget{
   
@@ -13,7 +19,6 @@ class _MainInputState extends State<MainInput>{
   Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: Colors.transparent,
-      
       body: 
       Container(
         decoration: new BoxDecoration(
@@ -31,15 +36,12 @@ class _MainInputState extends State<MainInput>{
           children:<Widget>[
             Column(children: <Widget>[
               AppBar(
-                title: Text('Edit')
+                title: Text('Input Data')
                 ,),
-
           Container(
           height:600,
           child: CustomScrollView(
           slivers:<Widget>[
-             
-
             SliverList(
           delegate: SliverChildListDelegate([
           GridView.count(
@@ -73,7 +75,7 @@ class _MainInputState extends State<MainInput>{
                       child: new IconButton(icon: new Icon(Icons.assignment),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => LKNForm()));}
                       )
                     ),
                     SizedBox(height: 15),
@@ -105,7 +107,7 @@ class _MainInputState extends State<MainInput>{
                       child: new IconButton(icon: new Icon(Icons.search),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => spkapForm()));}
                       )
                     ),
                     SizedBox(height: 15),
@@ -137,7 +139,7 @@ class _MainInputState extends State<MainInput>{
                       child: new IconButton(icon: new Icon(Icons.business_center),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => bbForm()));}
                       ),
                     ),
                     SizedBox(height: 15),
@@ -169,7 +171,7 @@ class _MainInputState extends State<MainInput>{
                       child: new IconButton(icon: new Icon(Icons.person_pin),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => tersangkaForm()));}
                       ),
                     ),
                     SizedBox(height: 15),
@@ -201,7 +203,7 @@ class _MainInputState extends State<MainInput>{
                       child: new IconButton(icon: new Icon(Icons.account_balance),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => prosesTersangkaForm()));}
                       ),
                     ),
                     SizedBox(height: 15),
@@ -233,7 +235,7 @@ class _MainInputState extends State<MainInput>{
                       child: new IconButton(icon: new Icon(Icons.swap_horiz),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {print('Icon tapped.');}
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => statusTersangkaForm()));}
                       ),
                     ),
                     SizedBox(height: 15),
