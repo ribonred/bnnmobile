@@ -17,9 +17,21 @@ class PnkpView extends StatefulWidget {
 }
 
 class PnkpViewState extends State<PnkpView> {
-  List<Map<String, dynamic>> files=[] ;
+  // List<Map<String, dynamic>> files=[] ;
   @override
   Widget build(context) {
+    List<Map<String, dynamic>> files=[] ;
+    // var files = [
+    //   {'title':'dokumen penangkapan', 'url':widget.data['dokumen_penangkapan']},
+    //   {'title':'dokumen sp jangkap', 'url':widget.data['dokumen_sp_jangkap']}
+    // ];
+    if (widget.data['dokumen_penangkapan'] != null) {
+      files.add({'title':'dokumen penangkapan', 'url':widget.data['dokumen_penangkapan']});
+    }
+    if (widget.data['dokumen_sp_jangkap'] != null) {
+      files.add({'title':'dokumen sp jangkap', 'url':widget.data['dokumen_sp_jangkap']});
+    }
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('PENANGKAPAN'),
@@ -67,12 +79,12 @@ class PnkpViewState extends State<PnkpView> {
             RaisedButton(
               child: Text("Download Berkas"),
               onPressed: () {
-                if (widget.data['dokumen_penangkapan'] != null) {
-                  files.add({'title':'dokumen penangkapan', 'url':widget.data['dokumen_penangkapan']});
-                }
-                if (widget.data['dokumen_sp_jangkap'] != null) {
-                  files.add({'title':'dokumen sp jangkap', 'url':widget.data['dokumen_sp_jangkap']});
-                }
+                // if (widget.data['dokumen_penangkapan'] != null) {
+                //   files.add({'title':'dokumen penangkapan', 'url':widget.data['dokumen_penangkapan']});
+                // }
+                // if (widget.data['dokumen_sp_jangkap'] != null) {
+                //   files.add({'title':'dokumen sp jangkap', 'url':widget.data['dokumen_sp_jangkap']});
+                // }
                 print(files);
                 showDialog(
                   context: context,
@@ -81,7 +93,7 @@ class PnkpViewState extends State<PnkpView> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                       elevation: 16,
                       child: Container(
-                        height: 400.0,
+                        height: 250.0,
                         width: 360.0,
                         child: ListView(
                           children: <Widget>[
@@ -92,32 +104,43 @@ class PnkpViewState extends State<PnkpView> {
                                 style: TextStyle(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 30),
                             for (var i in files) RaisedButton(
                               child: Text(i['title'].toString()),
                               onPressed: () async {
                                 //Insert event to be fired up when button is clicked here
                                 //in this case, this increments our `countValue` variable by one.
-                                print(i['url']);
+                                print('url'+i['url']);
                                 final status = await Permission.storage.request();
-
                                 if(status.isGranted){
-
                                   final externalDir = await getExternalStorageDirectory();
-
                                   final id = FlutterDownloader.enqueue(
-                                    url: "https://firebasestorage.googleapis.com/v0/b/storage-3cff8.appspot.com/o/2020-05-29%2007-18-34.mp4?alt=media&token=841fffde-2b83-430c-87c3-2d2fd658fd41", 
+                                    url: "$i['url']",
                                     savedDir: externalDir.path,
                                     fileName: "download",
                                     showNotification: true,
                                     openFileFromNotification: true,
                                   );
-
-
                                 }else{
                                   print("permission denied");
                                 }
                               },
+                            ),
+                            if (files.length==0) Center(
+                              child: Column(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.highlight_off,
+                                    color: Colors.pink,
+                                    size: 75.0,
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "Tidak ada berkas untuk diunduh",
+                                    style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+                                  ),
+                                ]
+                              )
                             ),
                           ],
                         ),

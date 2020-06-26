@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import '../../services/request.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:async';
+import 'dart:io';
 
 class LKNForm extends StatelessWidget {
   @override
@@ -39,6 +43,14 @@ class MyCustomFormState extends State<MyCustomForm> {
   final List optionList = ['Penangkapan', 'Penangkapan 2', 'Penangkapan 3'];
   String _date = "Not set";
   String _time = "Not set";
+  var form = {
+    'no_penangkapan': '',
+    'no_lkn': '',
+    'dropdown': '',
+    'textArea': '',
+    'tanggal_penangkapan': '',
+    'time': ''
+  };
   // rest of our code
   @override
   Widget build(BuildContext context) {
@@ -51,14 +63,22 @@ class MyCustomFormState extends State<MyCustomForm> {
           child: ListView(
             children: <Widget>[
               TextFormField(
-                onSaved: (val) => print(val),
+                onChanged: (val) {
+                  setState(() {
+                    form['no_penangkapan'] = val.toString();
+                  });
+                },
                 decoration: InputDecoration(
                   labelText: 'Text Input Example',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
               TextFormField(
-                onSaved: (val) => print(val),
+                onChanged: (val) {
+                  setState(() {
+                    form['no_lkn'] = val;
+                  });
+                },
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Number Text Input Example',
@@ -78,7 +98,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ).toList(),
                 onChanged: (val) {
                   setState(() {
-                    selectedOption = val.toString();
+                    form['dropdown'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
@@ -87,7 +107,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
               ),
               TextFormField(
-                onSaved: (val) => print(val),
+                onChanged: (val) {
+                  setState(() {
+                    form['textArea'] = val.toString();
+                  });
+                },
                 maxLines: 8,
                 decoration: InputDecoration(
                   labelText: 'Text Area Example',
@@ -107,8 +131,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                       minTime: DateTime(2000, 1, 1),
                       maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
                     print('confirm $date');
-                    _date = '${date.year} - ${date.month} - ${date.day}';
-                    setState(() {});
+                    _date = '${date.day}-${date.month}-${date.year}';
+                    setState(() {
+                      form['tanggal_penangkapan'] = _date;
+                    });
                   }, currentTime: DateTime.now(), locale: LocaleType.en);
                 },
                 child: Container(
@@ -163,7 +189,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                       showTitleActions: true, onConfirm: (time) {
                     print('confirm $time');
                     _time = '${time.hour} : ${time.minute} : ${time.second}';
-                    setState(() {});
+                    setState(() {
+                      form['time'] = _time;
+                    });
                   }, currentTime: DateTime.now(), locale: LocaleType.en);
                   setState(() {});
                 },
@@ -211,10 +239,27 @@ class MyCustomFormState extends State<MyCustomForm> {
                 child: Text('Submit'),
                 color: Colors.blue,
                 textColor: Colors.white,
-                onPressed: () {
-                  print('Payment Complete');
+                onPressed: () async {
+                  print(form);
+                  pnkp(null, form).then((response){
+                    if (response != null){
+                      setState(() {
+                      print(response);
+                        });
+                      // print(data);
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
+                    }
+                  });
                 },
               ),
+            RaisedButton(
+              child: Text('Choose file'),
+              onPressed: () async {
+                File file = await FilePicker.getFile();
+                print('file');
+                print(file);
+                print('file');
+            })
             ]
           ),
         )

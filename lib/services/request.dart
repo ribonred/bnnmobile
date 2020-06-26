@@ -34,7 +34,7 @@ Future<bool> login(String username, String password) async {
   return Future.value(status);
 }
 
-Future<Map> lkn(int lknId) async {
+Future<Map> lkn(int lknId, var input) async {
   String token = await getToken();
   Map content;
   if (lknId==null) {
@@ -73,10 +73,28 @@ Future<Map> lkn(int lknId) async {
   return Future.value(content);
 }
 
-Future<Map> pnkp(int pnkpId) async {
+Future<Map> pnkp(int pnkpId, var input) async {
   String token = await getToken();
   Map content;
-  if (pnkpId==null) {
+  if (pnkpId==null && input!=null)
+  {
+    await http.post('${baseUrl}mobile-api/penangkapan/', headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }, body: input).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+  } 
+  else if (pnkpId==null) 
+  {
     await http.get('${baseUrl}mobile-api/penangkapan/', headers: {
       'Accept': 'application/json',
       'Authorization':'Bearer $token'
@@ -91,7 +109,8 @@ Future<Map> pnkp(int pnkpId) async {
         content = json.decode(response.body);
       }
     });
-  } else
+  }
+  else
   {
     await http.get('${baseUrl}mobile-api/penangkapan/$pnkpId', headers: {
       'Accept': 'application/json',
@@ -111,7 +130,7 @@ Future<Map> pnkp(int pnkpId) async {
   return Future.value(content);
 }
 
-Future<Map> bb(String bbId) async {
+Future<Map> bb(int bbId, var input) async {
   String token = await getToken();
   Map content;
   await http.get('${baseUrl}mobile-api/barangbukti/', headers: {
@@ -131,7 +150,7 @@ Future<Map> bb(String bbId) async {
   return Future.value(content);
 }
 
-Future<List> bbStatus(String bbId) async {
+Future<List> bbStatus(int bbId, var input) async {
   String token = await getToken();
   List content;
   await http.get('${baseUrl}api/bb-status-app/', headers: {
@@ -151,7 +170,7 @@ Future<List> bbStatus(String bbId) async {
   return Future.value(content);
 }
 
-Future<Map> tsk(String tskId) async {
+Future<Map> tsk(int tskId, var input) async {
   String token = await getToken();
   Map content;
   await http.get('${baseUrl}mobile-api/tersangka/', headers: {
@@ -171,7 +190,7 @@ Future<Map> tsk(String tskId) async {
   return Future.value(content);
 }
 
-Future<List> tskProses(String tskId) async {
+Future<List> tskProses(int tskId, var input) async {
   String token = await getToken();
   List content;
   await http.get('${baseUrl}api/tsk-proses/', headers: {

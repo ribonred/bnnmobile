@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../services/request.dart';
 import '../pages/lkn.view.dart';
+import '../pages/pnkp.view.dart';
 
 class GetLkn extends StatefulWidget {
   final data;
@@ -60,7 +61,7 @@ class LknState extends State<GetLkn> {
                     if (widget.title.toString()=='LKN')
                     {
                       // print(widget.data[index]['id']);
-                      lkn(widget.data[index]['id']).then((response){
+                      lkn(widget.data[index]['id'], null).then((response){
                         if (response != null){
                           setState(() {
                           data = response;
@@ -69,9 +70,38 @@ class LknState extends State<GetLkn> {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
                         }
                       });
-                    } else
+                    }
+                    else if (widget.title.toString()=='PENANGKAPAN')
                     {
-                      print('bukan lkn');
+                      pnkp(widget.data[index]['id'], null).then((response){
+                        if (response != null){
+                          setState(() {
+                          data = response;
+                            });
+                          // print(data);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => PnkpView( data: data)));
+                        }
+                      });
+                    }
+                    else if (widget.title.toString()=='BARANG BUKTI')
+                    {
+
+                    } 
+                    else if (widget.title.toString()=='TERSANGKA')
+                    {
+
+                    } 
+                    else if (widget.title.toString()=='PROSES TERSANGKA')
+                    {
+
+                    }  
+                    else if (widget.title.toString()=='STATUS BB')
+                    {
+
+                    } 
+                    else
+                    {
+                      print('WEIRD');
                     }
                    },
                   child: Card(

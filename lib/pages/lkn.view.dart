@@ -55,7 +55,7 @@ class LknViewState extends State<LknView> {
                   child: GestureDetector(
                     onTap: () {
                       print(widget.data['penangkapan'][index]['id']);
-                      pnkp(widget.data['penangkapan'][index]['id']).then((response){
+                      pnkp(widget.data['penangkapan'][index]['id'], null).then((response){
                         if (response != null){
                           setState(() {
                           dataPnkp = response;

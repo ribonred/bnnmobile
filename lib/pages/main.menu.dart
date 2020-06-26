@@ -111,7 +111,7 @@ class _MainMenuState extends State<MainMenu>{
                         color: Colors.white,
                         iconSize: 40,
                         onPressed: () {
-                          lkn(null).then((response){
+                          lkn(null, null).then((response){
                             if (response['results'] != null){
                               setState(() {
                               data = response['results'];
@@ -152,7 +152,7 @@ class _MainMenuState extends State<MainMenu>{
                         color: Colors.white,
                         iconSize: 40,
                         onPressed: () {
-                          pnkp(null).then((response){
+                          pnkp(null, null).then((response){
                             if (response['results'] != null){
                               setState(() {
                               data = response['results'];
@@ -193,7 +193,7 @@ class _MainMenuState extends State<MainMenu>{
                         color: Colors.white,
                         iconSize: 40,
                         onPressed: () {
-                          bb('').then((response){
+                          bb(null, null).then((response){
                             if (response['results'] != null){
                               setState(() {
                               data = response['results'];
@@ -234,7 +234,7 @@ class _MainMenuState extends State<MainMenu>{
                         color: Colors.white,
                         iconSize: 40,
                         onPressed: () {
-                          tsk('').then((response){
+                          tsk(null, null).then((response){
                             if (response['results'] != null){
                               setState(() {
                               data = response['results'];
@@ -275,7 +275,7 @@ class _MainMenuState extends State<MainMenu>{
                         color: Colors.white,
                         iconSize: 40,
                         onPressed: () {
-                          tskProses('').then((response){
+                          tskProses(null, null).then((response){
                             if (response != null){
                               setState(() {
                               data = response;
@@ -316,7 +316,7 @@ class _MainMenuState extends State<MainMenu>{
                         color: Colors.white,
                         iconSize: 40,
                         onPressed: () {
-                          bbStatus('').then((response){
+                          bbStatus(null, null).then((response){
                             if (response != null){
                               setState(() {
                               data = response;
