@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:getflutter/getflutter.dart';
-import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import '../services/request.dart';
 import '../widget/getlkn.dart';
 

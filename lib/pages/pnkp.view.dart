@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-//IMPORT PACKAGE UNTUK HTTP REQUEST DAN ASYNCHRONOUS
-import 'dart:async'; 
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../services/request.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class PnkpView extends StatefulWidget {
   final data;

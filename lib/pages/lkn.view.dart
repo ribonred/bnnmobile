@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-//IMPORT PACKAGE UNTUK HTTP REQUEST DAN ASYNCHRONOUS
-import 'dart:async'; 
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import '../services/request.dart';
 import '../pages/pnkp.view.dart';
 
