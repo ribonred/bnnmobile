@@ -6,10 +6,9 @@ import '../widget/inputForm/bbForm.dart';
 import '../widget/inputForm/tersangkaForm.dart';
 import '../widget/inputForm/prosesTersangkaForm.dart';
 import '../widget/inputForm/statusTersangkaForm.dart';
+import '../widget/inputForm/statusBbForm.dart';
 
 class MainInput extends StatefulWidget{
-  
-  
   @override
   _MainInputState createState() => _MainInputState();
 }
@@ -267,7 +266,7 @@ class _MainInputState extends State<MainInput>{
                       child: new IconButton(icon: new Icon(Icons.swap_horiz),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => statusTersangkaForm()));}
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => statusBbForm()));}
                       ),
                     ),
                     SizedBox(height: 15),

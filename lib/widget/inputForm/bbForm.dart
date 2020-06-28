@@ -56,7 +56,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     'tap_status_doc': '',
     'nomor_lab': '',
     'nomor_lab_doc': '',
-    'jenis_barang': '',
+    'jenis_barang': 'non narkotika',
   };
 
   // rest of our code
