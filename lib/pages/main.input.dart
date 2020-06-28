@@ -47,7 +47,7 @@ class _MainInputState extends State<MainInput>{
           GridView.count(
             padding: const EdgeInsets.only(top: 50, right: 5, left: 5),
             shrinkWrap: true,
-            crossAxisCount: 2,
+            crossAxisCount: 3,
             crossAxisSpacing: 10.0,
             mainAxisSpacing: 10.0,
             children: <Widget>[
@@ -133,7 +133,7 @@ class _MainInputState extends State<MainInput>{
                          borderRadius: BorderRadius.circular(1000),
                          border: Border.all(
                           color: Colors.blue[800],
-                          width: 10,
+                          width: 6,
                          ),
                       ),
                       child: new IconButton(icon: new Icon(Icons.business_center),
@@ -142,7 +142,7 @@ class _MainInputState extends State<MainInput>{
                         onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => bbForm()));}
                       ),
                     ),
-                    SizedBox(height: 15),
+                    SizedBox(height: 10),
                     Text('BB'),
                   ]
                 ),
@@ -207,7 +207,7 @@ class _MainInputState extends State<MainInput>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    Text('PROSES'),
+                    Text('PROSES TSK'),
                   ]
                 ),
               ),
@@ -239,7 +239,39 @@ class _MainInputState extends State<MainInput>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    Text('STATUS'),
+                    Text('STATUS TSK'),
+                  ]
+                ),
+              ),
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:<Widget>[
+                    Container(
+                       decoration: BoxDecoration(
+                         boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.8),
+                            spreadRadius: 3,
+                            blurRadius: 5,
+                            offset: Offset(0, 0), // changes position of shadow
+                          ),
+                        ],
+                         color: Colors.blue[800],
+                         borderRadius: BorderRadius.circular(1000),
+                         border: Border.all(
+                          color: Colors.blue[800],
+                          width: 10,
+                         ),
+                      ),
+                      child: new IconButton(icon: new Icon(Icons.swap_horiz),
+                        color: Colors.white,
+                        iconSize: 40,
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => statusTersangkaForm()));}
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Text('STATUS BB'),
                   ]
                 ),
               ),

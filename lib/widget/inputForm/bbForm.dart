@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import '../../services/request.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:async';
+import 'dart:io';
 
 class bbForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'BB Form';
+    final appTitle = 'Form Barang Bukti';
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
@@ -36,9 +41,24 @@ class MyCustomFormState extends State<MyCustomForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
   String selectedOption;
-  final List optionList = ['Penangkapan', 'Penangkapan 2', 'Penangkapan 3'];
+
+  final List optionList = ['narkotika', 'non narkotika'];
   String _date = "Not set";
   String _time = "Not set";
+  var form = {
+    'nama_tersangka': '',
+    'nama_barang': '',
+    'sp_sita': '',
+    'sp_sita_doc': '',
+    'tap_sita': '',
+    'tap_sita_doc': '',
+    'tap_status': '',
+    'tap_status_doc': '',
+    'nomor_lab': '',
+    'nomor_lab_doc': '',
+    'jenis_barang': '',
+  };
+
   // rest of our code
   @override
   Widget build(BuildContext context) {
@@ -51,23 +71,110 @@ class MyCustomFormState extends State<MyCustomForm> {
           child: ListView(
             children: <Widget>[
               TextFormField(
-                onSaved: (val) => print(val),
+                onChanged: (val) {
+                  setState(() {
+                    form['nama_tersangka'] = val.toString();
+                  });
+                },
                 decoration: InputDecoration(
-                  labelText: 'Text Input Example',
+                  labelText: 'Nama Tersangka',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
               TextFormField(
-                onSaved: (val) => print(val),
-                keyboardType: TextInputType.number,
+                onChanged: (val) {
+                  setState(() {
+                    form['nama_barang'] = val;
+                  });
+                },
                 decoration: InputDecoration(
-                  labelText: 'Number Text Input Example',
+                  labelText: 'Nama Barang',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
+              TextFormField(
+                onChanged: (val) {
+                  setState(() {
+                    form['sp_sita'] = val;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'SP Sita',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+              ),
+              RaisedButton(
+                child: Text('Upload SP Sita Doc'),
+                onPressed: () async {
+                  File file = await FilePicker.getFile();
+                  setState(() {
+                    form['sp_sita_doc'] = 'test';
+                  });
+              }),
+              TextFormField(
+                onChanged: (val) {
+                  setState(() {
+                    form['tap_sita'] = val;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Tap Sita',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+              ),
+              RaisedButton(
+                child: Text('Upload Tap Sita Doc'),
+                onPressed: () async {
+                  File file = await FilePicker.getFile();
+                  setState(() {
+                    form['tap_sita_doc'] = 'test';
+                  });
+              }),
+              if (form['jenis_barang'] == 'narkotika')
+              TextFormField(
+                onChanged: (val) {
+                  setState(() {
+                    form['tap_status'] = val;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Tap Status',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+              ),
+              if (form['jenis_barang'] == 'narkotika')
+              RaisedButton(
+                child: Text('Upload Tap Status Doc'),
+                onPressed: () async {
+                  File file = await FilePicker.getFile();
+                  setState(() {
+                    form['sp_status_doc'] = 'test';
+                  });
+              }),
+              if (form['jenis_barang'] == 'narkotika')
+              TextFormField(
+                onChanged: (val) {
+                  setState(() {
+                    form['nomor_lab'] = val;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Nomor Lab',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+              ),
+              if (form['jenis_barang'] == 'narkotika')
+              RaisedButton(
+                child: Text('Nomor Lab Doc'),
+                onPressed: () async {
+                  File file = await FilePicker.getFile();
+                  setState(() {
+                    form['nomor_lab_doc'] = 'test';
+                  });
+              }),
               DropdownButtonFormField(
                 onSaved: (val) => print(val),
-                value: selectedOption,
+                value: form['jenis_barang'],
                 items: optionList.map<DropdownMenuItem>(
                   (val) {
                     return DropdownMenuItem(
@@ -78,141 +185,29 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ).toList(),
                 onChanged: (val) {
                   setState(() {
-                    selectedOption = val.toString();
+                    form['jenis_barang'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
-                  labelText: 'Option Example',
+                  labelText: 'Jenis Narkoba',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
-              TextFormField(
-                onSaved: (val) => print(val),
-                maxLines: 8,
-                decoration: InputDecoration(
-                  labelText: 'Text Area Example',
-                  icon: Icon(Icons.assignment_turned_in),
-                ),
-              ),
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                elevation: 4.0,
-                onPressed: () {
-                  DatePicker.showDatePicker(context,
-                      theme: DatePickerTheme(
-                        containerHeight: 210.0,
-                      ),
-                      showTitleActions: true,
-                      minTime: DateTime(2000, 1, 1),
-                      maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                    print('confirm $date');
-                    _date = '${date.year} - ${date.month} - ${date.day}';
-                    setState(() {});
-                  }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.date_range,
-                                  size: 18.0,
-                                  color: Colors.blue,
-                                ),
-                                Text(
-                                  " $_date",
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Text(
-                        "  Change",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
-                      ),
-                    ],
-                  ),
-                ),
-                color: Colors.white,
-              ),
-               RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                elevation: 4.0,
-                onPressed: () {
-                  DatePicker.showTimePicker(context,
-                      theme: DatePickerTheme(
-                        containerHeight: 210.0,
-                      ),
-                      showTitleActions: true, onConfirm: (time) {
-                    print('confirm $time');
-                    _time = '${time.hour} : ${time.minute} : ${time.second}';
-                    setState(() {});
-                  }, currentTime: DateTime.now(), locale: LocaleType.en);
-                  setState(() {});
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.access_time,
-                                  size: 18.0,
-                                  color: Colors.blue,
-                                ),
-                                Text(
-                                  " $_time",
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Text(
-                        "  Change",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
-                      ),
-                    ],
-                  ),
-                ),
-                color: Colors.white,
-              ), 
               RaisedButton(
                 child: Text('Submit'),
                 color: Colors.blue,
                 textColor: Colors.white,
-                onPressed: () {
-                  print('Payment Complete');
+                onPressed: () async {
+                  print(form);
+                  pnkp(null, form).then((response){
+                    if (response != null){
+                      setState(() {
+                      print(response);
+                        });
+                      // print(data);
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
+                    }
+                  });
                 },
               ),
             ]
