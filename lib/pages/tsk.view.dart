@@ -63,7 +63,7 @@ class TskViewState extends State<TskView> {
               ),
               Card(
                 child: ExpansionTile(
-                  title: Text('Lihat Tersangka'),
+                  title: Text('Lihat Status'),
                   children: <Widget>[
                     for ( var i in widget.data['statustersangka'] ) Container(
                       child: GestureDetector(
