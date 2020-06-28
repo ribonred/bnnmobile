@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import '../../services/request.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:async';
+import 'dart:io';
 
 class tersangkaForm extends StatelessWidget {
   @override
@@ -7,6 +11,7 @@ class tersangkaForm extends StatelessWidget {
     final appTitle = 'Form Tersangka';
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
@@ -36,9 +41,13 @@ class MyCustomFormState extends State<MyCustomForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
   String selectedOption;
-  final List optionList = ['Penangkapan', 'Penangkapan 2', 'Penangkapan 3'];
-  String _date = "Not set";
-  String _time = "Not set";
+  final List optionList = ['laki-laki', 'perempuan'];
+  var form = {
+    'nama_tersangka': '',
+    'umur': '',
+    'jenis_kelamin': 'laki-laki',
+    'foto': '',
+  };
   // rest of our code
   @override
   Widget build(BuildContext context) {
@@ -51,23 +60,31 @@ class MyCustomFormState extends State<MyCustomForm> {
           child: ListView(
             children: <Widget>[
               TextFormField(
-                onSaved: (val) => print(val),
+                onChanged: (val) {
+                  setState(() {
+                    form['nama_tersangka'] = val.toString();
+                  });
+                },
                 decoration: InputDecoration(
-                  labelText: 'Text Input Example',
+                  labelText: 'Nama Tersangka',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
               TextFormField(
-                onSaved: (val) => print(val),
+                onChanged: (val) {
+                  setState(() {
+                    form['umur'] = val;
+                  });
+                },
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: 'Number Text Input Example',
+                  labelText: 'Umur',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
               DropdownButtonFormField(
                 onSaved: (val) => print(val),
-                value: selectedOption,
+                value: form['jenis_kelamin'],
                 items: optionList.map<DropdownMenuItem>(
                   (val) {
                     return DropdownMenuItem(
@@ -78,141 +95,37 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ).toList(),
                 onChanged: (val) {
                   setState(() {
-                    selectedOption = val.toString();
+                    form['jenis_kelamin'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
-                  labelText: 'Option Example',
-                  icon: Icon(Icons.assignment_turned_in),
-                ),
-              ),
-              TextFormField(
-                onSaved: (val) => print(val),
-                maxLines: 8,
-                decoration: InputDecoration(
-                  labelText: 'Text Area Example',
+                  labelText: 'Jenis Kelamin',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
               RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                elevation: 4.0,
-                onPressed: () {
-                  DatePicker.showDatePicker(context,
-                      theme: DatePickerTheme(
-                        containerHeight: 210.0,
-                      ),
-                      showTitleActions: true,
-                      minTime: DateTime(2000, 1, 1),
-                      maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                    print('confirm $date');
-                    _date = '${date.year} - ${date.month} - ${date.day}';
-                    setState(() {});
-                  }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.date_range,
-                                  size: 18.0,
-                                  color: Colors.blue,
-                                ),
-                                Text(
-                                  " $_date",
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Text(
-                        "  Change",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
-                      ),
-                    ],
-                  ),
-                ),
-                color: Colors.white,
-              ),
-               RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                elevation: 4.0,
-                onPressed: () {
-                  DatePicker.showTimePicker(context,
-                      theme: DatePickerTheme(
-                        containerHeight: 210.0,
-                      ),
-                      showTitleActions: true, onConfirm: (time) {
-                    print('confirm $time');
-                    _time = '${time.hour} : ${time.minute} : ${time.second}';
-                    setState(() {});
-                  }, currentTime: DateTime.now(), locale: LocaleType.en);
-                  setState(() {});
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.access_time,
-                                  size: 18.0,
-                                  color: Colors.blue,
-                                ),
-                                Text(
-                                  " $_time",
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Text(
-                        "  Change",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
-                      ),
-                    ],
-                  ),
-                ),
-                color: Colors.white,
-              ), 
+                child: Text('Upload Foto'),
+                onPressed: () async {
+                  File file = await FilePicker.getFile();
+                  setState(() {
+                    form['foto'] = 'test';
+                  });
+              }),
               RaisedButton(
                 child: Text('Submit'),
                 color: Colors.blue,
                 textColor: Colors.white,
-                onPressed: () {
-                  print('Payment Complete');
+                onPressed: () async {
+                  print(form);
+                  pnkp(null, form).then((response){
+                    if (response != null){
+                      setState(() {
+                      print(response);
+                        });
+                      // print(data);
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
+                    }
+                  });
                 },
               ),
             ]

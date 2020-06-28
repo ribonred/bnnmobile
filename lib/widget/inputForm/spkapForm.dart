@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import '../../services/request.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:async';
+import 'dart:io';
 
 class spkapForm extends StatelessWidget {
   @override
@@ -7,6 +11,7 @@ class spkapForm extends StatelessWidget {
     final appTitle = 'SPKAP FORM';
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
@@ -37,8 +42,21 @@ class MyCustomFormState extends State<MyCustomForm> {
   final _formKey = GlobalKey<FormState>();
   String selectedOption;
   final List optionList = ['Penangkapan', 'Penangkapan 2', 'Penangkapan 3'];
-  String _date = "Not set";
-  String _time = "Not set";
+  String tgl_dimulai = "Belum diatur";
+  String masa_berakhir_penangkapan = "Belum diatur";
+  String tanggal_sp_jangkap = "Belum diatur";
+  String masa_berakhir_sp_jangkap = "Belum diatur";
+  var form = {
+    'no_lkn': '',
+    'no_penangkapan': '',
+    'tanggal_penangkapan': '',
+    'masa_berakhir_penangkapan': '',
+    'dokumen_penangkapan': '',
+    'sp_jangkap': '',
+    'tanggal_sp_jangkap': '',
+    'masa_berakhir_sp_jangkap': '',
+    'dokumen_sp_jangkap': '',
+  };
   // rest of our code
   @override
   Widget build(BuildContext context) {
@@ -51,47 +69,36 @@ class MyCustomFormState extends State<MyCustomForm> {
           child: ListView(
             children: <Widget>[
               TextFormField(
-                onSaved: (val) => print(val),
-                decoration: InputDecoration(
-                  labelText: 'Text Input Example',
-                  icon: Icon(Icons.assignment_turned_in),
-                ),
-              ),
-              TextFormField(
-                onSaved: (val) => print(val),
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Number Text Input Example',
-                  icon: Icon(Icons.assignment_turned_in),
-                ),
-              ),
-              DropdownButtonFormField(
-                onSaved: (val) => print(val),
-                value: selectedOption,
-                items: optionList.map<DropdownMenuItem>(
-                  (val) {
-                    return DropdownMenuItem(
-                      child: Text(val.toString()),
-                      value: val.toString(),
-                    );
-                  },
-                ).toList(),
                 onChanged: (val) {
                   setState(() {
-                    selectedOption = val.toString();
+                    form['no_lkn'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
-                  labelText: 'Option Example',
+                  labelText: 'No. LKN',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
               TextFormField(
-                onSaved: (val) => print(val),
-                maxLines: 8,
+                onChanged: (val) {
+                  setState(() {
+                    form['no_penangkapan'] = val.toString();
+                  });
+                },
                 decoration: InputDecoration(
-                  labelText: 'Text Area Example',
+                  labelText: 'No. Penangkapan',
                   icon: Icon(Icons.assignment_turned_in),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(text: 'Tanggal Penangkapan', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ),
               ),
               RaisedButton(
@@ -105,10 +112,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                       ),
                       showTitleActions: true,
                       minTime: DateTime(2000, 1, 1),
-                      maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                    print('confirm $date');
-                    _date = '${date.year} - ${date.month} - ${date.day}';
-                    setState(() {});
+                      maxTime: DateTime(2040, 12, 31), onConfirm: (date) {
+                    tgl_dimulai = '${date.day}-${date.month}-${date.year}';
+                    setState(() {
+                      form['tanggal_penangkapan'] = tgl_dimulai;
+                    });
                   }, currentTime: DateTime.now(), locale: LocaleType.en);
                 },
                 child: Container(
@@ -128,7 +136,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                                   color: Colors.blue,
                                 ),
                                 Text(
-                                  " $_date",
+                                  " $tgl_dimulai",
                                   style: TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.bold,
@@ -140,7 +148,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         ],
                       ),
                       Text(
-                        "  Change",
+                        "Ubah",
                         style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
@@ -151,21 +159,34 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
                 color: Colors.white,
               ),
-               RaisedButton(
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(text: 'Masa Berakhir Penangkapan', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+              RaisedButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 elevation: 4.0,
                 onPressed: () {
-                  DatePicker.showTimePicker(context,
+                  DatePicker.showDatePicker(context,
                       theme: DatePickerTheme(
                         containerHeight: 210.0,
                       ),
-                      showTitleActions: true, onConfirm: (time) {
-                    print('confirm $time');
-                    _time = '${time.hour} : ${time.minute} : ${time.second}';
-                    setState(() {});
+                      showTitleActions: true,
+                      minTime: DateTime(2000, 1, 1),
+                      maxTime: DateTime(2040, 12, 31), onConfirm: (date) {
+                    masa_berakhir_penangkapan = '${date.day}-${date.month}-${date.year}';
+                    setState(() {
+                      form['masa_berakhir_penangkapan'] = masa_berakhir_penangkapan;
+                    });
                   }, currentTime: DateTime.now(), locale: LocaleType.en);
-                  setState(() {});
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -179,12 +200,12 @@ class MyCustomFormState extends State<MyCustomForm> {
                             child: Row(
                               children: <Widget>[
                                 Icon(
-                                  Icons.access_time,
+                                  Icons.date_range,
                                   size: 18.0,
                                   color: Colors.blue,
                                 ),
                                 Text(
-                                  " $_time",
+                                  " $masa_berakhir_penangkapan",
                                   style: TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.bold,
@@ -196,7 +217,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         ],
                       ),
                       Text(
-                        "  Change",
+                        "Ubah",
                         style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
@@ -206,15 +227,202 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ),
                 ),
                 color: Colors.white,
-              ), 
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(text: 'Dokumen Penangkapan', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+              RaisedButton(
+                child: Text('Pilih dokumen'),
+                onPressed: () async {
+                  File file = await FilePicker.getFile();
+                   setState(() {
+                    form['dokumen_penangkapan'] = 'test';
+                   });
+              }),
+              TextFormField(
+                onChanged: (val) {
+                  setState(() {
+                    form['sp_jangkap'] = val.toString();
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Sp. Jangkap',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(text: 'Tanggal SP. Jangkap', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                elevation: 4.0,
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      theme: DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true,
+                      minTime: DateTime(2000, 1, 1),
+                      maxTime: DateTime(2040, 12, 31), onConfirm: (date) {
+                    tanggal_sp_jangkap = '${date.day}-${date.month}-${date.year}';
+                    setState(() {
+                      form['tanggal_sp_jangkap'] = tanggal_sp_jangkap;
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.date_range,
+                                  size: 18.0,
+                                  color: Colors.blue,
+                                ),
+                                Text(
+                                  " $tanggal_sp_jangkap",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        "Ubah",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                ),
+                color: Colors.white,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(text: 'Masa Berakhir SP.Jangkap', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                elevation: 4.0,
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      theme: DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true,
+                      minTime: DateTime(2000, 1, 1),
+                      maxTime: DateTime(2040, 12, 31), onConfirm: (date) {
+                    masa_berakhir_sp_jangkap = '${date.day}-${date.month}-${date.year}';
+                    setState(() {
+                      form['masa_berakhir_sp_jangkap'] = tanggal_sp_jangkap;
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.date_range,
+                                  size: 18.0,
+                                  color: Colors.blue,
+                                ),
+                                Text(
+                                  " $masa_berakhir_sp_jangkap",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        "Ubah",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                ),
+                color: Colors.white,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(text: 'Dokumen SP.Jangkap', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+              RaisedButton(
+                child: Text('Pilih dokumen'),
+                onPressed: () async {
+                  File file = await FilePicker.getFile();
+                   setState(() {
+                    form['dokumen_sp_jangkap'] = 'test';
+                   });
+              }),
               RaisedButton(
                 child: Text('Submit'),
                 color: Colors.blue,
                 textColor: Colors.white,
-                onPressed: () {
-                  print('Payment Complete');
+                onPressed: () async {
+                  print(form);
                 },
-              ),
+              )
             ]
           ),
         )
