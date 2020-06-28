@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/request.dart';
+import '../pages/bb.view.dart';
 
 class TskView extends StatefulWidget {
   final data;
@@ -9,6 +10,7 @@ class TskView extends StatefulWidget {
 }
 
 class TskViewState extends State<TskView> {
+  var dataBb;
   @override
   Widget build(context) {
     print(widget.data);
@@ -63,7 +65,7 @@ class TskViewState extends State<TskView> {
               ),
               Card(
                 child: ExpansionTile(
-                  title: Text('Lihat Tersangka'),
+                  title: Text('Lihat Status'),
                   children: <Widget>[
                     for ( var i in widget.data['statustersangka'] ) Container(
                       child: GestureDetector(
@@ -119,6 +121,15 @@ class TskViewState extends State<TskView> {
                       child: GestureDetector(
                         onTap: () {
                           print(i['id']);
+                          bb(i['id'], null).then((response){
+                            if (response != null){
+                              setState(() {
+                              dataBb = response;
+                                });
+                              // print(data);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => BbView( data: dataBb)));
+                            }
+                          });
                           // print('enaak');
                         },
                         child: new Card(

@@ -3,6 +3,7 @@ import '../services/request.dart';
 import '../pages/lkn.view.dart';
 import '../pages/pnkp.view.dart';
 import '../pages/tsk.view.dart';
+import '../pages/bb.view.dart';
 
 class GetLkn extends StatefulWidget {
   final data;
@@ -43,6 +44,7 @@ class LknState extends State<GetLkn> {
   // }
  
   Widget build(context){
+    print(data);
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title.toString())
@@ -82,7 +84,15 @@ class LknState extends State<GetLkn> {
                     }
                     else if (widget.title.toString()=='BARANG BUKTI')
                     {
-
+                      bb(widget.data[index]['id'], null).then((response){
+                        if (response != null){
+                          setState(() {
+                          data = response;
+                            });
+                          // print(data);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => BbView( data: data)));
+                        }
+                      });
                     } 
                     else if (widget.title.toString()=='TERSANGKA')
                     {

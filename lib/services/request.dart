@@ -133,20 +133,49 @@ Future<Map> pnkp(int pnkpId, var input) async {
 Future<Map> bb(int bbId, var input) async {
   String token = await getToken();
   Map content;
-  await http.get('${baseUrl}mobile-api/barangbukti/', headers: {
-    'Accept': 'application/json',
-    'Authorization':'Bearer $token'
-  }).then((response) async {
-    print(response.statusCode);
-    if (response.statusCode == 200){
-      content = json.decode(response.body);
-      // await storage.write(key: 'token', value: content['token']);
-      // Navigator.push(context,
-      //             MaterialPageRoute(builder: (context) => Dashboard()));
-    } else {
-      content = json.decode(response.body);
-    }
-  });
+  if (bbId==null && input!=null)
+  {
+
+  }
+  else if (bbId!=null && input!=null)
+  {
+
+  }
+  else if (bbId==null)
+  {
+    await http.get('${baseUrl}mobile-api/barangbukti/', headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+  }
+  else
+  {
+    await http.get('${baseUrl}mobile-api/barangbukti/$bbId', headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+  }
+  
   return Future.value(content);
 }
 

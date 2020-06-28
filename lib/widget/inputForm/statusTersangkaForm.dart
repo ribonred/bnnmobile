@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import '../../services/request.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:async';
+import 'dart:io';
 
 class statusTersangkaForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Status Tersangka Form';
+    final appTitle = 'Form Status Tersangka';
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
@@ -36,9 +41,18 @@ class MyCustomFormState extends State<MyCustomForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
   String selectedOption;
-  final List optionList = ['Penangkapan', 'Penangkapan 2', 'Penangkapan 3'];
-  String _date = "Not set";
-  String _time = "Not set";
+  final List rekamJejakList = ['Masuk', 'Keluar'];
+  final List statusPenahananList = ['Di Amankan', 'Di tahan', 'TAT', 'Selesai'];
+  String tanggal = "Atur Tanggal";
+  String waktu = "Atur Waktu";
+  var form = {
+    'nama_tersangka': '',
+    'status_penahanan': 'Di Amankan',
+    'rekam_jejak': 'Masuk',
+    'tanggal': '',
+    'waktu': '',
+    'keterangan': '',
+  };
   // rest of our code
   @override
   Widget build(BuildContext context) {
@@ -51,24 +65,20 @@ class MyCustomFormState extends State<MyCustomForm> {
           child: ListView(
             children: <Widget>[
               TextFormField(
-                onSaved: (val) => print(val),
+                onChanged: (val) {
+                  setState(() {
+                    form['nama_tersangka'] = val.toString();
+                  });
+                },
                 decoration: InputDecoration(
-                  labelText: 'Text Input Example',
-                  icon: Icon(Icons.assignment_turned_in),
-                ),
-              ),
-              TextFormField(
-                onSaved: (val) => print(val),
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Number Text Input Example',
+                  labelText: 'Nama Tersangka',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
               DropdownButtonFormField(
                 onSaved: (val) => print(val),
-                value: selectedOption,
-                items: optionList.map<DropdownMenuItem>(
+                value: form['status_penahanan'],
+                items: statusPenahananList.map<DropdownMenuItem>(
                   (val) {
                     return DropdownMenuItem(
                       child: Text(val.toString()),
@@ -78,19 +88,32 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ).toList(),
                 onChanged: (val) {
                   setState(() {
-                    selectedOption = val.toString();
+                    form['status_penahanan'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
-                  labelText: 'Option Example',
+                  labelText: 'Status Penahanan',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
-              TextFormField(
+              DropdownButtonFormField(
                 onSaved: (val) => print(val),
-                maxLines: 8,
+                value: form['rekam_jejak'],
+                items: rekamJejakList.map<DropdownMenuItem>(
+                  (val) {
+                    return DropdownMenuItem(
+                      child: Text(val.toString()),
+                      value: val.toString(),
+                    );
+                  },
+                ).toList(),
+                onChanged: (val) {
+                  setState(() {
+                    form['rekam_jejak'] = val.toString();
+                  });
+                },
                 decoration: InputDecoration(
-                  labelText: 'Text Area Example',
+                  labelText: 'Rekam Jejak',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
@@ -105,10 +128,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                       ),
                       showTitleActions: true,
                       minTime: DateTime(2000, 1, 1),
-                      maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
-                    print('confirm $date');
-                    _date = '${date.year} - ${date.month} - ${date.day}';
-                    setState(() {});
+                      maxTime: DateTime(2050, 12, 31), onConfirm: (date) {
+                    tanggal = '${date.day}-${date.month}-${date.year}';
+                    setState(() {
+                      form['tanggal'] = tanggal;
+                    });
                   }, currentTime: DateTime.now(), locale: LocaleType.en);
                 },
                 child: Container(
@@ -128,7 +152,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                                   color: Colors.blue,
                                 ),
                                 Text(
-                                  " $_date",
+                                  " $tanggal",
                                   style: TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.bold,
@@ -140,7 +164,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         ],
                       ),
                       Text(
-                        "  Change",
+                        "Ubah",
                         style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
@@ -161,9 +185,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                         containerHeight: 210.0,
                       ),
                       showTitleActions: true, onConfirm: (time) {
-                    print('confirm $time');
-                    _time = '${time.hour} : ${time.minute} : ${time.second}';
-                    setState(() {});
+                    waktu = '${time.hour} : ${time.minute} : ${time.second}';
+                    setState(() {
+                      form['waktu'] = waktu;
+                    });
                   }, currentTime: DateTime.now(), locale: LocaleType.en);
                   setState(() {});
                 },
@@ -184,7 +209,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                                   color: Colors.blue,
                                 ),
                                 Text(
-                                  " $_time",
+                                  " $waktu",
                                   style: TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.bold,
@@ -196,7 +221,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         ],
                       ),
                       Text(
-                        "  Change",
+                        "Ubah",
                         style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
@@ -206,15 +231,44 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ),
                 ),
                 color: Colors.white,
-              ), 
+              ),
+              TextFormField(
+                onChanged: (val) {
+                  setState(() {
+                    form['keterangan'] = val.toString();
+                  });
+                },
+                maxLines: 8,
+                decoration: InputDecoration(
+                  labelText: 'Keterangan',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+              ),
               RaisedButton(
                 child: Text('Submit'),
                 color: Colors.blue,
                 textColor: Colors.white,
-                onPressed: () {
-                  print('Payment Complete');
+                onPressed: () async {
+                  print(form);
+                  pnkp(null, form).then((response){
+                    if (response != null){
+                      setState(() {
+                      print(response);
+                        });
+                      // print(data);
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
+                    }
+                  });
                 },
               ),
+            RaisedButton(
+              child: Text('Choose file'),
+              onPressed: () async {
+                File file = await FilePicker.getFile();
+                print('file');
+                print(file);
+                print('file');
+            })
             ]
           ),
         )
