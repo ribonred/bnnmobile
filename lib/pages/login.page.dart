@@ -4,7 +4,13 @@ import '../widget/forgot.dart';
 import '../widget/textLogin.dart';
 import '../widget/verticalText.dart';
 import '../pages/menu.dart';
+import '../pages/lknlist.page.dart';
 import '../services/request.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as statusCodes;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:convert';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -15,6 +21,54 @@ class _LoginPageState extends State<LoginPage> {
   final String url = 'http://178.128.80.233:8000/get-token/token-auth/';
   final _usernamecontroller = TextEditingController();
   final _passwordcontroller = TextEditingController();
+  WebSocketChannel channels = WebSocketChannel.connect(Uri.parse("ws://178.128.80.233:8000/notifications/"));
+  var sub;
+  String text;
+  @override
+  initState() {
+    super.initState();
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project   
+     // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon'); 
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification).then((done) {
+         var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      'your channel id', 'your channel name', 'your channel description',
+      importance: Importance.Max, priority: Priority.High);
+        var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+        var platformChannelSpecifics = new NotificationDetails(
+            androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+      sub = channels.stream.listen((newData) {
+        setState(() {
+          text = newData;
+        });
+
+        var messagess= jsonDecode(text);
+        flutterLocalNotificationsPlugin.show(
+            0,
+            "Notifikasi Baru",
+            messagess['message'],
+            platformChannelSpecifics,
+            payload: 'Default_Sound',
+        );
+      });
+        }
+        
+        );
+  }
+Future onSelectNotification(String payload) async {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return Dashboard(text:'from notif');
+      },
+    );
+  }
 
    showMyDialog() async {
   return showDialog<void>(

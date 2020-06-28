@@ -18,7 +18,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class Navbarbottom extends State<Dashboard> {
-  int _index = 0;
+  int _index = 2;
     var _pages = [
       MainMenu(),
       GetLkn(),
