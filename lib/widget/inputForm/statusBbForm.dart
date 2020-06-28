@@ -5,10 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:async';
 import 'dart:io';
 
-class prosesTersangkaForm extends StatelessWidget {
+class statusBbForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Form Proses Tersangka';
+    final appTitle = 'Status BB Form';
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -41,21 +41,18 @@ class MyCustomFormState extends State<MyCustomForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
   String selectedOption;
-  final List optionList = ['Penyidik', 'Kejati', 'Pengadilan 1', 'Pengadilan 2'];
-  String tanggal_mulai_proses = "Atur Tanggal Mulai Proses";
-  String tanggal_akhir_proses = "Atur Tanggal Akhir Proses";
+  final List satuanList = ['gram', 'butir', 'PCS', 'unit'];
+  final List statusList = ['Masuk', 'Keluar'];
+  String tanggal_status = "Atur Tanggal Status";
+  String waktu_status = "Atur Waktu Status";
   var form = {
-    'nama_tersangka': '',
-    'jenis_proses': 1,
-    'tap_han': '',
-    'tap_han_doc': '',
-    'surat_perpanjangan_han': '',
-    'surat_perpanjangan_han_doc': '',
-    'sp_han': '',
-    'sp_han_doc': '',
-    'tanggal_mulai_proses': '',
-    'tanggal_akhir_proses': '',
+    'nama_bb': '',
+    'tanggal_status': '',
+    'waktu_status': '',
+    'jumlah': '',
+    'satuan': 'gram',
     'keterangan': '',
+    'status': 'Masuk'
   };
   // rest of our code
   @override
@@ -71,215 +68,163 @@ class MyCustomFormState extends State<MyCustomForm> {
               TextFormField(
                 onChanged: (val) {
                   setState(() {
-                    form['nama_tersangka'] = val.toString();
+                    form['nama_bb'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
-                  labelText: 'Nama Tersangka',
+                  labelText: 'Nama Barang Bukti',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+              ),
+               RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                elevation: 4.0,
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      theme: DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true,
+                      minTime: DateTime(2000, 1, 1),
+                      maxTime: DateTime(2050, 12, 31), onConfirm: (date) {
+                    print('confirm $date');
+                    tanggal_status = '${date.day}-${date.month}-${date.year}';
+                    setState(() {
+                      form['tanggal_status'] = tanggal_status;
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.date_range,
+                                  size: 18.0,
+                                  color: Colors.blue,
+                                ),
+                                Text(
+                                  " $tanggal_status",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        "Ubah",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                ),
+                color: Colors.white,
+              ),
+               RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                elevation: 4.0,
+                onPressed: () {
+                  DatePicker.showTimePicker(context,
+                      theme: DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true, onConfirm: (time) {
+                    print('confirm $time');
+                    waktu_status = '${time.hour} : ${time.minute} : ${time.second}';
+                    setState(() {
+                      form['waktu_status'] = waktu_status;
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                  setState(() {});
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.access_time,
+                                  size: 18.0,
+                                  color: Colors.blue,
+                                ),
+                                Text(
+                                  " $waktu_status",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        "  Change",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                ),
+                color: Colors.white,
+              ), 
+              TextFormField(
+                onChanged: (val) {
+                  setState(() {
+                    form['jumlah'] = val;
+                  });
+                },
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Jumlah',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
               DropdownButtonFormField(
                 onSaved: (val) => print(val),
-                value: form['jenis_proses'],
-                items: optionList.map<DropdownMenuItem>(
+                value: form['satuan'],
+                items: satuanList.map<DropdownMenuItem>(
                   (val) {
                     return DropdownMenuItem(
                       child: Text(val.toString()),
-                      value: optionList.indexOf(val.toString()) + 1,
+                      value: val.toString(),
                     );
                   },
                 ).toList(),
                 onChanged: (val) {
                   setState(() {
-                    form['jenis_proses'] = val;
+                    form['satuan'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
-                  labelText: 'Jenis Proses',
+                  labelText: 'Satuan',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
-              ),
-              if(form['jenis_proses'] == 2 || form['jenis_proses'] == 3)
-              TextFormField(
-                onChanged: (val) {
-                  setState(() {
-                    form['tap_han'] = val.toString();
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Tap Han',
-                  icon: Icon(Icons.assignment_turned_in),
-                ),
-              ),
-              if(form['jenis_proses'] == 2 || form['jenis_proses'] == 3)
-              RaisedButton(
-                child: Text('Upload Tap Han Doc'),
-                onPressed: () async {
-                  File file = await FilePicker.getFile();
-                  setState(() {
-                    form['tap_han_doc'] = 'test';
-                  });
-              }),
-              if(form['jenis_proses'] == 4)
-              TextFormField(
-                onChanged: (val) {
-                  setState(() {
-                    form['surat_perpanjangan_han'] = val.toString();
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Surat Perpanjangan Han',
-                  icon: Icon(Icons.assignment_turned_in),
-                ),
-              ),
-              if(form['jenis_proses'] == 4)
-              RaisedButton(
-                child: Text('Upload Surat Perpanjangan Han Doc'),
-                onPressed: () async {
-                  File file = await FilePicker.getFile();
-                  setState(() {
-                    form['surat_perpanjangan_han_doc'] = 'test';
-                  });
-              }),
-              if(form['jenis_proses'] == 1)
-              TextFormField(
-                onChanged: (val) {
-                  setState(() {
-                    form['sp_han'] = val.toString();
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'SP Han',
-                  icon: Icon(Icons.assignment_turned_in),
-                ),
-              ),
-              if(form['jenis_proses'] == 1)
-              RaisedButton(
-                child: Text('Upload SP Han Doc'),
-                onPressed: () async {
-                  File file = await FilePicker.getFile();
-                  setState(() {
-                    form['sp_han_doc'] = 'test';
-                  });
-              }),
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                elevation: 4.0,
-                onPressed: () {
-                  DatePicker.showDatePicker(context,
-                      theme: DatePickerTheme(
-                        containerHeight: 210.0,
-                      ),
-                      showTitleActions: true,
-                      minTime: DateTime(2000, 1, 1),
-                      maxTime: DateTime(2050, 12, 31), onConfirm: (date) {
-                    print('confirm $date');
-                    tanggal_mulai_proses = '${date.day}-${date.month}-${date.year}';
-                    setState(() {
-                      form['tanggal_mulai_proses'] = tanggal_mulai_proses;
-                    });
-                  }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.date_range,
-                                  size: 18.0,
-                                  color: Colors.blue,
-                                ),
-                                Text(
-                                  " $tanggal_mulai_proses",
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Text(
-                        "Ubah",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
-                      ),
-                    ],
-                  ),
-                ),
-                color: Colors.white,
-              ),
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                elevation: 4.0,
-                onPressed: () {
-                  DatePicker.showDatePicker(context,
-                      theme: DatePickerTheme(
-                        containerHeight: 210.0,
-                      ),
-                      showTitleActions: true,
-                      minTime: DateTime(2000, 1, 1),
-                      maxTime: DateTime(2050, 12, 31), onConfirm: (date) {
-                    print('confirm $date');
-                    tanggal_akhir_proses = '${date.day}-${date.month}-${date.year}';
-                    setState(() {
-                      form['tanggal_akhir_proses'] = tanggal_akhir_proses;
-                    });
-                  }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.date_range,
-                                  size: 18.0,
-                                  color: Colors.blue,
-                                ),
-                                Text(
-                                  " $tanggal_akhir_proses",
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Text(
-                        "Ubah",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
-                      ),
-                    ],
-                  ),
-                ),
-                color: Colors.white,
               ),
               TextFormField(
                 onChanged: (val) {
@@ -293,14 +238,52 @@ class MyCustomFormState extends State<MyCustomForm> {
                   icon: Icon(Icons.assignment_turned_in),
                 ),
               ),
+              DropdownButtonFormField(
+                onSaved: (val) => print(val),
+                value: form['status'],
+                items: statusList.map<DropdownMenuItem>(
+                  (val) {
+                    return DropdownMenuItem(
+                      child: Text(val.toString()),
+                      value: val.toString(),
+                    );
+                  },
+                ).toList(),
+                onChanged: (val) {
+                  setState(() {
+                    form['status'] = val.toString();
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Status',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+              ),
               RaisedButton(
                 child: Text('Submit'),
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                  print(form['jenis_proses']);
+                  print(form);
+                  pnkp(null, form).then((response){
+                    if (response != null){
+                      setState(() {
+                      print(response);
+                        });
+                      // print(data);
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
+                    }
+                  });
                 },
               ),
+            RaisedButton(
+              child: Text('Choose file'),
+              onPressed: () async {
+                File file = await FilePicker.getFile();
+                print('file');
+                print(file);
+                print('file');
+            })
             ]
           ),
         )
