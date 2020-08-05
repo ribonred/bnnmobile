@@ -46,7 +46,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String tanggal_status = "Atur Tanggal Status";
   String waktu_status = "Atur Waktu Status";
   var form = {
-    'nama_bb': '',
+    'barang_bukti_id': '10',
     'tanggal_status': '',
     'waktu_status': '',
     'jumlah': '',
@@ -68,7 +68,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               TextFormField(
                 onChanged: (val) {
                   setState(() {
-                    form['nama_bb'] = val.toString();
+                    form['barang_bukti_id'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
@@ -146,7 +146,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                       ),
                       showTitleActions: true, onConfirm: (time) {
                     print('confirm $time');
-                    waktu_status = '${time.hour} : ${time.minute} : ${time.second}';
+                    waktu_status = '${time.hour}:${time.minute}:${time.second}';
                     setState(() {
                       form['waktu_status'] = waktu_status;
                     });
@@ -265,25 +265,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(form);
-                  pnkp(null, form).then((response){
-                    if (response != null){
-                      setState(() {
-                      print(response);
-                        });
-                      // print(data);
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
-                    }
-                  });
+                  
                 },
               ),
-            RaisedButton(
-              child: Text('Choose file'),
-              onPressed: () async {
-                File file = await FilePicker.getFile();
-                print('file');
-                print(file);
-                print('file');
-            })
             ]
           ),
         )
