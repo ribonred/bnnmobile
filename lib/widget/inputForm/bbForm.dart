@@ -46,7 +46,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String _date = "Not set";
   String _time = "Not set";
   var form = {
-    'nama_tersangka': '',
+    'milik_tersangka_id': '12',
     'nama_barang': '',
     'sp_sita': '',
     'sp_sita_doc': '',
@@ -73,7 +73,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               TextFormField(
                 onChanged: (val) {
                   setState(() {
-                    form['nama_tersangka'] = val.toString();
+                    form['milik_tersangka_id'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
@@ -106,9 +106,10 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Upload SP Sita Doc'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.any);
                   setState(() {
-                    form['sp_sita_doc'] = 'test';
+                    form['sp_sita_doc'] = filePath;
                   });
               }),
               TextFormField(
@@ -125,9 +126,10 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Upload Tap Sita Doc'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.any);
                   setState(() {
-                    form['tap_sita_doc'] = 'test';
+                    form['tap_sita_doc'] = filePath;
                   });
               }),
               if (form['jenis_barang'] == 'narkotika')
@@ -146,9 +148,10 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Upload Tap Status Doc'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.any);
                   setState(() {
-                    form['sp_status_doc'] = 'test';
+                    form['tap_status_doc'] = filePath;
                   });
               }),
               if (form['jenis_barang'] == 'narkotika')
@@ -167,9 +170,10 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Nomor Lab Doc'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.any);
                   setState(() {
-                    form['nomor_lab_doc'] = 'test';
+                    form['nomor_lab_doc'] = filePath;
                   });
               }),
               DropdownButtonFormField(
@@ -199,14 +203,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(form);
-                  pnkp(null, form).then((response){
-                    if (response != null){
-                      setState(() {
-                      print(response);
-                        });
-                      // print(data);
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
-                    }
+                  bb(null, form).then((response) async {
+                    print('response');
+                    print(response);
                   });
                 },
               ),

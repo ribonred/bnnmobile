@@ -183,7 +183,66 @@ Future<Map> bb(int bbId, var input) async {
   Map content;
   if (bbId==null && input!=null)
   {
+    Map<String, String> headers = { 'Authorization':'Bearer $token'};
+    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}mobile-api/barangbukti/'));
+    request.headers.addAll(headers);
 
+    if (["", null].contains(input['sp_sita_doc'])) {
+      print('sp_sita_doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('sp_sita_doc', input['sp_sita_doc'])
+      );
+    }
+
+    if (["", null].contains(input['tap_sita_doc'])) {
+      print('tap_sita_doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('tap_sita_doc', input['tap_sita_doc'])
+      );
+    }
+    
+    if (["", null].contains(input['tap_status_doc'])) {
+      print('sp_sita_doc tap_status_doc');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('tap_status_doc', input['tap_status_doc'])
+      );
+    }
+    
+    if (["", null].contains(input['nomor_lab_doc'])) {
+      print('nomor_lab_doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('nomor_lab_doc', input['nomor_lab_doc'])
+      );
+    }
+
+    request.fields['milik_tersangka_id'] = input['milik_tersangka_id'];
+    request.fields['nama_barang'] = input['nama_barang'];
+    request.fields['sp_sita'] = input['sp_sita'];
+    request.fields['tap_sita'] = input['tap_sita'];
+    request.fields['tap_status'] = input['tap_status'];
+    request.fields['nomor_lab'] = input['nomor_lab'];
+    request.fields['jenis_barang'] = input['jenis_barang'];
+    
+    await request.send().then((result) async {
+      await http.Response.fromStream(result)
+          .then((response) async {
+        if (response.statusCode == 201)
+        {
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        } else {
+          print(response.statusCode);
+          content = json.decode(response.body);
+        }
+      });
+    }).catchError((err) => print('error : '+err.toString()))
+        .whenComplete(()
+    {});
   }
   else if (bbId!=null && input!=null)
   {
