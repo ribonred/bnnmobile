@@ -111,7 +111,7 @@ Future<Map> pnkp(int pnkpId, var input) async {
       print('dokumen_sp_jangkap kosong');
     } else {
       request.files.add(
-        await http.MultipartFile.fromPath('dokumen_penangkapan', input['dokumen_penangkapan'])
+        await http.MultipartFile.fromPath('dokumen_sp_jangkap', input['dokumen_sp_jangkap'])
       );
     }
 
@@ -252,7 +252,39 @@ Future<Map> tsk(int tskId, var input) async {
   Map content;
   if (tskId==null && input!=null)
   {
+    Map<String, String> headers = { 'Authorization':'Bearer $token'};
+    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}mobile-api/tersangka/'));
+    request.headers.addAll(headers);
 
+    if (["", null].contains(input['foto'])) {
+      print('foto kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('foto', input['foto'])
+      );
+    }
+
+    request.fields['no_penangkapan_id'] = input['no_penangkapan_id'];
+    request.fields['nama_tersangka'] = input['nama_tersangka'];
+    request.fields['umur'] = input['umur'];
+    request.fields['jenis_kelamin'] = input['jenis_kelamin'];
+    
+    await request.send().then((result) async {
+      await http.Response.fromStream(result)
+          .then((response) async {
+        if (response.statusCode == 201)
+        {
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        } else {
+          print(response.statusCode);
+          content = json.decode(response.body);
+        }
+      });
+    }).catchError((err) => print('error : '+err.toString()))
+        .whenComplete(()
+    {});
   }
   else if (tskId!=null && input!=null)
   {

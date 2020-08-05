@@ -4,6 +4,7 @@ import '../../services/request.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:mime/mime.dart';
 
 class tersangkaForm extends StatelessWidget {
   @override
@@ -43,6 +44,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String selectedOption;
   final List optionList = ['laki-laki', 'perempuan'];
   var form = {
+    'no_penangkapan_id': '28',
     'nama_tersangka': '',
     'umur': '',
     'jenis_kelamin': 'laki-laki',
@@ -106,10 +108,24 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Upload Foto'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
-                  setState(() {
-                    form['foto'] = 'test';
-                  });
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'png']);
+                  print(filePath);
+                  if (["", null].contains(filePath)) {
+                    print('foto kosong');
+                  } else {
+                    String mimeStr = lookupMimeType(filePath);
+                    var fileType = mimeStr.split('/');
+                    print(fileType[1]);
+                    if (['jpg', 'jpeg', 'png'].contains(fileType[1])) {
+                      setState(() {
+                        form['foto'] = filePath;
+                      });
+                    } else {
+                      print('wrong file type');
+                      //do alert for wrong type
+                    }
+                  }
               }),
               RaisedButton(
                 child: Text('Submit'),
@@ -117,14 +133,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(form);
-                  pnkp(null, form).then((response){
-                    if (response != null){
-                      setState(() {
-                      print(response);
-                        });
-                      // print(data);
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
-                    }
+                  tsk(null, form).then((response) async {
+                    print('response');
+                    print(response);
                   });
                 },
               ),

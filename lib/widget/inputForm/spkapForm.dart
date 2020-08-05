@@ -244,7 +244,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 child: Text('Pilih dokumen'),
                 onPressed: () async {
                   // File file = await FilePicker.getFile();
-                  String filePath = await FilePicker.getFilePath(type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'png']);
+                  String filePath = await FilePicker.getFilePath(type: FileType.any);
                   // String mimeStr = lookupMimeType(filePath);
                   // var fileType = mimeStr.split('/');
                   // print('file type ${fileType[1]}');
@@ -436,9 +436,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                    pnkp(null, form).then((response) async {
-                      print('response');
-                      print(response);
+                  pnkp(null, form).then((response) async {
+                    print('response');
+                    print(response);
                   });
                 },
               )
