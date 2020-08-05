@@ -4,6 +4,7 @@ import '../../services/request.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:mime/mime.dart';
 
 class spkapForm extends StatelessWidget {
   @override
@@ -51,11 +52,11 @@ class MyCustomFormState extends State<MyCustomForm> {
     'no_penangkapan': '',
     'tanggal_penangkapan': '',
     'masa_berakhir_penangkapan': '',
-    'dokumen_penangkapan': '',
+    'dokumen_penangkapan': String,
     'sp_jangkap': '',
     'tanggal_sp_jangkap': '',
     'masa_berakhir_sp_jangkap': '',
-    'dokumen_sp_jangkap': '',
+    'dokumen_sp_jangkap': String,
   };
   // rest of our code
   @override
@@ -242,10 +243,16 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Pilih dokumen'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'png']);
+                  String mimeStr = lookupMimeType(filePath);
+                  var fileType = mimeStr.split('/');
+                  print('file type ${fileType[1]}');
                    setState(() {
-                    form['dokumen_penangkapan'] = 'test';
+                    form['dokumen_penangkapan'] = filePath;
                    });
+                   print('ini dokumen penangkapan');
+                   print(form['dokumen_penangkapan']);
               }),
               TextFormField(
                 onChanged: (val) {
@@ -410,10 +417,19 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Pilih dokumen'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.any);
+                  String mimeStr = lookupMimeType(filePath);
+                  var fileType = mimeStr.split('/');
+                  print('file type ${fileType[1]}');
                    setState(() {
-                    form['dokumen_sp_jangkap'] = 'test';
+                    form['dokumen_sp_jangkap'] = filePath;
                    });
+                   print('ini dokumen_sp_jangkap');
+                   print(form['dokumen_sp_jangkap']);
+                  //  setState(() {
+                  //   form['dokumen_sp_jangkap'] = file;
+                  //  });
               }),
               RaisedButton(
                 child: Text('Submit'),
@@ -421,6 +437,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(form);
+                  coba(form).then((response){
+                  print('response');
+                  print(response);
+                });
                 },
               )
             ]

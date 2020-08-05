@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:io';
+
 
 final storage = new FlutterSecureStorage();
 
@@ -37,7 +39,22 @@ Future<bool> login(String username, String password) async {
 Future<Map> lkn(int lknId, var input) async {
   String token = await getToken();
   Map content;
-  if (lknId==null) {
+  if (lknId==null && input!=null) {
+    await http.post('${baseUrl}mobile-api/lkn/', headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    }, body: input).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+  } else if (lknId==null) {
     await http.get('${baseUrl}mobile-api/lkn/', headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -79,7 +96,7 @@ Future<Map> pnkp(int pnkpId, var input) async {
   if (pnkpId==null && input!=null)
   {
     await http.post('${baseUrl}mobile-api/penangkapan/', headers: {
-      'Accept': 'application/json',
+      'Accept': 'multipart/form-data',
       'Authorization':'Bearer $token'
     }, body: input).then((response) async {
       print(response.statusCode);
@@ -259,5 +276,72 @@ Future<List> tskProses(int tskId, var input) async {
       content = json.decode(response.body);
     }
   });
+  return Future.value(content);
+}
+
+coba(var input) async {
+  String token = await getToken();
+  Map<String, String> headers = { 'Authorization':'Bearer $token'};
+  List content;
+
+  var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}mobile-api/penangkapan/'));
+  request.headers.addAll(headers);
+  print('request');
+  print(request);
+  
+  await input.forEach(
+    (key, value) async {
+      if ((key == 'dokumen_penangkapan' || key == 'dokumen_sp_jangkap') && (value != '' || value != null)) {
+        // var multipartFile = await http.MultipartFile.fromPath(key, value);
+        // request.files.add(multipartFile);
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            key,
+            value
+          )
+        );
+        print('ke file $key : $value');
+      } else {
+        if (value != '' || value != null) {
+          print('ke field $key : $value');
+          request.fields[key] = value;
+        } else {
+          print('field $key has no value');
+        }
+      }
+    }
+  );
+  // String filename = input['dokumen_penangkapan'];
+  // print(filename);
+
+  // request.headers.addAll(headers);
+  // request.files.add(
+  //   await http.MultipartFile.fromPath(
+  //     'dokumen_penangkapan',
+  //     filename
+  //   )
+  // );
+  // request.fields['no_lkn'] = input['no_lkn'];
+  // request.fields['no_penangkapan'] = input['no_penangkapan'];
+  print('request 2');
+  print(request);
+  await request.send().then((result) async {
+    http.Response.fromStream(result)
+        .then((response) {
+      if (response.statusCode == 201)
+      {
+        print("Uploaded! ");
+        content = json.decode(response.body);
+        // print('response.body '+response.body);
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        content = json.decode(response.body);
+      }
+    });
+  }).catchError((err) => print('error : '+err.toString()))
+      .whenComplete(()
+  {});
+
   return Future.value(content);
 }
