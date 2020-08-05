@@ -95,20 +95,50 @@ Future<Map> pnkp(int pnkpId, var input) async {
   Map content;
   if (pnkpId==null && input!=null)
   {
-    await http.post('${baseUrl}mobile-api/penangkapan/', headers: {
-      'Accept': 'multipart/form-data',
-      'Authorization':'Bearer $token'
-    }, body: input).then((response) async {
-      print(response.statusCode);
-      if (response.statusCode == 200){
-        content = json.decode(response.body);
-        // await storage.write(key: 'token', value: content['token']);
-        // Navigator.push(context,
-        //             MaterialPageRoute(builder: (context) => Dashboard()));
-      } else {
-        content = json.decode(response.body);
-      }
-    });
+    Map<String, String> headers = { 'Authorization':'Bearer $token'};
+    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}mobile-api/penangkapan/'));
+    request.headers.addAll(headers);
+
+    if (["", null].contains(input['dokumen_penangkapan'])) {
+      print('dokumen_penangkapan kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('dokumen_penangkapan', input['dokumen_penangkapan'])
+      );
+    }
+
+    if (["", null].contains(input['dokumen_sp_jangkap'])) {
+      print('dokumen_sp_jangkap kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('dokumen_penangkapan', input['dokumen_penangkapan'])
+      );
+    }
+
+    request.fields['no_lkn'] = input['no_lkn'];
+    request.fields['no_penangkapan'] = input['no_penangkapan'];
+    request.fields['tanggal_penangkapan'] = input['tanggal_penangkapan'];
+    request.fields['masa_berakhir_penangkapan'] = input['masa_berakhir_penangkapan'];
+    request.fields['sp_jangkap'] = input['sp_jangkap'];
+    request.fields['tanggal_sp_jangkap'] = input['tanggal_sp_jangkap'];
+    request.fields['masa_berakhir_sp_jangkap'] = input['masa_berakhir_sp_jangkap'];
+
+    await request.send().then((result) async {
+      await http.Response.fromStream(result)
+          .then((response) async {
+        if (response.statusCode == 201)
+        {
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        } else {
+          print(response.statusCode);
+          content = json.decode(response.body);
+        }
+      });
+    }).catchError((err) => print('error : '+err.toString()))
+        .whenComplete(()
+    {});
   } 
   else if (pnkpId==null) 
   {
@@ -144,6 +174,7 @@ Future<Map> pnkp(int pnkpId, var input) async {
       }
     });
   }
+
   return Future.value(content);
 }
 

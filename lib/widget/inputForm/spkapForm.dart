@@ -52,11 +52,11 @@ class MyCustomFormState extends State<MyCustomForm> {
     'no_penangkapan': '',
     'tanggal_penangkapan': '',
     'masa_berakhir_penangkapan': '',
-    'dokumen_penangkapan': String,
+    'dokumen_penangkapan': '',
     'sp_jangkap': '',
     'tanggal_sp_jangkap': '',
     'masa_berakhir_sp_jangkap': '',
-    'dokumen_sp_jangkap': String,
+    'dokumen_sp_jangkap': '',
   };
   // rest of our code
   @override
@@ -245,9 +245,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 onPressed: () async {
                   // File file = await FilePicker.getFile();
                   String filePath = await FilePicker.getFilePath(type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'png']);
-                  String mimeStr = lookupMimeType(filePath);
-                  var fileType = mimeStr.split('/');
-                  print('file type ${fileType[1]}');
+                  // String mimeStr = lookupMimeType(filePath);
+                  // var fileType = mimeStr.split('/');
+                  // print('file type ${fileType[1]}');
                    setState(() {
                     form['dokumen_penangkapan'] = filePath;
                    });
@@ -419,14 +419,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                 onPressed: () async {
                   // File file = await FilePicker.getFile();
                   String filePath = await FilePicker.getFilePath(type: FileType.any);
-                  String mimeStr = lookupMimeType(filePath);
-                  var fileType = mimeStr.split('/');
-                  print('file type ${fileType[1]}');
-                   setState(() {
+                  // String mimeStr = lookupMimeType(filePath);
+                  // var fileType = mimeStr.split('/');
+                  // print('file type ${fileType[1]}');
+                  setState(() {
                     form['dokumen_sp_jangkap'] = filePath;
-                   });
-                   print('ini dokumen_sp_jangkap');
-                   print(form['dokumen_sp_jangkap']);
+                  });
+                  print('ini dokumen_sp_jangkap');
+                  print(form['dokumen_sp_jangkap']);
                   //  setState(() {
                   //   form['dokumen_sp_jangkap'] = file;
                   //  });
@@ -436,11 +436,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                  print(form);
-                  coba(form).then((response){
-                  print('response');
-                  print(response);
-                });
+                    pnkp(null, form).then((response) async {
+                      print('response');
+                      print(response);
+                  });
                 },
               )
             ]
