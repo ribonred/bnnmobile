@@ -45,7 +45,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String tanggal_mulai_proses = "Atur Tanggal Mulai Proses";
   String tanggal_akhir_proses = "Atur Tanggal Akhir Proses";
   var form = {
-    'nama_tersangka': '',
+    'proses_tersangka': '12',
     'jenis_proses': 1,
     'tap_han': '',
     'tap_han_doc': '',
@@ -71,7 +71,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               TextFormField(
                 onChanged: (val) {
                   setState(() {
-                    form['nama_tersangka'] = val.toString();
+                    form['proses_tersangka'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
@@ -116,9 +116,11 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Upload Tap Han Doc'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.any);
+
                   setState(() {
-                    form['tap_han_doc'] = 'test';
+                    form['tap_han_doc'] = filePath;
                   });
               }),
               if(form['jenis_proses'] == 4)
@@ -137,9 +139,10 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Upload Surat Perpanjangan Han Doc'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.any);
                   setState(() {
-                    form['surat_perpanjangan_han_doc'] = 'test';
+                    form['surat_perpanjangan_han_doc'] = filePath;
                   });
               }),
               if(form['jenis_proses'] == 1)
@@ -158,9 +161,10 @@ class MyCustomFormState extends State<MyCustomForm> {
               RaisedButton(
                 child: Text('Upload SP Han Doc'),
                 onPressed: () async {
-                  File file = await FilePicker.getFile();
+                  // File file = await FilePicker.getFile();
+                  String filePath = await FilePicker.getFilePath(type: FileType.any);
                   setState(() {
-                    form['sp_han_doc'] = 'test';
+                    form['sp_han_doc'] = filePath;
                   });
               }),
               RaisedButton(
@@ -298,7 +302,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                  print(form['jenis_proses']);
+                  print(form);
                 },
               ),
             ]

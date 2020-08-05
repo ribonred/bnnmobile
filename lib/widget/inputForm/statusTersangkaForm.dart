@@ -46,7 +46,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String tanggal = "Atur Tanggal";
   String waktu = "Atur Waktu";
   var form = {
-    'nama_tersangka': '',
+    'tersangka_id': '12',
     'status_penahanan': 'Di Amankan',
     'rekam_jejak': 'Masuk',
     'tanggal': '',
@@ -67,7 +67,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               TextFormField(
                 onChanged: (val) {
                   setState(() {
-                    form['nama_tersangka'] = val.toString();
+                    form['tersangka_id'] = val.toString();
                   });
                 },
                 decoration: InputDecoration(
@@ -185,7 +185,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         containerHeight: 210.0,
                       ),
                       showTitleActions: true, onConfirm: (time) {
-                    waktu = '${time.hour} : ${time.minute} : ${time.second}';
+                    waktu = '${time.hour}:${time.minute}:${time.second}';
                     setState(() {
                       form['waktu'] = waktu;
                     });
@@ -250,25 +250,12 @@ class MyCustomFormState extends State<MyCustomForm> {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(form);
-                  pnkp(null, form).then((response){
-                    if (response != null){
-                      setState(() {
-                      print(response);
-                        });
-                      // print(data);
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LknView( data: data)));
-                    }
+                  tskStatus(null, form).then((response) async {
+                    print('response');
+                    print(response);
                   });
                 },
               ),
-            RaisedButton(
-              child: Text('Choose file'),
-              onPressed: () async {
-                File file = await FilePicker.getFile();
-                print('file');
-                print(file);
-                print('file');
-            })
             ]
           ),
         )

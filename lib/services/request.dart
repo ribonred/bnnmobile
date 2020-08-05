@@ -342,6 +342,28 @@ Future<List> tskProses(int tskId, var input) async {
   return Future.value(content);
 }
 
+Future<Map> tskStatus(int tskId, var input) async {
+  String token = await getToken();
+  Map content;
+  if (tskId==null && input!=null) {
+    await http.post('${baseUrl}api/tsk-status/', headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    }, body: input).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 201){
+        content = json.decode(response.body);
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+  } else if (tskId!=null && input!=null) {
+    //do put request
+  }
+
+  return Future.value(content);
+}
+
 coba(var input) async {
   String token = await getToken();
   Map<String, String> headers = { 'Authorization':'Bearer $token'};
