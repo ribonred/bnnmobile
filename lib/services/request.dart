@@ -36,6 +36,30 @@ Future<bool> login(String username, String password) async {
   return Future.value(status);
 }
 
+Future<Map> verifyToken() async {
+  String token = await getToken();
+  Map result = {
+    "isVerified": false,
+    "data": null
+  };
+  await http.post('${baseUrl}get-token/token-verify/', headers: {
+    'Accept': 'application/json',
+  }, body: {
+    "token": token
+  }).then((response) async {
+    print(response.statusCode);
+    if (response.statusCode == 200){
+      result['data'] = json.decode(response.body);
+      result['isVerified'] = true;
+    } else {
+      result['data'] = json.decode(response.body);
+      result['isVerified'] = false;
+    }
+  });
+  
+  return Future.value(result);
+}
+
 Future<Map> lkn(int lknId, var input) async {
   String token = await getToken();
   Map content;
