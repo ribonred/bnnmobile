@@ -1,3 +1,4 @@
+import 'package:andro/widget/inputForm/model/lkn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../services/request.dart';
@@ -5,6 +6,8 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:mime/mime.dart';
+import 'dart:convert';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
 class spkapForm extends StatelessWidget {
   @override
@@ -35,6 +38,27 @@ class MyCustomForm extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomFormState extends State<MyCustomForm> {
+  AutoCompleteTextField searchTextField;
+  GlobalKey<AutoCompleteTextFieldState<Lkn>> key = new GlobalKey();
+  static List<Lkn> lkns = new List<Lkn>();
+  void getLkns() async {
+    try {
+      final response = await lknList();
+      if(response.statusCode == 200){
+        lkns = loadLkns(response.body);
+        print('lkns: ${lkns.length}');
+      } else {
+        print("Error getting lkn list");
+      }
+    } catch (e) {
+      print("Error getting lkn list");
+    }
+  }
+
+  static List<Lkn> loadLkns(String jsonString){
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<Lkn>((json) => Lkn.fromJson(json)).toList();
+  }
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
@@ -58,6 +82,19 @@ class MyCustomFormState extends State<MyCustomForm> {
     'masa_berakhir_sp_jangkap': '',
     'dokumen_sp_jangkap': '',
   };
+  @override
+  void initState() {
+    getLkns();
+    super.initState();
+  }
+  Widget row(Lkn lkn){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(lkn.lkn, style: TextStyle(fontSize: 16.0),)
+      ],
+    );
+  }
   // rest of our code
   @override
   Widget build(BuildContext context) {
@@ -69,6 +106,31 @@ class MyCustomFormState extends State<MyCustomForm> {
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: <Widget>[
+              searchTextField = AutoCompleteTextField<Lkn>(
+                key: key,
+                clearOnSubmit: false,
+                suggestions: lkns,
+                decoration: InputDecoration(
+                  labelText: 'No. LKN',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+                itemFilter: (item, query){
+                  return item.lkn.toLowerCase().startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.lkn.compareTo(b.lkn);
+                },
+                itemSubmitted: (item){
+                  setState(() {
+                    searchTextField.textField.controller.text = item.lkn;
+                    form['no_lkn'] = item.id.toString();
+                  });
+                },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return row(item);
+                },
+              ),
               TextFormField(
                 onChanged: (val) {
                   setState(() {

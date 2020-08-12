@@ -447,6 +447,23 @@ Future<Map> tskStatus(int tskId, var input) async {
   return Future.value(content);
 }
 
+lknList() async {
+  String token = await getToken();
+  var content;
+  await http.get('${baseUrl}api/lkn/', headers: {
+    'Accept': 'application/json',
+    'Authorization':'Bearer $token'
+  }).then((response) async {
+    print(response.statusCode);
+    if (response.statusCode == 200){
+      content = response;
+    } else {
+      content = response;
+    }
+  });
+  return content;
+}
+
 coba(var input) async {
   String token = await getToken();
   Map<String, String> headers = { 'Authorization':'Bearer $token'};

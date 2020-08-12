@@ -7,6 +7,7 @@ import '../widget/inputForm/tersangkaForm.dart';
 import '../widget/inputForm/prosesTersangkaForm.dart';
 import '../widget/inputForm/statusTersangkaForm.dart';
 import '../widget/inputForm/statusBbForm.dart';
+import '../services/request.dart';
 
 class MainInput extends StatefulWidget{
   @override
@@ -14,7 +15,8 @@ class MainInput extends StatefulWidget{
 }
 
 class _MainInputState extends State<MainInput>{
-   @override
+  var data;
+  @override
   Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -106,7 +108,18 @@ class _MainInputState extends State<MainInput>{
                       child: new IconButton(icon: new Icon(Icons.search),
                         color: Colors.white,
                         iconSize: 40,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => spkapForm()));}
+                        onPressed: () async {
+                          data = await lknList();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => spkapForm()));
+
+                          // data = await lknList();
+                          // if (data.length>0) {
+                          //   print("data lebih dr 0");
+                          //   Navigator.push(context, MaterialPageRoute(builder: (context) => spkapForm(data: data)));
+                          // } else {
+                          //   print("data 0");
+                          // }
+                        }
                       )
                     ),
                     SizedBox(height: 15),

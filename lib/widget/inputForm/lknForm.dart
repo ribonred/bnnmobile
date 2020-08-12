@@ -143,7 +143,13 @@ class MyCustomFormState extends State<MyCustomForm> {
                 textColor: Colors.white,
                 onPressed: () async {
                 lkn(null, form).then((response){
-                  print(response);
+                  if (response.containsKey('id')){
+                    final snackBar = SnackBar(content: Text('LKN Disimpan'));
+                    Scaffold.of(context).showSnackBar(snackBar);
+                  } else {
+                    final snackBar = SnackBar(content: Text('Berkas LKN Sudah Ada'));
+                    Scaffold.of(context).showSnackBar(snackBar);
+                  }
                 });
                 },
               ),
