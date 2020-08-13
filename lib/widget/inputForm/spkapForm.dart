@@ -85,14 +85,19 @@ class MyCustomFormState extends State<MyCustomForm> {
   @override
   void initState() {
     getLkns();
+    print('lkns');
+    print(lkns.length);
     super.initState();
   }
   Widget row(Lkn lkn){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(lkn.lkn, style: TextStyle(fontSize: 16-.0),)
-      ],
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text(lkn.lkn,
+            style: TextStyle(fontSize: 15))),
+      ]
     );
   }
   // rest of our code
@@ -130,17 +135,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                   // ui for autocomplete
                   return row(item);
                 },
-              ),
-              TextFormField(
-                onChanged: (val) {
-                  setState(() {
-                    form['no_lkn'] = val.toString();
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'No. LKN',
-                  icon: Icon(Icons.assignment_turned_in),
-                ),
               ),
               TextFormField(
                 onChanged: (val) {
@@ -316,6 +310,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                    print('ini dokumen penangkapan');
                    print(form['dokumen_penangkapan']);
               }),
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: ' FilePath : ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: form['dokumen_penangkapan'], style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
               TextFormField(
                 onChanged: (val) {
                   setState(() {
@@ -493,14 +495,27 @@ class MyCustomFormState extends State<MyCustomForm> {
                   //   form['dokumen_sp_jangkap'] = file;
                   //  });
               }),
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: ' FilePath : ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: form['dokumen_sp_jangkap'], style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
               RaisedButton(
                 child: Text('Submit'),
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
                   pnkp(null, form).then((response) async {
-                    print('response');
-                    print(response);
+                    if (response.containsKey('id')){
+                      final snackBar = SnackBar(content: Text('LKN Disimpan'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    } else {
+                      final snackBar = SnackBar(content: Text('Berkas LKN Sudah Ada'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
                   });
                 },
               )

@@ -1,9 +1,11 @@
+import 'package:andro/widget/inputForm/model/tersangka.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:andro/widget/inputForm/model/lkn.dart';
+import 'package:andro/widget/inputForm/model/tersangka.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import '../../services/request.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:async';
-import 'dart:io';
+import 'dart:convert';
 
 class bbForm extends StatelessWidget {
   @override
@@ -39,8 +41,55 @@ class MyCustomFormState extends State<MyCustomForm> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
+  AutoCompleteTextField searchTextField;
+  AutoCompleteTextField searchTextFieldTersangka;
+
+  GlobalKey<AutoCompleteTextFieldState<Lkn>> key = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<Tersangka>> keys = new GlobalKey();
+
+  static List<Lkn> lkns = new List<Lkn>();
+  static List<Tersangka> tersangkas = new List<Tersangka>();
+
   final _formKey = GlobalKey<FormState>();
+  
   String selectedOption;
+  void getLkns() async {
+    try {
+      final response = await lknList();
+      if(response.statusCode == 200){
+        lkns = loadLkns(response.body);
+        print('lkns: ${lkns.length}');
+      } else {
+        print("Error getting lkn list");
+      }
+    } catch (e) {
+      print("Error getting lkn list");
+    }
+  }
+
+  void getTersangka() async {
+    try {
+      final response = await lknList();
+      if(response.statusCode == 200){
+        tersangkas = loadTersangkas(response.body);
+        print('lkns: ${lkns.length}');
+      } else {
+        print("Error getting lkn list");
+      }
+    } catch (e) {
+      print("Error getting lkn list");
+    }
+  }
+
+ static List<Lkn> loadLkns(String jsonString){
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<Lkn>((json) => Lkn.fromJson(json)).toList();
+  }
+
+  static List<Tersangka> loadTersangkas(String jsonString){
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<Tersangka>((json) => Tersangka.fromJson(json)).toList();
+  }
 
   final List optionList = ['narkotika', 'non narkotika'];
   String _date = "Not set";
@@ -60,7 +109,37 @@ class MyCustomFormState extends State<MyCustomForm> {
   };
 
   // rest of our code
-  @override
+   @override
+  void initState() {
+    getLkns();
+    getTersangka();
+    print(lkns);
+    super.initState();
+  }
+  Widget row(Lkn lkn){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text(lkn.lkn,
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+
+   Widget rowTersangka(Tersangka lkn){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text(lkn.lkn,
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Container(
@@ -70,16 +149,55 @@ class MyCustomFormState extends State<MyCustomForm> {
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: <Widget>[
-              TextFormField(
-                onChanged: (val) {
+               searchTextField = AutoCompleteTextField<Lkn>(
+                key: key,
+                clearOnSubmit: false,
+                suggestions: lkns,
+                decoration: InputDecoration(
+                  labelText: 'No. LKN',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+                itemFilter: (item, query){
+                  return item.lkn.toLowerCase().startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.lkn.compareTo(b.lkn);
+                },
+                itemSubmitted: (item){
                   setState(() {
-                    form['milik_tersangka_id'] = val.toString();
+                    searchTextField.textField.controller.text = item.lkn;
+                    form['no_lkn'] = item.id.toString();
                   });
                 },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return row(item);
+                },
+              ),
+              searchTextFieldTersangka = AutoCompleteTextField<Tersangka>(
+                key: keys,
+                clearOnSubmit: false,
+                suggestions: tersangkas,
                 decoration: InputDecoration(
                   labelText: 'Nama Tersangka',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
+                itemFilter: (item, query){
+                  return item.lkn.toLowerCase().startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.lkn.compareTo(b.lkn);
+                },
+                itemSubmitted: (item){
+                  setState(() {
+                    searchTextFieldTersangka.textField.controller.text = item.lkn;
+                    form['milik_tersangka_id'] = item.id.toString();
+                  });
+                },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return rowTersangka(item);
+                },
               ),
               TextFormField(
                 onChanged: (val) {
