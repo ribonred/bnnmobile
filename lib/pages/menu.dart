@@ -21,7 +21,6 @@ class Navbarbottom extends State<Dashboard> {
   int _index = 2;
     var _pages = [
       MainMenu(),
-      GetLkn(),
       LknListView(),
       MainInput(),
       MainEdit(),
@@ -52,10 +51,6 @@ class Navbarbottom extends State<Dashboard> {
                 FFNavigationBarItem(
                   iconData: Icons.folder_open,
                   label: 'DATA',
-                ),
-                FFNavigationBarItem(
-                  iconData: Icons.people,
-                  label: 'Admin',
                 ),
                 FFNavigationBarItem(
                   iconData: Icons.notifications_active,

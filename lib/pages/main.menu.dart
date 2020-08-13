@@ -77,7 +77,7 @@ class _MainMenuState extends State<MainMenu>{
           GridView.count(
             padding: const EdgeInsets.only(top: 50, right: 5, left: 5),
             shrinkWrap: true,
-            crossAxisCount: 3,
+            crossAxisCount: 4,
             crossAxisSpacing: 10.0,
             mainAxisSpacing: 10.0,
             children: <Widget>[
@@ -91,7 +91,7 @@ class _MainMenuState extends State<MainMenu>{
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.8),
                             spreadRadius: 3,
-                            blurRadius: 5,
+                            blurRadius: 3,
                             offset: Offset(0, 0), // changes position of shadow
                           ),
                         ],
@@ -104,7 +104,7 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                       child: new IconButton(icon: new Icon(Icons.assignment),
                         color: Colors.white,
-                        iconSize: 40,
+                        iconSize: 25,
                         onPressed: () {
                           lkn(null, null).then((response){
                             if (response['results'] != null){
@@ -132,7 +132,7 @@ class _MainMenuState extends State<MainMenu>{
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.8),
                             spreadRadius: 3,
-                            blurRadius: 5,
+                            blurRadius: 3,
                             offset: Offset(0, 0), // changes position of shadow
                           ),
                         ],
@@ -145,7 +145,7 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                       child: new IconButton(icon: new Icon(Icons.search),
                         color: Colors.white,
-                        iconSize: 40,
+                        iconSize: 25,
                         onPressed: () {
                           pnkp(null, null).then((response){
                             if (response['results'] != null){
@@ -173,7 +173,7 @@ class _MainMenuState extends State<MainMenu>{
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.8),
                             spreadRadius: 3,
-                            blurRadius: 5,
+                            blurRadius: 3,
                             offset: Offset(0, 0), // changes position of shadow
                           ),
                         ],
@@ -186,7 +186,7 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                       child: new IconButton(icon: new Icon(Icons.business_center),
                         color: Colors.white,
-                        iconSize: 40,
+                        iconSize: 25,
                         onPressed: () {
                           bb(null, null).then((response){
                             if (response['results'] != null){
@@ -214,7 +214,7 @@ class _MainMenuState extends State<MainMenu>{
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.8),
                             spreadRadius: 3,
-                            blurRadius: 5,
+                            blurRadius: 3,
                             offset: Offset(0, 0), // changes position of shadow
                           ),
                         ],
@@ -227,7 +227,7 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                       child: new IconButton(icon: new Icon(Icons.person_pin),
                         color: Colors.white,
-                        iconSize: 40,
+                        iconSize: 25,
                         onPressed: () {
                           tsk(null, null).then((response){
                             if (response['results'] != null){
@@ -242,88 +242,6 @@ class _MainMenuState extends State<MainMenu>{
                     ),
                     SizedBox(height: 15),
                     Text('TERSANGKA',style: TextStyle(fontWeight: FontWeight.bold)),
-                  ]
-                ),
-              ),
-              Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:<Widget>[
-                    Container(
-                       decoration: BoxDecoration(
-                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.8),
-                            spreadRadius: 3,
-                            blurRadius: 5,
-                            offset: Offset(0, 0), // changes position of shadow
-                          ),
-                        ],
-                         color: Colors.blue[800],
-                         borderRadius: BorderRadius.circular(1000),
-                         border: Border.all(
-                          color: Colors.blue[800],
-                          width: 5,
-                         ),
-                      ),
-                      child: new IconButton(icon: new Icon(Icons.account_balance),
-                        color: Colors.white,
-                        iconSize: 40,
-                        onPressed: () {
-                          tskProses(null, null).then((response){
-                            if (response != null){
-                              setState(() {
-                              data = response;
-                               });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'proses_tersangka', created:'jenis_proses', title:'PROSES TERSANGKA')));
-                            }
-                          });
-                        }
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Text('PROSES',style: TextStyle(fontWeight: FontWeight.bold)),
-                  ]
-                ),
-              ),
-              Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:<Widget>[
-                    Container(
-                       decoration: BoxDecoration(
-                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.8),
-                            spreadRadius: 3,
-                            blurRadius: 5,
-                            offset: Offset(0, 0), // changes position of shadow
-                          ),
-                        ],
-                         color: Colors.blue[800],
-                         borderRadius: BorderRadius.circular(1000),
-                         border: Border.all(
-                          color: Colors.blue[800],
-                          width: 5,
-                         ),
-                      ),
-                      child: new IconButton(icon: new Icon(Icons.swap_horiz),
-                        color: Colors.white,
-                        iconSize: 40,
-                        onPressed: () {
-                          bbStatus(null, null).then((response){
-                            if (response != null){
-                              setState(() {
-                              data = response;
-                               });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'status', created:'tanggal_status', title:'STATUS BB')));
-                            }
-                          });
-                        }
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Text('STATUS',style: TextStyle(fontWeight: FontWeight.bold)),
                   ]
                 ),
               ),
