@@ -41,11 +41,15 @@ class MyCustomFormState extends State<MyCustomForm> {
   AutoCompleteTextField searchTextField;
   GlobalKey<AutoCompleteTextFieldState<Lkn>> key = new GlobalKey();
   static List<Lkn> lkns = new List<Lkn>();
+  bool loading = true;
   void getLkns() async {
     try {
       final response = await lknList();
       if(response.statusCode == 200){
         lkns = loadLkns(response.body);
+        setState(() {
+          loading = false;
+        });
         print('lkns: ${lkns.length}');
       } else {
         print("Error getting lkn list");
@@ -111,6 +115,7 @@ class MyCustomFormState extends State<MyCustomForm> {
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: <Widget>[
+              loading ? CircularProgressIndicator() :
               searchTextField = AutoCompleteTextField<Lkn>(
                 key: key,
                 clearOnSubmit: false,
