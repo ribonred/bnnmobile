@@ -447,10 +447,17 @@ Future<Map> tskStatus(int tskId, var input) async {
   return Future.value(content);
 }
 
-lknList() async {
+suggestionList(String target) async {
   String token = await getToken();
+  String url = '${baseUrl}api/lkn/';
+  if (target == 'TSK') {
+    url = '${baseUrl}api/tersangka/';
+  } else if (target == 'PNKP') {
+    url = '${baseUrl}api/pnkp/';
+  }
   var content;
-  await http.get('${baseUrl}api/lkn/', headers: {
+
+  await http.get(url, headers: {
     'Accept': 'application/json',
     'Authorization':'Bearer $token'
   }).then((response) async {
@@ -465,71 +472,4 @@ lknList() async {
   print('content');
   print(content);
   return content;
-}
-
-coba(var input) async {
-  String token = await getToken();
-  Map<String, String> headers = { 'Authorization':'Bearer $token'};
-  List content;
-
-  var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}mobile-api/penangkapan/'));
-  request.headers.addAll(headers);
-  print('request');
-  print(request);
-  
-  await input.forEach(
-    (key, value) async {
-      if ((key == 'dokumen_penangkapan' || key == 'dokumen_sp_jangkap') && (value != '' || value != null)) {
-        // var multipartFile = await http.MultipartFile.fromPath(key, value);
-        // request.files.add(multipartFile);
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            key,
-            value
-          )
-        );
-        print('ke file $key : $value');
-      } else {
-        if (value != '' || value != null) {
-          print('ke field $key : $value');
-          request.fields[key] = value;
-        } else {
-          print('field $key has no value');
-        }
-      }
-    }
-  );
-  // String filename = input['dokumen_penangkapan'];
-  // print(filename);
-
-  // request.headers.addAll(headers);
-  // request.files.add(
-  //   await http.MultipartFile.fromPath(
-  //     'dokumen_penangkapan',
-  //     filename
-  //   )
-  // );
-  // request.fields['no_lkn'] = input['no_lkn'];
-  // request.fields['no_penangkapan'] = input['no_penangkapan'];
-  print('request 2');
-  print(request);
-  await request.send().then((result) async {
-    http.Response.fromStream(result)
-        .then((response) {
-      if (response.statusCode == 201)
-      {
-        print("Uploaded! ");
-        content = json.decode(response.body);
-        // print('response.body '+response.body);
-      } else {
-        print(response.statusCode);
-        print(response.body);
-        content = json.decode(response.body);
-      }
-    });
-  }).catchError((err) => print('error : '+err.toString()))
-      .whenComplete(()
-  {});
-
-  return Future.value(content);
 }

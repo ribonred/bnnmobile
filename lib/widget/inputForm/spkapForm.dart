@@ -44,7 +44,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   bool loading = true;
   void getLkns() async {
     try {
-      final response = await lknList();
+      final response = await suggestionList(null);
       if(response.statusCode == 200){
         lkns = loadLkns(response.body);
         setState(() {
