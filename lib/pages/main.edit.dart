@@ -109,7 +109,6 @@ class _MainEditState extends State<MainEdit>{
                         color: Colors.white,
                         iconSize: 40,
                         onPressed: () async {
-                          data = await lknList();
                           Navigator.push(context, MaterialPageRoute(builder: (context) => spkapForm()));
 
                           // data = await lknList();
