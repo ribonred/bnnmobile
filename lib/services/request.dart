@@ -310,13 +310,15 @@ Future<Map> bb(int bbId, var input) async {
   return Future.value(content);
 }
 
-Future<List> bbStatus(int bbId, var input) async {
+Future<Map> bbStatus(int bbId, var input) async {
   String token = await getToken();
-  List content;
-  await http.get('${baseUrl}api/bb-status-app/', headers: {
-    'Accept': 'application/json',
-    'Authorization':'Bearer $token'
-  }).then((response) async {
+  Map content;
+  await http.post('${baseUrl}api/bb-status/', headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+  }, body: input).then((response) async {
+    print('error');
+    print(response);
     print(response.statusCode);
     if (response.statusCode == 200){
       content = json.decode(response.body);
@@ -405,23 +407,68 @@ Future<Map> tsk(int tskId, var input) async {
   return Future.value(content);
 }
 
-Future<List> tskProses(int tskId, var input) async {
+Future<Map> tskProses(int tskId, var input) async {
   String token = await getToken();
-  List content;
-  await http.get('${baseUrl}api/tsk-proses/', headers: {
-    'Accept': 'application/json',
-    'Authorization':'Bearer $token'
-  }).then((response) async {
-    print(response.statusCode);
-    if (response.statusCode == 200){
-      content = json.decode(response.body);
-      // await storage.write(key: 'token', value: content['token']);
-      // Navigator.push(context,
-      //             MaterialPageRoute(builder: (context) => Dashboard()));
+  Map content;
+  if (tskId==null && input!=null)
+  {
+    Map<String, String> headers = { 'Authorization':'Bearer $token'};
+    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}api/tsk-proses/'));
+    request.headers.addAll(headers);
+
+    if (["", null].contains(input['sp_han_doc'])) {
+      print('sp han doc kosong');
     } else {
-      content = json.decode(response.body);
+      request.files.add(
+        await http.MultipartFile.fromPath('sp_han_doc', input['sp_han_doc'])
+      );
     }
-  });
+
+    if (["", null].contains(input['tap_han_doc'])) {
+      print('tap han doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('tap_han_doc', input['tap_han_doc'])
+      );
+    }
+
+    if (["", null].contains(input['surat_perpanjangan_han_doc'])) {
+      print('surat_perpanjangan_han_doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('surat_perpanjangan_han_doc', input['surat_perpanjangan_han_doc'])
+      );
+    }
+
+    request.fields['proses_tersangka'] = input['proses_tersangka'];
+    request.fields['keterangan'] = input['keterangan'];
+    request.fields['jenis_proses'] = input['jenis_proses'].toString();
+    request.fields['tanggal_mulai_proses'] = input['tanggal_mulai_proses'];
+    request.fields['tanggal_akhir_proses'] = input['tanggal_akhir_proses'];
+    request.fields['sp_han'] = input['sp_han'];
+    request.fields['tap_han'] = input['tap_han'];
+    request.fields['surat_perpanjangan_han'] = input['surat_perpanjangan_han'];
+
+    
+    await request.send().then((result) async {
+      await http.Response.fromStream(result)
+          .then((response) async {
+        if (response.statusCode == 201)
+        {
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        } else {
+          print(response.statusCode);
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        }
+      });
+    }).catchError((err) => print('error : '+err.toString()))
+        .whenComplete(()
+    {});
+  }
   return Future.value(content);
 }
 
@@ -454,6 +501,8 @@ suggestionList(String target) async {
     url = '${baseUrl}api/tersangka/';
   } else if (target == 'PNKP') {
     url = '${baseUrl}api/pnkp/';
+  } else if (target == 'BB'){
+    url = '${baseUrl}api/bb-edit/';
   }
   var content;
 

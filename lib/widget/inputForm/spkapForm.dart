@@ -63,6 +63,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   static List<Lkn> loadLkns(String jsonString){
+    print(jsonString);
     final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
     return parsed.map<Lkn>((json) => Lkn.fromJson(json)).toList();
   }

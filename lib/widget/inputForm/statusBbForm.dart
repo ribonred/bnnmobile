@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../services/request.dart';
-import 'package:file_picker/file_picker.dart';
-import 'dart:async';
-import 'dart:io';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'dart:convert';
+import 'package:andro/widget/inputForm/model/barangBukti.dart';
 
 class statusBbForm extends StatelessWidget {
   @override
@@ -39,8 +39,42 @@ class MyCustomFormState extends State<MyCustomForm> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
+  AutoCompleteTextField searchTextFieldTersangka;
+
+  GlobalKey<AutoCompleteTextFieldState<BarangBukti>> keys = new GlobalKey();
+
+  static List<BarangBukti> barangBuktis = new List<BarangBukti>();
+
   final _formKey = GlobalKey<FormState>();
+  
   String selectedOption;
+  bool loading = true;
+  void getBarangBukti() async {
+    try {
+      final response = await suggestionList('BB');
+      if(response.statusCode == 200){
+        barangBuktis = loadBarangBukti(response.body);
+        setState(() {
+          loading = false;
+        });
+      } else {
+        print("Error getting barang bukti list");
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        loading = false;
+      });
+      print("Error getting barang bukti list");
+    }
+  }
+
+  static List<BarangBukti> loadBarangBukti(String jsonString){
+    print(jsonString);
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<BarangBukti>((json) => BarangBukti.fromJson(json)).toList();
+  }
+
   final List satuanList = ['gram', 'butir', 'PCS', 'unit'];
   final List statusList = ['Masuk', 'Keluar'];
   String tanggal_status = "Atur Tanggal Status";
@@ -56,6 +90,23 @@ class MyCustomFormState extends State<MyCustomForm> {
   };
   // rest of our code
   @override
+  void initState() {
+    getBarangBukti();
+    super.initState();
+  }
+
+   Widget rowBarangBukti(BarangBukti bb){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text('${bb.nama} (${bb.id})',
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Container(
@@ -65,18 +116,33 @@ class MyCustomFormState extends State<MyCustomForm> {
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: <Widget>[
-              TextFormField(
-                onChanged: (val) {
-                  setState(() {
-                    form['barang_bukti_id'] = val.toString();
-                  });
-                },
+              loading ? CircularProgressIndicator() :
+               searchTextFieldTersangka = AutoCompleteTextField<BarangBukti>(
+                key: keys,
+                clearOnSubmit: false,
+                suggestions: barangBuktis,
                 decoration: InputDecoration(
                   labelText: 'Nama Barang Bukti',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
+                itemFilter: (item, query){
+                  return item.nama.toLowerCase().startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.nama.compareTo(b.nama);
+                },
+                itemSubmitted: (item){
+                  setState(() {
+                    searchTextFieldTersangka.textField.controller.text = item.nama;
+                    form['barang_bukti_id'] = item.id.toString();
+                  });
+                },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return rowBarangBukti(item);
+                },
               ),
-               RaisedButton(
+              RaisedButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 elevation: 4.0,
@@ -264,7 +330,15 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                  print(form);
+                   bbStatus(null, form).then((response) async {
+                     if (response.containsKey('id')){
+                      final snackBar = SnackBar(content: Text('Status Barang Bukti Berhasil Disimpan'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    } else {
+                      final snackBar = SnackBar(content: Text('Gagal Menyimpan Status Barang Bukti'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  });
                   
                 },
               ),

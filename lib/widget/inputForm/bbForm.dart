@@ -1,6 +1,5 @@
 import 'package:andro/widget/inputForm/model/tersangka.dart';
 import 'package:flutter/material.dart';
-import 'package:andro/widget/inputForm/model/lkn.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import '../../services/request.dart';
 import 'package:file_picker/file_picker.dart';
@@ -44,7 +43,6 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   GlobalKey<AutoCompleteTextFieldState<Tersangka>> keys = new GlobalKey();
 
-  static List<Lkn> lkns = new List<Lkn>();
   static List<Tersangka> tersangkas = new List<Tersangka>();
 
   final _formKey = GlobalKey<FormState>();
@@ -97,7 +95,6 @@ class MyCustomFormState extends State<MyCustomForm> {
    @override
   void initState() {
     getTersangka();
-    print(lkns);
     super.initState();
   }
 
