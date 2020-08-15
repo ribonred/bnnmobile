@@ -2,28 +2,31 @@ import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+
+
+
 class FirebaseNotifications {
   FirebaseMessaging _firebaseMessaging;
 
-  void setUpFirebase() {
+  void setUpFirebase(user) {
     _firebaseMessaging = FirebaseMessaging();
-    firebaseCloudMessaging_Listeners();
-
+    firebaseCloudMessaging_Listeners(user);
+    
   }
 
-  void firebaseCloudMessaging_Listeners() {
+  void firebaseCloudMessaging_Listeners(user) {
     if (Platform.isIOS) iOS_Permission();
-
+    subscribe_Topic(user);
     _firebaseMessaging.getToken().then((token) {
-      print(token);
+      print("token fcm: $token");
     });
-
+    
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print('on message $message');
     FlutterLocalNotificationsPlugin notifications = FlutterLocalNotificationsPlugin();
     notifications.show(
-            0,
+            1,
             message['notification']['title'],
             message['notification']['body'],
             NotificationDetails(
@@ -52,5 +55,14 @@ class FirebaseNotifications {
         .listen((IosNotificationSettings settings) {
       print("Settings registered: $settings");
     });
+  }
+
+  void subscribe_Topic(user){
+    if (user == 2){
+      _firebaseMessaging.subscribeToTopic("moderator");
+    }else{
+      _firebaseMessaging.subscribeToTopic("regular");
+    }
+    
   }
 }

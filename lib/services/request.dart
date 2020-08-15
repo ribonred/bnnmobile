@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:io';
 
 
 final storage = new FlutterSecureStorage();
@@ -9,20 +8,21 @@ final storage = new FlutterSecureStorage();
 String baseUrl = 'http://178.128.80.233:8000/';
 
 Future<String> getToken() async {
-    final token = await storage.read(key: 'token');
+    String token = await storage.read(key: 'token');
+    if (token == null){
+      token = '';
+    }
     return token;
   }
 
 Future<bool> login(String username, String password) async {
   bool status;
-  print('${baseUrl}get-token/token-auth/');
   await http.post('${baseUrl}get-token/token-auth/', headers: {
     'Accept': 'application/json'
   }, body: {
     "username": username,
     "password": password
   }).then((response) async {
-    print(response.statusCode);
     if (response.statusCode == 200){
       var content = json.decode(response.body);
       await storage.write(key: 'token', value: content['token']);
@@ -36,29 +36,28 @@ Future<bool> login(String username, String password) async {
   return Future.value(status);
 }
 
-// Future<Map> verifyToken() async {
-//   String token = await getToken();
-//   Map result = {
-//     "isVerified": false,
-//     "data": null
-//   };
-//   await http.post('${baseUrl}get-token/token-verify/', headers: {
-//     'Accept': 'application/json',
-//   }, body: {
-//     "token": token
-//   }).then((response) async {
-//     print(response.statusCode);
-//     if (response.statusCode == 200){
-//       result['data'] = json.decode(response.body);
-//       result['isVerified'] = true;
-//     } else {
-//       result['data'] = json.decode(response.body);
-//       result['isVerified'] = false;
-//     }
-//   });
+Future<Map> verifyToken() async {
+  String token = await getToken();
+  Map result = {
+    "isVerified": false,
+    "data": null
+  };
+  await http.post('${baseUrl}get-token/token-verify/', headers: {
+    'Accept': 'application/json',
+  }, body: {
+    "token": token
+  }).then((response) async {
+    if (response.statusCode == 200){
+      result['data'] = json.decode(response.body);
+      result['isVerified'] = true;
+    } else {
+      result['data'] = json.decode(response.body);
+      result['isVerified'] = false;
+    }
+  });
   
-//   return Future.value(result);
-// }
+  return Future.value(result);
+}
 
 Future<Map> lkn(int lknId, var input) async {
   String token = await getToken();
