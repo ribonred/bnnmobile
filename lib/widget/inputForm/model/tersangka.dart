@@ -1,7 +1,7 @@
 class Tersangka {
   int id;
   String nama;
-  String umur;
+  int umur;
   String jenisKelamin;
   String foto;
 
@@ -11,7 +11,7 @@ class Tersangka {
     return  Tersangka(
       id: parsedJson["id"],
       nama: parsedJson["nama_tersangka"] as String,
-      umur: parsedJson["umur"] as String,
+      umur: parsedJson["umur"],
       jenisKelamin: parsedJson["jenis_kelamin"] as String,
       foto: parsedJson["foto"] as String
     );

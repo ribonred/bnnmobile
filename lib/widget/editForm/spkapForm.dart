@@ -43,7 +43,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   static List<Lkn> lkns = new List<Lkn>();
   void getLkns() async {
     try {
-      final response = await lknList();
+      final response = await suggestionList('');
       if(response.statusCode == 200){
         lkns = loadLkns(response.body);
         print('lkns: ${lkns.length}');
