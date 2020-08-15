@@ -1,4 +1,4 @@
-package com.example.andro
+package com.bnn.bnnmobile
 
 import android.os.Bundle
 
