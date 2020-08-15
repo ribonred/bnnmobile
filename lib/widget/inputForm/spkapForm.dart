@@ -55,6 +55,9 @@ class MyCustomFormState extends State<MyCustomForm> {
         print("Error getting lkn list");
       }
     } catch (e) {
+      setState(() {
+        loading = false;
+      });
       print("Error getting lkn list");
     }
   }
