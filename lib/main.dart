@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import './pages/login.page.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import './services/request.dart';
-import './pages/menu.dart';
+import './services/fcm.dart';
 
+import './pages/menu.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize(
     debug: true // optional: set false to disable printing logs to console
   );
+
   // Map verify = await verifyToken(); 
   // var status = verify['isVerified'] ?? false;
   // print('verify');
@@ -23,6 +25,8 @@ void main() async {
     home: status == true ?  LoginPage(): Dashboard(text: 'Hello'),
     debugShowCheckedModeBanner: false,
   ));
+  new FirebaseNotifications().setUpFirebase();
+
 }
 
 // class MyApp extends StatelessWidget {
