@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "604602542636",
+    "firebase_url": "https://bnn-cloud-message.firebaseio.com",
+    "project_id": "bnn-cloud-message",
+    "storage_bucket": "bnn-cloud-message.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:604602542636:android:43fb767829886fbab1ff89",
+        "android_client_info": {
+          "package_name": "com.bnn.bnnmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "604602542636-ir290k9bdsl0t3skiptn86gr60hhgrcb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHTShdQDIMccJ2kZ-DPULYNKEeEwlgji8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "604602542636-ir290k9bdsl0t3skiptn86gr60hhgrcb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
