@@ -7,6 +7,7 @@ import './main.input.dart';
 import './main.edit.dart';
 import './lknlist.page.dart';
 import '../widget/getlkn.dart';
+import '../services/fcm.dart';
 
 
 
@@ -25,6 +26,11 @@ class Navbarbottom extends State<Dashboard> {
       MainInput(),
       MainEdit(),
   ];
+    @override
+  void initState() {
+    super.initState();
+    new FirebaseNotifications().setUpFirebase();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
