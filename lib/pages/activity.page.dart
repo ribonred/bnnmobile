@@ -86,17 +86,23 @@ class _ActivityListView extends State <ActivityListView>{
                     ButtonTheme.bar(
                       child: ButtonBar(
                         children: <Widget>[
-                          // BUTTON PERTAMA f
-                          FlatButton(
-                            //DENGAN TEXT LIHAT DETAIL
-                            child: const Text('DELETE'),
-                            onPressed: () { print(activities[index]['id']); },
-                          ),
-                          //BUTTON KEDUA
+                          // BUTTON PERTAMA
                           FlatButton(
                             //DENGAN TEXT DENGARKAN
                             child: const Text('MARK AS READ'),
-                            onPressed: () { /* ... */ },
+                            onPressed: () async { 
+                              final isRead = await activity(activities[index]['id'].toString());
+                              if (isRead.statusCode == 200){
+                                activities.removeWhere((item) => item['id'] == activities[index]['id']);
+                                activities.join(', ');
+                                setState(() {
+                                  activities = activities;
+                                });
+                              } else {
+                                print("error on mark as read");
+                                print(isRead);
+                              }
+                            },
                           ),
                         ],
                       ),

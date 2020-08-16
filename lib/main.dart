@@ -7,14 +7,6 @@ import './pages/menu.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  String token = await storage.read(key: 'plugin');
-  if (token == null) {
-    await FlutterDownloader.initialize(
-        debug: true // optional: set false to disable printing logs to console
-        );
-    await storage.write(key: 'plugin', value: 'reg');
-  }
-
   Map verify = await verifyToken();
   var status = verify['isVerified'] ?? false;
   runApp(MaterialApp(
@@ -27,6 +19,9 @@ void main() async {
         : LoginPage(),
     debugShowCheckedModeBanner: false,
   ));
+    await FlutterDownloader.initialize(
+    debug: true // optional: set false to disable printing logs to console
+  );
 }
 
 // class MyApp extends StatelessWidget {

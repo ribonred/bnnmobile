@@ -85,38 +85,72 @@ class _MainMenuState extends State<MainMenu>{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:<Widget>[
-                    Container(
-                       decoration: BoxDecoration(
-                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.8),
-                            spreadRadius: 3,
-                            blurRadius: 3,
-                            offset: Offset(0, 0), // changes position of shadow
-                          ),
-                        ],
-                         color: Colors.blue[800],
-                         borderRadius: BorderRadius.circular(1000),
-                         border: Border.all(
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.8),
+                              spreadRadius: 3,
+                              blurRadius: 3,
+                              offset: Offset(0, 0), // changes position of shadow
+                            ),
+                          ],
                           color: Colors.blue[800],
-                          width: 5,
-                         ),
+                          borderRadius: BorderRadius.circular(1000),
+                          border: Border.all(
+                            color: Colors.blue[800],
+                            width: 5,
+                          ),
+                        ),
+                        child: new IconButton(icon: new Icon(Icons.assignment),
+                          color: Colors.white,
+                          iconSize: 25,
+                          onPressed: () {
+                            lkn(null, null).then((response){
+                              if (response['results'] != null){
+                                setState(() {
+                                data = response['results'];
+                                });
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'LKN',created:'created', title:'LKN')));
+                              }
+                            });
+                          }
+                        )
                       ),
-                      child: new IconButton(icon: new Icon(Icons.assignment),
-                        color: Colors.white,
-                        iconSize: 25,
-                        onPressed: () {
-                          lkn(null, null).then((response){
-                            if (response['results'] != null){
-                              setState(() {
-                              data = response['results'];
-                               });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'LKN',created:'created', title:'LKN')));
-                            }
-                          });
-                        }
-                      )
                     ),
+                    // Container(
+                    //    decoration: BoxDecoration(
+                    //      boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.grey.withOpacity(0.8),
+                    //         spreadRadius: 3,
+                    //         blurRadius: 3,
+                    //         offset: Offset(0, 0), // changes position of shadow
+                    //       ),
+                    //     ],
+                    //      color: Colors.blue[800],
+                    //      borderRadius: BorderRadius.circular(1000),
+                    //      border: Border.all(
+                    //       color: Colors.blue[800],
+                    //       width: 5,
+                    //      ),
+                    //   ),
+                    //   child: new IconButton(icon: new Icon(Icons.assignment),
+                    //     color: Colors.white,
+                    //     iconSize: 25,
+                    //     onPressed: () {
+                    //       lkn(null, null).then((response){
+                    //         if (response['results'] != null){
+                    //           setState(() {
+                    //           data = response['results'];
+                    //            });
+                    //           Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'LKN',created:'created', title:'LKN')));
+                    //         }
+                    //       });
+                    //     }
+                    //   )
+                    // ),
                     SizedBox(height: 15),
                     Text('LKN',style: TextStyle(fontWeight: FontWeight.bold),),
                   ]
@@ -126,38 +160,72 @@ class _MainMenuState extends State<MainMenu>{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:<Widget>[
-                    Container(
-                       decoration: BoxDecoration(
-                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.8),
-                            spreadRadius: 3,
-                            blurRadius: 3,
-                            offset: Offset(0, 0), // changes position of shadow
-                          ),
-                        ],
-                         color: Colors.blue[800],
-                         borderRadius: BorderRadius.circular(1000),
-                         border: Border.all(
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.8),
+                              spreadRadius: 3,
+                              blurRadius: 3,
+                              offset: Offset(0, 0), // changes position of shadow
+                            ),
+                          ],
                           color: Colors.blue[800],
-                          width: 5,
-                         ),
-                      ),
-                      child: new IconButton(icon: new Icon(Icons.search),
-                        color: Colors.white,
-                        iconSize: 25,
-                        onPressed: () {
-                          pnkp(null, null).then((response){
-                            if (response['results'] != null){
-                              setState(() {
-                              data = response['results'];
-                               });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan', title:'PENANGKAPAN')));
-                            }
-                          });
-                        }
+                          borderRadius: BorderRadius.circular(1000),
+                          border: Border.all(
+                            color: Colors.blue[800],
+                            width: 5,
+                          ),
+                        ),
+                        child: new IconButton(icon: new Icon(Icons.search),
+                          color: Colors.white,
+                          iconSize: 25,
+                          onPressed: () {
+                            pnkp(null, null).then((response){
+                              if (response['results'] != null){
+                                setState(() {
+                                data = response['results'];
+                                });
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan', title:'PENANGKAPAN')));
+                              }
+                            });
+                          }
+                        ),
                       ),
                     ),
+                    // Container(
+                    //    decoration: BoxDecoration(
+                    //      boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.grey.withOpacity(0.8),
+                    //         spreadRadius: 3,
+                    //         blurRadius: 3,
+                    //         offset: Offset(0, 0), // changes position of shadow
+                    //       ),
+                    //     ],
+                    //      color: Colors.blue[800],
+                    //      borderRadius: BorderRadius.circular(1000),
+                    //      border: Border.all(
+                    //       color: Colors.blue[800],
+                    //       width: 5,
+                    //      ),
+                    //   ),
+                    //   child: new IconButton(icon: new Icon(Icons.search),
+                    //     color: Colors.white,
+                    //     iconSize: 25,
+                    //     onPressed: () {
+                    //       pnkp(null, null).then((response){
+                    //         if (response['results'] != null){
+                    //           setState(() {
+                    //           data = response['results'];
+                    //            });
+                    //           Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan', title:'PENANGKAPAN')));
+                    //         }
+                    //       });
+                    //     }
+                    //   ),
+                    // ),
                     SizedBox(height: 15),
                     Text('SP KAP',style: TextStyle(fontWeight: FontWeight.bold),),
                   ]
@@ -167,38 +235,72 @@ class _MainMenuState extends State<MainMenu>{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:<Widget>[
-                    Container(
-                       decoration: BoxDecoration(
-                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.8),
-                            spreadRadius: 3,
-                            blurRadius: 3,
-                            offset: Offset(0, 0), // changes position of shadow
-                          ),
-                        ],
-                         color: Colors.blue[800],
-                         borderRadius: BorderRadius.circular(1000),
-                         border: Border.all(
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.8),
+                              spreadRadius: 3,
+                              blurRadius: 3,
+                              offset: Offset(0, 0), // changes position of shadow
+                            ),
+                          ],
                           color: Colors.blue[800],
-                          width: 5,
-                         ),
-                      ),
-                      child: new IconButton(icon: new Icon(Icons.business_center),
-                        color: Colors.white,
-                        iconSize: 25,
-                        onPressed: () {
-                          bb(null, null).then((response){
-                            if (response['results'] != null){
-                              setState(() {
-                              data = response['results'];
-                               });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang', title:'BARANG BUKTI')));
-                            }
-                          });
-                        }
+                          borderRadius: BorderRadius.circular(1000),
+                          border: Border.all(
+                            color: Colors.blue[800],
+                            width: 5,
+                          ),
+                        ),
+                        child: new IconButton(icon: new Icon(Icons.business_center),
+                          color: Colors.white,
+                          iconSize: 25,
+                          onPressed: () {
+                            bb(null, null).then((response){
+                              if (response['results'] != null){
+                                setState(() {
+                                data = response['results'];
+                                });
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang', title:'BARANG BUKTI')));
+                              }
+                            });
+                          }
+                        ),
                       ),
                     ),
+                    // Container(
+                    //    decoration: BoxDecoration(
+                    //      boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.grey.withOpacity(0.8),
+                    //         spreadRadius: 3,
+                    //         blurRadius: 3,
+                    //         offset: Offset(0, 0), // changes position of shadow
+                    //       ),
+                    //     ],
+                    //      color: Colors.blue[800],
+                    //      borderRadius: BorderRadius.circular(1000),
+                    //      border: Border.all(
+                    //       color: Colors.blue[800],
+                    //       width: 5,
+                    //      ),
+                    //   ),
+                    //   child: new IconButton(icon: new Icon(Icons.business_center),
+                    //     color: Colors.white,
+                    //     iconSize: 25,
+                    //     onPressed: () {
+                    //       bb(null, null).then((response){
+                    //         if (response['results'] != null){
+                    //           setState(() {
+                    //           data = response['results'];
+                    //            });
+                    //           Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang', title:'BARANG BUKTI')));
+                    //         }
+                    //       });
+                    //     }
+                    //   ),
+                    // ),
                     SizedBox(height: 15),
                     Text('BB',style: TextStyle(fontWeight: FontWeight.bold)),
                   ]
@@ -208,38 +310,72 @@ class _MainMenuState extends State<MainMenu>{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:<Widget>[
-                    Container(
-                       decoration: BoxDecoration(
-                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.8),
-                            spreadRadius: 3,
-                            blurRadius: 3,
-                            offset: Offset(0, 0), // changes position of shadow
-                          ),
-                        ],
-                         color: Colors.blue[800],
-                         borderRadius: BorderRadius.circular(1000),
-                         border: Border.all(
+                    Expanded(
+                      child:Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.8),
+                              spreadRadius: 3,
+                              blurRadius: 3,
+                              offset: Offset(0, 0), // changes position of shadow
+                            ),
+                          ],
                           color: Colors.blue[800],
-                          width: 5,
-                         ),
-                      ),
-                      child: new IconButton(icon: new Icon(Icons.person_pin),
-                        color: Colors.white,
-                        iconSize: 25,
-                        onPressed: () {
-                          tsk(null, null).then((response){
-                            if (response['results'] != null){
-                              setState(() {
-                              data = response['results'];
-                               });
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_tersangka', created:'jenis_kelamin', title:'TERSANGKA')));
-                            }
-                          });
-                        }
+                          borderRadius: BorderRadius.circular(1000),
+                          border: Border.all(
+                            color: Colors.blue[800],
+                            width: 5,
+                          ),
+                        ),
+                        child: new IconButton(icon: new Icon(Icons.person_pin),
+                          color: Colors.white,
+                          iconSize: 25,
+                          onPressed: () {
+                            tsk(null, null).then((response){
+                              if (response['results'] != null){
+                                setState(() {
+                                data = response['results'];
+                                });
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_tersangka', created:'jenis_kelamin', title:'TERSANGKA')));
+                              }
+                            });
+                          }
+                        ),
                       ),
                     ),
+                    // Container(
+                    //    decoration: BoxDecoration(
+                    //      boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.grey.withOpacity(0.8),
+                    //         spreadRadius: 3,
+                    //         blurRadius: 3,
+                    //         offset: Offset(0, 0), // changes position of shadow
+                    //       ),
+                    //     ],
+                    //      color: Colors.blue[800],
+                    //      borderRadius: BorderRadius.circular(1000),
+                    //      border: Border.all(
+                    //       color: Colors.blue[800],
+                    //       width: 5,
+                    //      ),
+                    //   ),
+                    //   child: new IconButton(icon: new Icon(Icons.person_pin),
+                    //     color: Colors.white,
+                    //     iconSize: 25,
+                    //     onPressed: () {
+                    //       tsk(null, null).then((response){
+                    //         if (response['results'] != null){
+                    //           setState(() {
+                    //           data = response['results'];
+                    //            });
+                    //           Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_tersangka', created:'jenis_kelamin', title:'TERSANGKA')));
+                    //         }
+                    //       });
+                    //     }
+                    //   ),
+                    // ),
                     SizedBox(height: 15),
                     Text('TERSANGKA',style: TextStyle(fontWeight: FontWeight.bold)),
                   ]

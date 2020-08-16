@@ -630,9 +630,12 @@ suggestionList(String target, {int id = 12}) async {
   return content;
 }
 
-activity(String action) async {
+activity(String id) async {
   String token = await getToken();
-  String url = '${baseUrl}notif/';
+  String url = '${baseUrl}api/notif/';
+  if (id != null) {
+    url = '${baseUrl}api/notif/$id/readnotif/';
+  }
   var content;
 
   await http.get(url, headers: {

@@ -109,7 +109,7 @@ class PnkpViewState extends State<PnkpView> {
                                 if(status.isGranted){
                                   final externalDir = await getExternalStorageDirectory();
                                   final id = FlutterDownloader.enqueue(
-                                    url: "$i['url']",
+                                    url: "${i['url']}",
                                     savedDir: externalDir.path,
                                     fileName: "download",
                                     showNotification: true,
