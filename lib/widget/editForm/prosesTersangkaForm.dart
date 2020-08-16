@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:andro/widget/editForm/model/prosesTsk.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:andro/widget/inputForm/model/tersangka.dart';
 import '../../services/request.dart';
@@ -40,10 +41,13 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   AutoCompleteTextField searchTextFieldTersangka;
+  AutoCompleteTextField searchTextFieldProsesTSK;
 
   GlobalKey<AutoCompleteTextFieldState<Tersangka>> keys = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<ProsesTSK>> prosesTskKeys = new GlobalKey();
 
   static List<Tersangka> tersangkas = new List<Tersangka>();
+  static List<ProsesTSK> prosesTsk = new List<ProsesTSK>();
 
   final _formKey = GlobalKey<FormState>();
   
@@ -69,12 +73,39 @@ class MyCustomFormState extends State<MyCustomForm> {
     }
   }
 
+ void getProsesList(tskId) async {
+    try {
+      final response = await suggestionList('TSKProses', id:tskId);
+      if(response.statusCode == 200){
+        prosesTsk = loadProses(response.body);
+        print('proses tsk.length${prosesTsk.length}');
+        setState(() {
+          isChange = false;
+        });
+      } else {
+        print("Error getting tersangka list");
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        loading = false;
+      });
+      print("Error getting tersangka list");
+    }
+  }
+
+  static List<ProsesTSK> loadProses(String jsonString){
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<ProsesTSK>((json) => ProsesTSK.fromJson(json)).toList();
+  }
+
   static List<Tersangka> loadTersangkas(String jsonString){
     final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
     return parsed.map<Tersangka>((json) => Tersangka.fromJson(json)).toList();
   }
 
   final List optionList = ['Penyidik', 'Kejati', 'Pengadilan 1', 'Pengadilan 2'];
+  var isChange = true;
   String tanggal_mulai_proses = "Atur Tanggal Mulai Proses";
   String tanggal_akhir_proses = "Atur Tanggal Akhir Proses";
   var form = {
@@ -110,6 +141,18 @@ class MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
+   Widget rowProsesTSK(ProsesTSK lkn){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text('${lkn.spHan})',
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Container(
@@ -135,14 +178,42 @@ class MyCustomFormState extends State<MyCustomForm> {
                   return a.nama.compareTo(b.nama);
                 },
                 itemSubmitted: (item){
+                  getProsesList(item.id);
                   setState(() {
+                    isChange = true;
                     searchTextFieldTersangka.textField.controller.text = item.nama;
-                    form['proses_tersangka'] = item.id.toString();
                   });
                 },
                 itemBuilder: (context, item){
                   // ui for autocomplete
                   return rowTersangka(item);
+                },
+              ),
+              if(isChange == false)
+              searchTextFieldProsesTSK = AutoCompleteTextField<ProsesTSK>(
+                key: prosesTskKeys,
+                clearOnSubmit: false,
+                suggestions: prosesTsk,
+                decoration: InputDecoration(
+                  labelText: 'Pilih SP Han/Tap Han/Surat Perpanjangan Han',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+                itemFilter: (item, query){
+                  var filteredItem = item.spHan.toLowerCase();
+                  return filteredItem.startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.spHan.compareTo(b.spHan);
+                },
+                itemSubmitted: (item){
+                  setState(() {
+                    searchTextFieldProsesTSK.textField.controller.text = item.spHan;
+                    form['proses_tersangka'] = item.id.toString();
+                  });
+                },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return rowProsesTSK(item);
                 },
               ),
               DropdownButtonFormField(

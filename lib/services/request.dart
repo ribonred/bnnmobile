@@ -331,6 +331,28 @@ Future<Map> bbSingleData(int bbId) async {
     return Future.value(content);
 }
 
+Future<Map> prosesTersangkaSingleData(int prosesId) async {
+  String token = await getToken();
+  Map content;
+
+  await http.get('${baseUrl}api/tsk-proses/$prosesId', headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+
+    return Future.value(content);
+}
+
 Future<Map> lknSingleData(int lknId) async {
   String token = await getToken();
   Map content;
@@ -578,7 +600,7 @@ Future<Map> tskStatus(int tskId, var input) async {
   return Future.value(content);
 }
 
-suggestionList(String target) async {
+suggestionList(String target, {int id = 12}) async {
   String token = await getToken();
   String url = '${baseUrl}api/lkn/';
   if (target == 'TSK') {
@@ -587,7 +609,10 @@ suggestionList(String target) async {
     url = '${baseUrl}api/pnkp/';
   } else if (target == 'BB'){
     url = '${baseUrl}api/bb-edit/';
+  } else if (target == 'TSKProses'){
+    url = '${baseUrl}api/tsk-proses/?proses_tersangka=$id';
   }
+
   var content;
 
   await http.get(url, headers: {
