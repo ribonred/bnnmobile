@@ -160,6 +160,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                   setState(() {
                     form['jenis_proses'] = val;
                     form['sp_han_doc'] = '';
+                    form['sp_han']='';
+                    form['tap_han']='';
+                    form['surat_perpanjangan_han']='';
                     form['tap_han_doc'] = '';
                     form['surat_perpanjangan_han_doc']='';
                   });

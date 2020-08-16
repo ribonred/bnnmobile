@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../services/request.dart';
-import 'package:file_picker/file_picker.dart';
-import 'dart:async';
-import 'dart:io';
-
 class LKNForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
