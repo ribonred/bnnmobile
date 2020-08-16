@@ -15,7 +15,8 @@ class Dashboard extends StatefulWidget {
   @override
   Navbarbottom createState() => Navbarbottom();
   final String text;
-  Dashboard({Key key, @required this.text}) : super(key: key);
+  final int user;
+  Dashboard({Key key, @required this.text,@required this.user}) : super(key: key);
 }
 
 class Navbarbottom extends State<Dashboard> {
@@ -29,7 +30,7 @@ class Navbarbottom extends State<Dashboard> {
     @override
   void initState() {
     super.initState();
-    new FirebaseNotifications().setUpFirebase();
+    new FirebaseNotifications().setUpFirebase(widget.user);
   }
   @override
   Widget build(BuildContext context) {
