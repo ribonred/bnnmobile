@@ -6,9 +6,13 @@ import './services/request.dart';
 import './pages/menu.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize(
-    debug: true // optional: set false to disable printing logs to console
-  );
+  bool downloadPlugin = false;
+  if (downloadPlugin == false) {
+    await FlutterDownloader.initialize(
+      debug: true // optional: set false to disable printing logs to console
+    );
+    downloadPlugin = true;
+  }
 
   Map verify = await verifyToken(); 
   var status = verify['isVerified'] ?? false;
