@@ -517,7 +517,23 @@ suggestionList(String target) async {
       content = response;
     }
   });
-  print('content');
-  print(content);
+  return content;
+}
+
+activity(String action) async {
+  String token = await getToken();
+  String url = '${baseUrl}notif/';
+  var content;
+
+  await http.get(url, headers: {
+    'Accept': 'application/json',
+    'Authorization':'Bearer $token'
+  }).then((response) async {
+    if (response.statusCode == 200){
+      content = response;
+    } else {
+      content = response;
+    }
+  });
   return content;
 }

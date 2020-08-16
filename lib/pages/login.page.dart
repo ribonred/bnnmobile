@@ -4,7 +4,7 @@ import '../widget/forgot.dart';
 import '../widget/textLogin.dart';
 import '../widget/verticalText.dart';
 import '../pages/menu.dart';
-import '../pages/lknlist.page.dart';
+import 'activity.page.dart';
 import '../services/request.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as statusCodes;

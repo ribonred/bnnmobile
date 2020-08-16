@@ -5,7 +5,7 @@ import './login.page.dart';
 import './main.menu.dart';
 import './main.input.dart';
 import './main.edit.dart';
-import './lknlist.page.dart';
+import 'activity.page.dart';
 import '../widget/getlkn.dart';
 import '../services/fcm.dart';
 
@@ -23,7 +23,7 @@ class Navbarbottom extends State<Dashboard> {
   int _index = 2;
     var _pages = [
       MainMenu(),
-      LknListView(),
+      ActivityListView(),
       MainInput(),
       MainEdit(),
   ];
