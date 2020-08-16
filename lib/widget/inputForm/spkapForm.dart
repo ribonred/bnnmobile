@@ -134,7 +134,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 itemSorter: (a, b){
                   return a.lkn.compareTo(b.lkn);
                 },
-                itemSubmitted: (item){
+                itemSubmitted: (item) async {
+                  final token = await getToken();
+                  print(token);
                   setState(() {
                     searchTextField.textField.controller.text = item.lkn;
                     form['no_lkn'] = item.id.toString();

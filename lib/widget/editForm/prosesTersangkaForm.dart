@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:andro/widget/inputForm/model/tersangka.dart';
 import '../../services/request.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:async';
-import 'dart:io';
-
+import 'dart:convert';
 class prosesTersangkaForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -39,13 +39,46 @@ class MyCustomFormState extends State<MyCustomForm> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
+  AutoCompleteTextField searchTextFieldTersangka;
+
+  GlobalKey<AutoCompleteTextFieldState<Tersangka>> keys = new GlobalKey();
+
+  static List<Tersangka> tersangkas = new List<Tersangka>();
+
   final _formKey = GlobalKey<FormState>();
+  
   String selectedOption;
+  bool loading = true;
+  void getTersangka() async {
+    try {
+      final response = await suggestionList('TSK');
+      if(response.statusCode == 200){
+        tersangkas = loadTersangkas(response.body);
+        setState(() {
+          loading = false;
+        });
+      } else {
+        print("Error getting tersangka list");
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        loading = false;
+      });
+      print("Error getting tersangka list");
+    }
+  }
+
+  static List<Tersangka> loadTersangkas(String jsonString){
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<Tersangka>((json) => Tersangka.fromJson(json)).toList();
+  }
+
   final List optionList = ['Penyidik', 'Kejati', 'Pengadilan 1', 'Pengadilan 2'];
   String tanggal_mulai_proses = "Atur Tanggal Mulai Proses";
   String tanggal_akhir_proses = "Atur Tanggal Akhir Proses";
   var form = {
-    'proses_tersangka': '12',
+    'proses_tersangka': '',
     'jenis_proses': 1,
     'tap_han': '',
     'tap_han_doc': '',
@@ -57,8 +90,26 @@ class MyCustomFormState extends State<MyCustomForm> {
     'tanggal_akhir_proses': '',
     'keterangan': '',
   };
-  // rest of our code
-  @override
+
+    // rest of our code
+    @override
+  void initState() {
+    getTersangka();
+    super.initState();
+  }
+
+   Widget rowTersangka(Tersangka lkn){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text('${lkn.nama} (${lkn.id})',
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Container(
@@ -68,16 +119,31 @@ class MyCustomFormState extends State<MyCustomForm> {
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: <Widget>[
-              TextFormField(
-                onChanged: (val) {
-                  setState(() {
-                    form['proses_tersangka'] = val.toString();
-                  });
-                },
+              loading ? CircularProgressIndicator() :
+              searchTextFieldTersangka = AutoCompleteTextField<Tersangka>(
+                key: keys,
+                clearOnSubmit: false,
+                suggestions: tersangkas,
                 decoration: InputDecoration(
                   labelText: 'Nama Tersangka',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
+                itemFilter: (item, query){
+                  return item.nama.toLowerCase().startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.nama.compareTo(b.nama);
+                },
+                itemSubmitted: (item){
+                  setState(() {
+                    searchTextFieldTersangka.textField.controller.text = item.nama;
+                    form['proses_tersangka'] = item.id.toString();
+                  });
+                },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return rowTersangka(item);
+                },
               ),
               DropdownButtonFormField(
                 onSaved: (val) => print(val),
@@ -93,6 +159,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 onChanged: (val) {
                   setState(() {
                     form['jenis_proses'] = val;
+                    form['sp_han_doc'] = '';
+                    form['tap_han_doc'] = '';
+                    form['surat_perpanjangan_han_doc']='';
                   });
                 },
                 decoration: InputDecoration(
@@ -123,6 +192,15 @@ class MyCustomFormState extends State<MyCustomForm> {
                     form['tap_han_doc'] = filePath;
                   });
               }),
+              if(form['jenis_proses'] == 2 || form['jenis_proses'] == 3)
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: ' FilePath : ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: form['tap_han_doc'], style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
               if(form['jenis_proses'] == 4)
               TextFormField(
                 onChanged: (val) {
@@ -145,6 +223,15 @@ class MyCustomFormState extends State<MyCustomForm> {
                     form['surat_perpanjangan_han_doc'] = filePath;
                   });
               }),
+              if(form['jenis_proses'] == 4)
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: ' FilePath : ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: form['surat_perpanjangan_han_doc'], style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
               if(form['jenis_proses'] == 1)
               TextFormField(
                 onChanged: (val) {
@@ -167,6 +254,15 @@ class MyCustomFormState extends State<MyCustomForm> {
                     form['sp_han_doc'] = filePath;
                   });
               }),
+              if(form['jenis_proses'] == 1)
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: ' FilePath : ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: form['sp_han_doc'], style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
               RaisedButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
@@ -303,6 +399,15 @@ class MyCustomFormState extends State<MyCustomForm> {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(form);
+                  tskProses(null, form).then((response) async {
+                     if (response.containsKey('id')){
+                      final snackBar = SnackBar(content: Text('Proses Tersangka Berhasil Disimpan'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    } else {
+                      final snackBar = SnackBar(content: Text('Gagal Menyimpan Proses Tersangka'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  });
                 },
               ),
             ]

@@ -1,9 +1,10 @@
+import 'package:andro/widget/inputForm/model/tersangka.dart';
+import 'package:andro/widget/inputForm/model/barangBukti.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import '../../services/request.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:async';
-import 'dart:io';
+import 'dart:convert';
 
 class bbForm extends StatelessWidget {
   @override
@@ -39,16 +40,85 @@ class MyCustomFormState extends State<MyCustomForm> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
+  AutoCompleteTextField searchTextFieldTersangka;
+
+  GlobalKey<AutoCompleteTextFieldState<Tersangka>> keys = new GlobalKey();
+
+  static List<Tersangka> tersangkas = new List<Tersangka>();
+  TextEditingController _namabarangController = TextEditingController();
+  TextEditingController _spSitaController = TextEditingController();
+  TextEditingController _tapSitaController = TextEditingController();
+  TextEditingController _tapStatusController = TextEditingController();
+  TextEditingController _nomorLabController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
+  
   String selectedOption;
+  bool loading = true;
+  AutoCompleteTextField searchTextFieldBarangBukti;
+
+  GlobalKey<AutoCompleteTextFieldState<BarangBukti>> keyBB = new GlobalKey();
+
+  static List<BarangBukti> barangBuktis = new List<BarangBukti>();
+
+  bool loadingBB = true;
+  void getBarangBukti() async {
+    try {
+      final response = await suggestionList('BB');
+      if(response.statusCode == 200){
+        barangBuktis = loadBarangBukti(response.body);
+        setState(() {
+          loadingBB = false;
+        });
+      } else {
+        print("Error getting barang bukti list");
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        loading = false;
+      });
+      print("Error getting barang bukti list");
+    }
+  }
+
+  static List<BarangBukti> loadBarangBukti(String jsonString){
+    print(jsonString);
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<BarangBukti>((json) => BarangBukti.fromJson(json)).toList();
+  }
+  void getTersangka() async {
+    try {
+      final response = await suggestionList('TSK');
+      if(response.statusCode == 200){
+        tersangkas = loadTersangkas(response.body);
+        setState(() {
+          loading = false;
+        });
+      } else {
+        print("Error getting tersangka list");
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        loading = false;
+      });
+      print("Error getting tersangka list");
+    }
+  }
+
+  static List<Tersangka> loadTersangkas(String jsonString){
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<Tersangka>((json) => Tersangka.fromJson(json)).toList();
+  }
 
   final List optionList = ['narkotika', 'non narkotika'];
   String _date = "Not set";
   String _time = "Not set";
   var form = {
     'milik_tersangka_id': '12',
-    'nama_barang': '',
-    'sp_sita': '',
+    'nama_barang': 'ekstasi',
+    'sp_sita': 'halo',
     'sp_sita_doc': '',
     'tap_sita': '',
     'tap_sita_doc': '',
@@ -56,11 +126,41 @@ class MyCustomFormState extends State<MyCustomForm> {
     'tap_status_doc': '',
     'nomor_lab': '',
     'nomor_lab_doc': '',
-    'jenis_barang': 'non narkotika',
+    'jenis_barang': 'narkotika',
   };
 
   // rest of our code
-  @override
+   @override
+  void initState() {
+    getTersangka();
+    getBarangBukti();
+    super.initState();
+  }
+
+   Widget rowTersangka(Tersangka lkn){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text('${lkn.nama} (${lkn.id})',
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+
+    Widget rowBarangBukti(BarangBukti bb){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text('${bb.nama} (${bb.id})',
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Container(
@@ -70,18 +170,86 @@ class MyCustomFormState extends State<MyCustomForm> {
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: <Widget>[
-              TextFormField(
-                onChanged: (val) {
+              loadingBB ? CircularProgressIndicator() :
+               searchTextFieldBarangBukti = AutoCompleteTextField<BarangBukti>(
+                key: keyBB,
+                clearOnSubmit: false,
+                suggestions: barangBuktis,
+                decoration: InputDecoration(
+                  labelText: 'Pilih Barang Bukti',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+                itemFilter: (item, query){
+                  return item.nama.toLowerCase().startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.nama.compareTo(b.nama);
+                },
+                itemSubmitted: (item) async {
+                    bbSingleData(item.id).then((response) async {
+                     if (response.containsKey('id')){
+                        searchTextFieldTersangka.textField.controller.text = response['milik_tersangka_id']['nama_tersangka'];
+                        _namabarangController.text = response['nama_barang'];
+                        setState(() {
+                          form['nama_barang'] = response['nama_barang'];
+                          form['jenis_barang'] = response['jenis_barang'];
+                          form['sp_sita'] = response['sp_sita'] ?? '';
+                          form['sp_sita_doc'] = response['sp_sita_doc'] ?? '';
+                          form['tap_sita'] = response['tap_sita'] ?? '';
+                          form['tap_sita_doc'] = response['tap_sita_doc'] ?? '';
+                          form['tap_status'] = response['tap_status'] ?? '';
+                          form['tap_status_doc'] = response['tap_status_doc'] ?? '';
+                          form['nomor_lab'] = response['nomor_lab'] ?? '';
+                          form['nomor_lab_doc'] = response['nomor_lab_doc'] ?? '';
+                        });
+                       
+                        _spSitaController.text = response['sp_sita'] ?? '';
+                        _tapSitaController.text = response['tap_sita'] ?? '';
+                        _tapStatusController.text = response['tap_status'] ?? '';
+                        _nomorLabController.text = response['nomor_lab'] ?? '';
+                     } else {
+                      final snackBar = SnackBar(content: Text('Data Gagal Ditemukan'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  });
                   setState(() {
-                    form['milik_tersangka_id'] = val.toString();
+                    searchTextFieldBarangBukti.textField.controller.text = item.nama;
+                    form['barang_bukti_id'] = item.id.toString();
                   });
                 },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return rowBarangBukti(item);
+                },
+              ),
+              loading ? CircularProgressIndicator() :
+              searchTextFieldTersangka = AutoCompleteTextField<Tersangka>(
+                key: keys,
+                clearOnSubmit: false,
+                suggestions: tersangkas,
                 decoration: InputDecoration(
                   labelText: 'Nama Tersangka',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
+                itemFilter: (item, query){
+                  return item.nama.toLowerCase().startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.nama.compareTo(b.nama);
+                },
+                itemSubmitted: (item){
+                  setState(() {
+                    searchTextFieldTersangka.textField.controller.text = item.nama;
+                    form['milik_tersangka_id'] = item.id.toString();
+                  });
+                },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return rowTersangka(item);
+                },
               ),
               TextFormField(
+                controller: _namabarangController,
                 onChanged: (val) {
                   setState(() {
                     form['nama_barang'] = val;
@@ -93,6 +261,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
               ),
               TextFormField(
+                controller: _spSitaController,
                 onChanged: (val) {
                   setState(() {
                     form['sp_sita'] = val;
@@ -112,7 +281,16 @@ class MyCustomFormState extends State<MyCustomForm> {
                     form['sp_sita_doc'] = filePath;
                   });
               }),
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: ' FilePath : ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: form['sp_sita_doc'], style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
               TextFormField(
+                controller: _tapSitaController,
                 onChanged: (val) {
                   setState(() {
                     form['tap_sita'] = val;
@@ -132,8 +310,17 @@ class MyCustomFormState extends State<MyCustomForm> {
                     form['tap_sita_doc'] = filePath;
                   });
               }),
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: ' FilePath : ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: form['tap_sita_doc'], style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
               if (form['jenis_barang'] == 'narkotika')
               TextFormField(
+                controller: _tapStatusController,
                 onChanged: (val) {
                   setState(() {
                     form['tap_status'] = val;
@@ -155,7 +342,17 @@ class MyCustomFormState extends State<MyCustomForm> {
                   });
               }),
               if (form['jenis_barang'] == 'narkotika')
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: ' FilePath : ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: form['tap_status_doc'], style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
+              if (form['jenis_barang'] == 'narkotika')
               TextFormField(
+                controller: _nomorLabController,
                 onChanged: (val) {
                   setState(() {
                     form['nomor_lab'] = val;
@@ -176,6 +373,15 @@ class MyCustomFormState extends State<MyCustomForm> {
                     form['nomor_lab_doc'] = filePath;
                   });
               }),
+              if (form['jenis_barang'] == 'narkotika')
+              Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: ' FilePath : ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: form['nomor_lab_doc'], style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
               DropdownButtonFormField(
                 onSaved: (val) => print(val),
                 value: form['jenis_barang'],
@@ -202,10 +408,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                  print(form);
                   bb(null, form).then((response) async {
-                    print('response');
-                    print(response);
+                     if (response.containsKey('id')){
+                      final snackBar = SnackBar(content: Text('Barang Bukti Berhasil Disimpan'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    } else {
+                      final snackBar = SnackBar(content: Text('Gagal Menyimpan Barang Bukti'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
                   });
                 },
               ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../services/request.dart';
-import 'package:file_picker/file_picker.dart';
-import 'dart:async';
-import 'dart:io';
+import 'package:andro/widget/inputForm/model/lkn.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'dart:convert';
 
 class LKNForm extends StatelessWidget {
   @override
@@ -39,14 +39,63 @@ class MyCustomFormState extends State<MyCustomForm> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
+  AutoCompleteTextField searchTextField;
+  GlobalKey<AutoCompleteTextFieldState<Lkn>> key = new GlobalKey();
+  static List<Lkn> lkns = new List<Lkn>();
+  TextEditingController _noLKNController = TextEditingController();
+
+  bool loading = true;
+  void getLkns() async {
+    try {
+      final response = await suggestionList(null);
+      if(response.statusCode == 200){
+        lkns = loadLkns(response.body);
+        setState(() {
+          loading = false;
+        });
+        print('lkns: ${lkns.length}');
+      } else {
+        print("Error getting lkn list");
+      }
+    } catch (e) {
+      setState(() {
+        loading = false;
+      });
+      print("Error getting lkn list");
+    }
+  }
+
+  static List<Lkn> loadLkns(String jsonString){
+    print(jsonString);
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<Lkn>((json) => Lkn.fromJson(json)).toList();
+  }
   final _formKey = GlobalKey<FormState>();
   String _date = "Belum Diatur";
   var form = {
     'LKN': '',
     'tgl_dibuat': '',
   };
+
   // rest of our code
-  @override
+   @override
+  void initState() {
+    getLkns();
+    super.initState();
+  }
+
+   Widget row(Lkn lkn){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text('${lkn.lkn}',
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Container(
@@ -56,7 +105,48 @@ class MyCustomFormState extends State<MyCustomForm> {
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: <Widget>[
+              loading ? CircularProgressIndicator() :
+              searchTextField = AutoCompleteTextField<Lkn>(
+                key: key,
+                clearOnSubmit: false,
+                suggestions: lkns,
+                decoration: InputDecoration(
+                  labelText: 'Pilih No.LKN',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+                itemFilter: (item, query){
+                  return item.lkn.toLowerCase().startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.lkn.compareTo(b.lkn);
+                },
+                itemSubmitted: (item) async {
+                  lknSingleData(item.id).then((response) async {
+                     if (response.containsKey('id')){
+                        setState(() {
+                          form['LKN'] = response['LKN'] ?? '';
+                          form['tgl_dibuat'] = response['tgl_dibuat'].toString() ?? '';
+                        });
+                        _noLKNController.text = response['LKN'] ?? '';
+                        _date = response['tgl_dibuat'].toString() ?? 'Belum diatur';
+                        print(response);
+                     } else {
+                      final snackBar = SnackBar(content: Text('Data Gagal Ditemukan'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  });
+                  setState(() {
+                    searchTextField.textField.controller.text = item.lkn;
+                    form['no_lkn'] = item.id.toString();
+                  });
+                },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return row(item);
+                },
+              ),
               TextFormField(
+                controller: _noLKNController,
                 onChanged: (val) {
                   setState(() {
                     form['LKN'] = val.toString();
