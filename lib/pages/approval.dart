@@ -2,61 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:getflutter/getflutter.dart';
 import '../services/request.dart';
 import '../widget/getlkn.dart';
-import './profile.dart';
 
 final List<String> imageList = [
   'assets/images/bnn.jpeg',
   'assets/images/bnn2.jpeg'
 ];
-class MainMenu extends StatefulWidget{  
+
+class Approval extends StatefulWidget{
+  
+  
   @override
-  _MainMenuState createState() => _MainMenuState();
+  _ApprovalState createState() => _ApprovalState();
 }
 
-class Choice {
-  const Choice({this.title, this.icon});
-
-  final String title;
-  final IconData icon;
-}
-
-const List<Choice> choices = const <Choice>[
-  const Choice(title: 'profile', icon: Icons.directions_boat),
-];
-
-class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
-
-  final Choice choice;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.headline4;
-    return Card(
-      color: Colors.white,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(choice.icon, size: 128.0, color: textStyle.color),
-            Text(choice.title, style: textStyle),
-          ],
-        ),
-      ),
-    );
-  }
-}
-class _MainMenuState extends State<MainMenu>{
+class _ApprovalState extends State<Approval>{
   var data;
-
-  void _select(Choice choice) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileView()));
-
-    print('choice');
-    print(choice);
-  }
-
    @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -79,21 +39,8 @@ class _MainMenuState extends State<MainMenu>{
           children:<Widget>[
             Column(children: <Widget>[
               AppBar(
-                title: Text('Menu'),
-                actions: <Widget>[
-                    PopupMenuButton<Choice>(
-                      onSelected: _select,
-                      itemBuilder: (BuildContext context) {
-                        return choices.map((Choice choice) {
-                          return PopupMenuItem<Choice>(
-                            value: choice,
-                            child: Text(choice.title),
-                          );
-                        }).toList();
-                      },
-                    ),
-                  ],
-                ),
+                title: Text('Menu')
+                ,),
               SizedBox(height: 30),
           GFCarousel(
             viewportFraction: 1.0,
@@ -123,6 +70,8 @@ class _MainMenuState extends State<MainMenu>{
           height:600,
           child: CustomScrollView(
           slivers:<Widget>[
+             
+
             SliverList(
           delegate: SliverChildListDelegate([
           GridView.count(
@@ -213,38 +162,6 @@ class _MainMenuState extends State<MainMenu>{
                         ),
                       ),
                     ),
-                    // Container(
-                    //    decoration: BoxDecoration(
-                    //      boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.grey.withOpacity(0.8),
-                    //         spreadRadius: 3,
-                    //         blurRadius: 3,
-                    //         offset: Offset(0, 0), // changes position of shadow
-                    //       ),
-                    //     ],
-                    //      color: Colors.blue[800],
-                    //      borderRadius: BorderRadius.circular(1000),
-                    //      border: Border.all(
-                    //       color: Colors.blue[800],
-                    //       width: 5,
-                    //      ),
-                    //   ),
-                    //   child: new IconButton(icon: new Icon(Icons.search),
-                    //     color: Colors.white,
-                    //     iconSize: 25,
-                    //     onPressed: () {
-                    //       pnkp(null, null).then((response){
-                    //         if (response['results'] != null){
-                    //           setState(() {
-                    //           data = response['results'];
-                    //            });
-                    //           Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan', title:'PENANGKAPAN')));
-                    //         }
-                    //       });
-                    //     }
-                    //   ),
-                    // ),
                     SizedBox(height: 15),
                     Text('SP KAP',style: TextStyle(fontWeight: FontWeight.bold),),
                   ]

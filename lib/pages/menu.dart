@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
-import './newuser.page.dart';
-import './login.page.dart';
 import './main.menu.dart';
 import './main.input.dart';
 import './main.edit.dart';
+import './approval.dart';
 import 'activity.page.dart';
-import '../widget/getlkn.dart';
 import '../services/fcm.dart';
 
 
@@ -47,6 +45,7 @@ class Navbarbottom extends State<Dashboard> {
       ActivityListView(),
       MainInput(),
       MainEdit(),
+      Approval(),
   ];
 
   @override
@@ -95,6 +94,10 @@ class Navbarbottom extends State<Dashboard> {
             FFNavigationBarItem(
               iconData: Icons.mode_edit,
               label: 'Edit data',
+            ),
+            FFNavigationBarItem(
+              iconData: Icons.note,
+              label: 'Approval',
             ),
           ],
         ),
