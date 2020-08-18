@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../services/request.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
-import 'package:andro/widget/inputForm/model/tersangka.dart';
+import 'package:andro/widget/editForm/model/tersangka.dart';
+import 'package:andro/widget/editForm/model/statusTsk.dart';
 import 'dart:convert';
 class statusTersangkaForm extends StatelessWidget {
   @override
@@ -39,10 +40,14 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   AutoCompleteTextField searchTextFieldTersangka;
+  AutoCompleteTextField searchTextFieldStatusTSK;
 
   GlobalKey<AutoCompleteTextFieldState<Tersangka>> keys = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<StatusTSK>> statusTSKKeys = new GlobalKey();
 
   static List<Tersangka> tersangkas = new List<Tersangka>();
+  static List<StatusTSK> statusTsk = new List<StatusTSK>();
+  TextEditingController _keteranganController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   
@@ -68,6 +73,32 @@ class MyCustomFormState extends State<MyCustomForm> {
     }
   }
 
+void getStatusList(tskId) async {
+    try {
+      final response = await suggestionList('TSKStatus', id:tskId);
+      if(response.statusCode == 200){
+        statusTsk = loadStatus(response.body);
+        print('status tsk.length${statusTsk.length}');
+        setState(() {
+          isChange = false;
+        });
+      } else {
+        print("Error getting status tsk");
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        loading = false;
+      });
+      print("Error getting status tsk");
+    }
+  }
+
+  static List<StatusTSK> loadStatus(String jsonString){
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<StatusTSK>((json) => StatusTSK.fromJson(json)).toList();
+  }
+
   static List<Tersangka> loadTersangkas(String jsonString){
     final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
     return parsed.map<Tersangka>((json) => Tersangka.fromJson(json)).toList();
@@ -76,6 +107,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   final List rekamJejakList = ['Masuk', 'Keluar'];
   final List statusPenahananList = ['Di Amankan', 'Di tahan', 'TAT', 'Selesai'];
   String tanggal = "Atur Tanggal";
+  var isChange = true;
   String waktu = "Atur Waktu";
   var form = {
     'tersangka_id': '12',
@@ -103,6 +135,19 @@ class MyCustomFormState extends State<MyCustomForm> {
       ]
     );
   }
+
+  Widget rowStatusTSK(StatusTSK lkn){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text('${lkn.id} (${lkn.statusPenahanan})',
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+  
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Container(
@@ -128,7 +173,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                   return a.nama.compareTo(b.nama);
                 },
                 itemSubmitted: (item){
+                  getStatusList(item.id);
                   setState(() {
+                    isChange = true;
                     searchTextFieldTersangka.textField.controller.text = item.nama;
                     form['tersangka_id'] = item.id.toString();
                   });
@@ -136,6 +183,51 @@ class MyCustomFormState extends State<MyCustomForm> {
                 itemBuilder: (context, item){
                   // ui for autocomplete
                   return rowTersangka(item);
+                },
+              ),
+              if(isChange == false)
+              searchTextFieldStatusTSK = AutoCompleteTextField<StatusTSK>(
+                key: statusTSKKeys,
+                clearOnSubmit: false,
+                suggestions: statusTsk,
+                decoration: InputDecoration(
+                  labelText: 'Pilih id status',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+                itemFilter: (item, query){
+                  var filteredItem = item.id.toString().toLowerCase();
+                  return filteredItem.startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.id.compareTo(b.id);
+                },
+                itemSubmitted: (item){
+                   statusTersangkaSingleData(item.id).then((response) async {
+                     if (response.containsKey('id')){
+                        setState(() {
+                           form['tersangka_id'] = response['tersangka_id'] ?? '';
+                           form['status_penahanan'] = response['status_penahanan'] ?? '';
+                           form['rekam_jejak'] = response['rekam_jejak'] ?? '';
+                           form['tanggal'] = response['tanggal'] ?? '';
+                           form['waktu'] = response['waktu'] ?? '';
+                           form['keterangan'] = response['keterangan'] ?? '';
+                        });
+                        _keteranganController.text = response['keterangan'] ?? '';
+                        tanggal = response['tanggal'] ?? "Atur Tanggal";
+                        waktu = response['waktu'] ?? "Atur Waktu";
+                     } else {
+                      final snackBar = SnackBar(content: Text('Data Gagal Ditemukan'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  });
+                  setState(() {
+                    searchTextFieldStatusTSK.textField.controller.text = item.id.toString();
+                    form['proses_tersangka'] = item.id.toString();
+                  });
+                },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return rowStatusTSK(item);
                 },
               ),
               DropdownButtonFormField(
@@ -296,6 +388,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.white,
               ),
               TextFormField(
+                controller: _keteranganController,
                 onChanged: (val) {
                   setState(() {
                     form['keterangan'] = val.toString();

@@ -320,9 +320,25 @@ Future<Map> bbSingleData(int bbId) async {
       print(response.statusCode);
       if (response.statusCode == 200){
         content = json.decode(response.body);
-        // await storage.write(key: 'token', value: content['token']);
-        // Navigator.push(context,
-        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+
+    return Future.value(content);
+}
+
+Future<Map> bbStatusSingleData(int bbId) async {
+  String token = await getToken();
+  Map content;
+
+  await http.get('${baseUrl}api/bb-status/$bbId', headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
       } else {
         content = json.decode(response.body);
       }
@@ -342,9 +358,25 @@ Future<Map> prosesTersangkaSingleData(int prosesId) async {
       print(response.statusCode);
       if (response.statusCode == 200){
         content = json.decode(response.body);
-        // await storage.write(key: 'token', value: content['token']);
-        // Navigator.push(context,
-        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        content = json.decode(response.body);
+      }
+    });
+
+    return Future.value(content);
+}
+
+Future<Map> statusTersangkaSingleData(int statusId) async {
+  String token = await getToken();
+  Map content;
+
+  await http.get('${baseUrl}api/tsk-status/$statusId', headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
       } else {
         content = json.decode(response.body);
       }
@@ -611,6 +643,10 @@ suggestionList(String target, {int id = 12}) async {
     url = '${baseUrl}api/bb-edit/';
   } else if (target == 'TSKProses'){
     url = '${baseUrl}api/tsk-proses/?proses_tersangka=$id';
+  } else if (target == 'TSKStatus'){
+    url = '${baseUrl}api//tsk-status/?tersangka_id=$id';
+  } else if(target == 'BBStatus'){
+    url = '${baseUrl}api/bb-status/?barang_bukti_id=$id';
   }
 
   var content;
@@ -620,6 +656,7 @@ suggestionList(String target, {int id = 12}) async {
     'Authorization':'Bearer $token'
   }).then((response) async {
     print('give response');
+    print(response);
     print(response.statusCode);
     if (response.statusCode == 200){
       content = response;

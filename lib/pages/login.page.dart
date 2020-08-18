@@ -65,7 +65,7 @@ Future onSelectNotification(String payload) async {
     showDialog(
       context: context,
       builder: (_) {
-        return Dashboard(text:'from notif');
+        return ActivityListView();
       },
     );
   }
@@ -119,6 +119,8 @@ Future onSelectNotification(String payload) async {
 
   @override
   Widget build(BuildContext context) {
+  print('ke login page');
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -201,9 +203,11 @@ Future onSelectNotification(String payload) async {
         ),
         child: FlatButton(
           onPressed: () {
-            login(_usernamecontroller.text,_passwordcontroller.text).then((response){
+            login(_usernamecontroller.text,_passwordcontroller.text).then((response) async {
               if(response){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(text: 'Hello',)));
+                final verify = await verifyToken();
+                // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(text: 'Hello', user: verify['data']['user']['role'])));
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Dashboard(text: 'Hello', user: verify['data']['user']['role'])), (Route<dynamic> route) => false);
               } else {
                 showMyDialog();
               }

@@ -50,6 +50,11 @@ class MyCustomFormState extends State<MyCustomForm> {
   static List<ProsesTSK> prosesTsk = new List<ProsesTSK>();
 
   final _formKey = GlobalKey<FormState>();
+
+  TextEditingController _tapHanController = TextEditingController();
+  TextEditingController _spHanController = TextEditingController();
+  TextEditingController _perpanjanganHansController = TextEditingController();
+  TextEditingController _keteranganController = TextEditingController();
   
   String selectedOption;
   bool loading = true;
@@ -142,12 +147,19 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
    Widget rowProsesTSK(ProsesTSK lkn){
+    var text = lkn.spHan;
+    if (["", null, false, 0].contains(text)) {
+      text = lkn.tapHan;
+       if (["", null, false, 0].contains(text)) {
+        text = lkn.perpanjanganHan;
+      }
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Padding(
           padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
-          child: Text('${lkn.spHan})',
+          child: Text('${lkn.id} ($text)',
             style: TextStyle(fontSize: 15))),
       ]
     );
@@ -195,19 +207,52 @@ class MyCustomFormState extends State<MyCustomForm> {
                 clearOnSubmit: false,
                 suggestions: prosesTsk,
                 decoration: InputDecoration(
-                  labelText: 'Pilih SP Han/Tap Han/Surat Perpanjangan Han',
+                  labelText: 'Pilih id proses',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
                 itemFilter: (item, query){
-                  var filteredItem = item.spHan.toLowerCase();
+                  var filteredItem = item.id.toString().toLowerCase();
                   return filteredItem.startsWith(query.toLowerCase());
                 },
                 itemSorter: (a, b){
-                  return a.spHan.compareTo(b.spHan);
+                  return a.id.compareTo(b.id);
                 },
                 itemSubmitted: (item){
+                   prosesTersangkaSingleData(item.id).then((response) async {
+                     if (response.containsKey('id')){
+                        setState(() {
+                           form['proses_tersangka'] = response['proses_tersangka'] ?? '';
+                           form['jenis_proses'] = response['jenis_proses'] ?? '';
+                           form['tap_han'] = response['tap_han'] ?? '';
+                           form['tap_han_doc'] = response['tap_han_doc'] ?? '';
+                           form['surat_perpanjangan_han'] = response['surat_perpanjangan_han'] ?? '';
+                           form['surat_perpanjangan_han_doc'] = response['surat_perpanjangan_han_doc'] ?? '';
+                           form['sp_han'] = response['sp_han'] ?? '';
+                           form['sp_han_doc'] = response['sp_han_doc'] ?? '';
+                           form['tanggal_mulai_proses'] = response['tanggal_mulai_proses'] ?? '';
+                           form['tanggal_akhir_proses'] = response['tanggal_akhir_proses'] ?? '';
+                           form['keterangan'] = response['keterangan'] ?? '';
+                        });
+                        _spHanController.text = response['sp_han'] ?? '';
+                        _tapHanController.text = response['tap_han'] ?? '';
+                        _perpanjanganHansController.text = response['surat_perpanjangan_han'] ?? '';
+                        _keteranganController.text = response['keterangan'] ?? '';
+                        tanggal_mulai_proses = response['tanggal_mulai_proses'] ?? "Atur Tanggal Mulai Proses";
+                        tanggal_akhir_proses = response['tanggal_akhir_proses'] ?? "Atur Tanggal Akhir Proses";
+                     } else {
+                      final snackBar = SnackBar(content: Text('Data Gagal Ditemukan'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  });
+                  var text = item.spHan;
+                   if (["", null, false, 0].contains(text)) {
+                    text = item.tapHan;
+                    if (["", null, false, 0].contains(text)) {
+                      text = item.perpanjanganHan;
+                    }
+                  }
                   setState(() {
-                    searchTextFieldProsesTSK.textField.controller.text = item.spHan;
+                    searchTextFieldProsesTSK.textField.controller.text = text;
                     form['proses_tersangka'] = item.id.toString();
                   });
                 },
@@ -230,6 +275,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 onChanged: (val) {
                   setState(() {
                     form['jenis_proses'] = val;
+                    form['sp_han'] = '';
+                    form['tap_han'] = '';
+                    form['surat_perpanjangan_han'] = '';
                     form['sp_han_doc'] = '';
                     form['tap_han_doc'] = '';
                     form['surat_perpanjangan_han_doc']='';
@@ -242,6 +290,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               ),
               if(form['jenis_proses'] == 2 || form['jenis_proses'] == 3)
               TextFormField(
+                controller: _tapHanController,
                 onChanged: (val) {
                   setState(() {
                     form['tap_han'] = val.toString();
@@ -274,6 +323,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               ),
               if(form['jenis_proses'] == 4)
               TextFormField(
+                controller: _perpanjanganHansController,
                 onChanged: (val) {
                   setState(() {
                     form['surat_perpanjangan_han'] = val.toString();
@@ -305,6 +355,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               ),
               if(form['jenis_proses'] == 1)
               TextFormField(
+                controller: _spHanController,
                 onChanged: (val) {
                   setState(() {
                     form['sp_han'] = val.toString();
@@ -453,6 +504,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.white,
               ),
               TextFormField(
+                controller: _keteranganController,
                 onChanged: (val) {
                   setState(() {
                     form['keterangan'] = val.toString();

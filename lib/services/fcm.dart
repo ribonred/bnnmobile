@@ -62,7 +62,15 @@ class FirebaseNotifications {
       _firebaseMessaging.subscribeToTopic("moderator");
     }else{
       _firebaseMessaging.subscribeToTopic("regular");
+    }  
+  }
+
+  void unsubscribe_Topic(user){
+    _firebaseMessaging = FirebaseMessaging();
+    if (user == 2){
+      _firebaseMessaging.unsubscribeFromTopic("moderator");
+    }else{
+      _firebaseMessaging.unsubscribeFromTopic("regular");
     }
-    
   }
 }

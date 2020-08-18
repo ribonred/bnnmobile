@@ -1,3 +1,4 @@
+import 'package:andro/widget/editForm/model/statusBB.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../services/request.dart';
@@ -40,11 +41,16 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   AutoCompleteTextField searchTextFieldBarangBukti;
+  AutoCompleteTextField searchTextFieldStatusBB;
 
   GlobalKey<AutoCompleteTextFieldState<BarangBukti>> keys = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<StatusBB>> statusBBKeys = new GlobalKey();
 
   static List<BarangBukti> barangBuktis = new List<BarangBukti>();
+  static List<StatusBB> statusBB = new List<StatusBB>();
 
+  TextEditingController _jumlahController = TextEditingController();
+  TextEditingController _keteranganController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   
   String selectedOption;
@@ -69,13 +75,40 @@ class MyCustomFormState extends State<MyCustomForm> {
     }
   }
 
+  void getStatusList(bbId) async {
+      try {
+        final response = await suggestionList('BBStatus', id:bbId);
+        if(response.statusCode == 200){
+          statusBB = loadStatusBB(response.body);
+          print('status BB.length${statusBB.length}');
+          setState(() {
+            isChange = false;
+          });
+        } else {
+          print("Error getting status BB");
+        }
+      } catch (e) {
+        print(e);
+        setState(() {
+          loading = false;
+        });
+        print("Error getting status BB");
+      }
+    }
+  
   static List<BarangBukti> loadBarangBukti(String jsonString){
     print(jsonString);
     final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
     return parsed.map<BarangBukti>((json) => BarangBukti.fromJson(json)).toList();
   }
 
+   static List<StatusBB> loadStatusBB(String jsonString){
+    final parsed = json.decode(jsonString).cast<Map<String, dynamic>>();
+    return parsed.map<StatusBB>((json) => StatusBB.fromJson(json)).toList();
+  }
+
   final List satuanList = ['gram', 'butir', 'PCS', 'unit'];
+  var isChange = true;
   final List statusList = ['Masuk', 'Keluar'];
   String tanggal_status = "Atur Tanggal Status";
   String waktu_status = "Atur Waktu Status";
@@ -107,6 +140,18 @@ class MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
+ Widget rowStatusBB(StatusBB lkn){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: Text('${lkn.id} (${lkn.status}-${lkn.keterangan})',
+            style: TextStyle(fontSize: 15))),
+      ]
+    );
+  }
+
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Container(
@@ -132,12 +177,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                   return a.nama.compareTo(b.nama);
                 },
                 itemSubmitted: (item) async{
-                  print('submitted');
-                  await bbSingleData(item.id).then((response) async {
-                    print('response dari barang');
-                    print(response);
-                  });
+                  getStatusList(item.id);
                   setState(() {
+                    isChange = true;
                     searchTextFieldBarangBukti.textField.controller.text = item.nama;
                     form['barang_bukti_id'] = item.id.toString();
                   });
@@ -145,6 +187,53 @@ class MyCustomFormState extends State<MyCustomForm> {
                 itemBuilder: (context, item){
                   // ui for autocomplete
                   return rowBarangBukti(item);
+                },
+              ),
+               if(isChange == false)
+              searchTextFieldStatusBB = AutoCompleteTextField<StatusBB>(
+                key: statusBBKeys,
+                clearOnSubmit: false,
+                suggestions: statusBB,
+                decoration: InputDecoration(
+                  labelText: 'Pilih id status',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
+                itemFilter: (item, query){
+                  var filteredItem = item.id.toString().toLowerCase();
+                  return filteredItem.startsWith(query.toLowerCase());
+                },
+                itemSorter: (a, b){
+                  return a.id.compareTo(b.id);
+                },
+                itemSubmitted: (item){
+                   bbStatusSingleData(item.id).then((response) async {
+                     if (response.containsKey('id')){
+                        setState(() {
+                           form['barang_bukti_id'] = response['barang_bukti_id'].toString() ?? '';
+                           form['tanggal_status'] = response['tanggal_status'] ?? '';
+                           form['waktu_status'] = response['waktu_status'] ?? '';
+                           form['jumlah'] = response['jumlah'].toString() ?? '';
+                           form['satuan'] = response['satuan'] ?? '';
+                           form['keterangan'] = response['keterangan'] ?? '';
+                           form['status'] = response['status'] ?? '';
+                        });
+                        tanggal_status = response['tanggal_status'] ?? "Atur Tanggal Status";
+                        waktu_status = response['waktu_status'] ?? "Atur Waktu Status";
+                        _jumlahController.text = response['jumlah'].toString() ?? '';
+                        _keteranganController.text = response['keterangan'] ?? '';
+                     } else {
+                      final snackBar = SnackBar(content: Text('Data Gagal Ditemukan'));
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    }
+                  });
+                  setState(() {
+                    searchTextFieldStatusBB.textField.controller.text = item.id.toString();
+                    form['status_bb'] = item.id.toString();
+                  });
+                },
+                itemBuilder: (context, item){
+                  // ui for autocomplete
+                  return rowStatusBB(item);
                 },
               ),
               RaisedButton(
@@ -265,6 +354,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.white,
               ), 
               TextFormField(
+                controller: _jumlahController,
                 onChanged: (val) {
                   setState(() {
                     form['jumlah'] = val;
@@ -298,6 +388,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
               ),
               TextFormField(
+                controller: _keteranganController,
                 onChanged: (val) {
                   setState(() {
                     form['keterangan'] = val.toString();

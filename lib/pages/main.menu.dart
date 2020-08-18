@@ -50,8 +50,10 @@ class ChoiceCard extends StatelessWidget {
 class _MainMenuState extends State<MainMenu>{
   var data;
 
-  void _select(Choice choice) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileView()));
+  void _select(Choice choice) async {
+    final response = await verifyToken();
+    data = response['data']['user'];
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileView(data: data,)));
 
     print('choice');
     print(choice);
