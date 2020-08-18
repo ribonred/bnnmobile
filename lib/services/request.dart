@@ -92,6 +92,24 @@ Future<Map> lkn(int lknId, var input) async {
         content = json.decode(response.body);
       }
     });
+  } else if (lknId!=null && input!=null) {
+    await http.put('${baseUrl}api/lkn/$lknId/', headers: {
+      'Accept': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token'
+    }, body: input).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+        // await storage.write(key: 'token', value: content['token']);
+        // Navigator.push(context,
+        //             MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        print(response.body);
+        print(json.encode(response.body));
+        content = json.decode(response.body);
+      }
+    });
+
   } else
   {
     await http.get('${baseUrl}api/lkn-detail/$lknId', headers: {
@@ -179,6 +197,53 @@ Future<Map> pnkp(int pnkpId, var input) async {
         content = json.decode(response.body);
       }
     });
+  } 
+  else if (pnkpId!=null && input!=null)
+  {
+    Map<String, String> headers = { 'Authorization':'Bearer $token'};
+    var request = http.MultipartRequest('PUT', Uri.parse('${baseUrl}api/pnkp/$pnkpId/'));
+    request.headers.addAll(headers);
+
+    if (["", null].contains(input['dokumen_penangkapan'])) {
+      print('dokumen_penangkapan kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('dokumen_penangkapan', input['dokumen_penangkapan'])
+      );
+    }
+
+    if (["", null].contains(input['dokumen_sp_jangkap'])) {
+      print('dokumen_sp_jangkap kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('dokumen_sp_jangkap', input['dokumen_sp_jangkap'])
+      );
+    }
+
+    request.fields['no_lkn'] = input['no_lkn'];
+    request.fields['no_penangkapan'] = input['no_penangkapan'];
+    request.fields['tanggal_penangkapan'] = input['tanggal_penangkapan'];
+    request.fields['masa_berakhir_penangkapan'] = input['masa_berakhir_penangkapan'];
+    request.fields['sp_jangkap'] = input['sp_jangkap'];
+    request.fields['tanggal_sp_jangkap'] = input['tanggal_sp_jangkap'];
+    request.fields['masa_berakhir_sp_jangkap'] = input['masa_berakhir_sp_jangkap'];
+
+    await request.send().then((result) async {
+      await http.Response.fromStream(result)
+          .then((response) async {
+        if (response.statusCode == 201)
+        {
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        } else {
+          print(response.statusCode);
+          content = json.decode(response.body);
+        }
+      });
+    }).catchError((err) => print('error : '+err.toString()))
+        .whenComplete(()
+    {});
   }
   else
   {

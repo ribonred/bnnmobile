@@ -125,10 +125,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                      if (response.containsKey('id')){
                         setState(() {
                           form['LKN'] = response['LKN'] ?? '';
-                          form['tgl_dibuat'] = response['tgl_dibuat'].toString() ?? '';
+                          form['tgl_dibuat'] = (response['tgl_dibuat'] ?? ''.toString());
                         });
+                        print(response['tgl_dibuat']);
                         _noLKNController.text = response['LKN'] ?? '';
-                        _date = response['tgl_dibuat'].toString() ?? 'Belum diatur';
+                        _date = (response['tgl_dibuat'] ?? 'Belum diatur'.toString());
                         print(response);
                      } else {
                       final snackBar = SnackBar(content: Text('Data Gagal Ditemukan'));
@@ -137,7 +138,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   });
                   setState(() {
                     searchTextField.textField.controller.text = item.lkn;
-                    form['no_lkn'] = item.id.toString();
+                    form['id'] = item.id.toString();
                   });
                 },
                 itemBuilder: (context, item){
@@ -232,7 +233,13 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                lkn(null, form).then((response){
+                print(form);
+                print(form['id']);
+                if(form['id']==null){
+                  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Tolong pilih LKN')));
+                  return;
+                }
+                lkn(int.parse(form['id']), form).then((response){
                   if (response.containsKey('id')){
                     final snackBar = SnackBar(content: Text('LKN Disimpan'));
                     Scaffold.of(context).showSnackBar(snackBar);

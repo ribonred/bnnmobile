@@ -5,6 +5,7 @@ import '../../services/request.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'dart:io';
 
 class spkapForm extends StatelessWidget {
   @override
@@ -158,7 +159,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   });
                   setState(() {
                     searchTextField.textField.controller.text = item.penangkapan;
-                    form['no_penangkapan'] = item.id.toString();
+                    form['id'] = item.id.toString();
                   });
                 },
                 itemBuilder: (context, item){
@@ -528,12 +529,26 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                  pnkp(null, form).then((response) async {
+                  if (form['id']==null) {
+                    Scaffold.of(context).showSnackBar(SnackBar(content: Text('Tolong pilih penangkapan')));
+                  }
+                  if (await File(form['dokumen_penangkapan']).exists()){
+                    print('is a file');
+                  } else {
+                    form.remove('dokumen_penangkapan');
+                  }
+                  if (await File(form['dokumen_sp_jangkap']).exists()){
+                    print('is a file');
+                  } else {
+                    form.remove('dokumen_sp_jangkap');
+                  }
+                  print(form);
+                  pnkp(int.parse(form['id']), form).then((response) async {
                     if (response.containsKey('id')){
-                      final snackBar = SnackBar(content: Text('LKN Disimpan'));
+                      final snackBar = SnackBar(content: Text('Penangkapan Disimpan'));
                       Scaffold.of(context).showSnackBar(snackBar);
                     } else {
-                      final snackBar = SnackBar(content: Text('Berkas LKN Sudah Ada'));
+                      final snackBar = SnackBar(content: Text('Berkas Penangkapan Sudah Ada'));
                       Scaffold.of(context).showSnackBar(snackBar);
                     }
                   });
