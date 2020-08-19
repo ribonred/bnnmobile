@@ -39,6 +39,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   AutoCompleteTextField searchTextField;
   GlobalKey<AutoCompleteTextFieldState<Penangkapan>> key = new GlobalKey();
   TextEditingController _spJangkapController = TextEditingController();
+  TextEditingController _penangkapanController = TextEditingController();
 
   static List<Penangkapan> penangkapans = new List<Penangkapan>();
   bool loading = true;
@@ -125,7 +126,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 clearOnSubmit: false,
                 suggestions: penangkapans,
                 decoration: InputDecoration(
-                  labelText: 'No. Penangkapan',
+                  labelText: 'Pilih No. Penangkapan',
                   icon: Icon(Icons.assignment_turned_in),
                 ),
                 itemFilter: (item, query){
@@ -138,8 +139,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                    penangkapanSingleData(item.id).then((response) async {
                      if (response.containsKey('id')){
                         setState(() {
-                          form['no_penangkapan'] = response['no_penangkapan'];
-                          form['tanggal_penangkapan'] = response['tanggal_penangkapan'];
+                          form['no_penangkapan'] = response['no_penangkapan'] ?? '';
+                          form['tanggal_penangkapan'] = response['tanggal_penangkapan'] ?? '';
                           form['masa_berakhir_penangkapan'] = response['masa_berakhir_penangkapan'] ?? '';
                           form['dokumen_penangkapan'] = response['dokumen_penangkapan'] ?? '';
                           form['sp_jangkap'] = response['sp_jangkap'] ?? '';
@@ -152,6 +153,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         masa_berakhir_sp_jangkap = response['masa_berakhir_sp_jangkap'] ?? 'Belum diatur';
                         tgl_dimulai = response['tanggal_penangkapan'] ?? 'Belum diatur';
                         _spJangkapController.text = response['sp_jangkap'] ?? '';
+                        _penangkapanController.text = response['no_penangkapan'] ?? '';
                      } else {
                       final snackBar = SnackBar(content: Text('Data Gagal Ditemukan'));
                       Scaffold.of(context).showSnackBar(snackBar);
@@ -166,6 +168,18 @@ class MyCustomFormState extends State<MyCustomForm> {
                   // ui for autocomplete
                   return row(item);
                 },
+              ),
+              TextFormField(
+                controller: _penangkapanController,
+                onChanged: (val) {
+                  setState(() {
+                    form['no_penangkapan'] = val.toString();
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'No Penangkapan',
+                  icon: Icon(Icons.assignment_turned_in),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),

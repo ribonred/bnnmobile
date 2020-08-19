@@ -70,9 +70,6 @@ Future<Map> lkn(int lknId, var input) async {
       print(response.statusCode);
       if (response.statusCode == 200){
         content = json.decode(response.body);
-        // await storage.write(key: 'token', value: content['token']);
-        // Navigator.push(context,
-        //             MaterialPageRoute(builder: (context) => Dashboard()));
       } else {
         content = json.decode(response.body);
       }
@@ -85,9 +82,6 @@ Future<Map> lkn(int lknId, var input) async {
       print(response.statusCode);
       if (response.statusCode == 200){
         content = json.decode(response.body);
-        // await storage.write(key: 'token', value: content['token']);
-        // Navigator.push(context,
-        //             MaterialPageRoute(builder: (context) => Dashboard()));
       } else {
         content = json.decode(response.body);
       }
@@ -97,12 +91,8 @@ Future<Map> lkn(int lknId, var input) async {
       'Accept': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token'
     }, body: input).then((response) async {
-      print(response.statusCode);
       if (response.statusCode == 200){
         content = json.decode(response.body);
-        // await storage.write(key: 'token', value: content['token']);
-        // Navigator.push(context,
-        //             MaterialPageRoute(builder: (context) => Dashboard()));
       } else {
         print(response.body);
         print(json.encode(response.body));
@@ -334,7 +324,65 @@ Future<Map> bb(int bbId, var input) async {
   }
   else if (bbId!=null && input!=null)
   {
+    Map<String, String> headers = { 'Authorization':'Bearer $token'};
+    var request = http.MultipartRequest('PUT', Uri.parse('${baseUrl}api/bb-edit/$bbId/'));
+    request.headers.addAll(headers);
 
+    if (["", null].contains(input['sp_sita_doc'])) {
+      print('sp_sita kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('sp_sita_doc', input['sp_sita_doc'])
+      );
+    }
+
+    if (["", null].contains(input['tap_sita_doc'])) {
+      print('tap_sita_doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('tap_sita_doc', input['tap_sita_doc'])
+      );
+    }
+
+     if (["", null].contains(input['tap_status_doc'])) {
+      print('tap_status_doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('tap_status_doc', input['tap_status_doc'])
+      );
+    }
+
+    if (["", null].contains(input['nomor_lab_doc'])) {
+      print('nomor_lab_doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('nomor_lab_doc', input['nomor_lab_doc'])
+      );
+    }
+
+    request.fields['milik_tersangka_id'] = input['milik_tersangka_id'];
+    request.fields['sp_sita'] = input['sp_sita'];
+    request.fields['tap_sita'] = input['tap_sita'];
+    request.fields['tap_status'] = input['tap_status'];
+    request.fields['nomor_lab'] = input['nomor_lab'];
+    request.fields['nama_barang'] = input['nama_barang'];
+
+    await request.send().then((result) async {
+      await http.Response.fromStream(result)
+          .then((response) async {
+        if (response.statusCode == 201)
+        {
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        } else {
+          print(response.statusCode);
+          content = json.decode(response.body);
+        }
+      });
+    }).catchError((err) => print('error : '+err.toString()))
+        .whenComplete(()
+    {});
   }
   else if (bbId==null)
   {
@@ -576,7 +624,39 @@ Future<Map> tsk(int tskId, var input) async {
   }
   else if (tskId!=null && input!=null)
   {
+    Map<String, String> headers = { 'Authorization':'Bearer $token'};
+    var request = http.MultipartRequest('PUT', Uri.parse('${baseUrl}api/tsk-edit/$tskId'));
+    request.headers.addAll(headers);
 
+    if (["", null].contains(input['foto'])) {
+      print('foto kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('foto', input['foto'])
+      );
+    }
+
+    request.fields['nama_tersangka'] = input['nama_tersangka'];
+    request.fields['umur'] = input['umur'];
+    request.fields['jenis_kelamin'] = input['jenis_kelamin'];
+
+    await request.send().then((result) async {
+      print(result);
+      await http.Response.fromStream(result)
+          .then((response) async {
+        if (response.statusCode == 201)
+        {
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        } else {
+          print(response.statusCode);
+          content = json.decode(response.body);
+        }
+      });
+    }).catchError((err) => print('error : '+err.toString()))
+        .whenComplete(()
+    {});
   }
   else if (tskId==null)
   {

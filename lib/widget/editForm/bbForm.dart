@@ -408,12 +408,13 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                  bb(null, form).then((response) async {
-                     if (response.containsKey('id')){
-                      final snackBar = SnackBar(content: Text('Barang Bukti Berhasil Disimpan'));
+                  print(form);
+                  bb(int.parse(form['barang_bukti_id']), form).then((response) async {
+                    if (response.containsKey('id')){
+                      final snackBar = SnackBar(content: Text('Penangkapan Disimpan'));
                       Scaffold.of(context).showSnackBar(snackBar);
                     } else {
-                      final snackBar = SnackBar(content: Text('Gagal Menyimpan Barang Bukti'));
+                      final snackBar = SnackBar(content: Text('Berkas Penangkapan Sudah Ada'));
                       Scaffold.of(context).showSnackBar(snackBar);
                     }
                   });
