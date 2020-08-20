@@ -522,7 +522,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(form);
-                  tskProses(null, form).then((response) async {
+                  tskProses(form['proses_tersangka'], form).then((response) async {
                      if (response.containsKey('id')){
                       final snackBar = SnackBar(content: Text('Proses Tersangka Berhasil Disimpan'));
                       Scaffold.of(context).showSnackBar(snackBar);

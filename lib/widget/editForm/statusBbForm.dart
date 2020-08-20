@@ -426,7 +426,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                   bbStatus(null, form).then((response) async {
+                   bbStatusEditData(int.parse(form['status_bb']), form).then((response) async {
                      if (response.containsKey('id')){
                       final snackBar = SnackBar(content: Text('Status Barang Bukti Berhasil Disimpan'));
                       Scaffold.of(context).showSnackBar(snackBar);
