@@ -3,6 +3,7 @@ import 'package:getflutter/getflutter.dart';
 import '../services/request.dart';
 import '../widget/getlkn.dart';
 import './profile.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 final List<String> imageList = [
   'assets/images/bnn.jpeg',
@@ -173,7 +174,7 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    Text('LKN',style: TextStyle(fontWeight: FontWeight.bold),),
+                    AutoSizeText('LKN',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
                   ]
                 ),
               ),
@@ -248,7 +249,7 @@ class _MainMenuState extends State<MainMenu>{
                     //   ),
                     // ),
                     SizedBox(height: 15),
-                    Text('SP KAP',style: TextStyle(fontWeight: FontWeight.bold),),
+                    AutoSizeText('SP KAP',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
                   ]
                 ),
               ),
@@ -323,7 +324,7 @@ class _MainMenuState extends State<MainMenu>{
                     //   ),
                     // ),
                     SizedBox(height: 15),
-                    Text('BB',style: TextStyle(fontWeight: FontWeight.bold)),
+                    AutoSizeText('BB',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
                   ]
                 ),
               ),
@@ -398,7 +399,7 @@ class _MainMenuState extends State<MainMenu>{
                     //   ),
                     // ),
                     SizedBox(height: 15),
-                    Text('TERSANGKA',style: TextStyle(fontWeight: FontWeight.bold)),
+                    AutoSizeText('TERSANGKA',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
                   ]
                 ),
               ),

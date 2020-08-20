@@ -833,23 +833,34 @@ activity(String id) async {
   return content;
 }
 
-approval(String id) async {
+approval(int id, var input) async {
   String token = await getToken();
   String url = '${baseUrl}api/bb-status-app/';
+  var content;
   if (id != null) {
     url = '${baseUrl}api/bb-status-app/$id/';
+    await http.put(url, headers: {
+      'Accept': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token'
+    }, body: input).then((response) async {
+      if (response.statusCode == 200){
+        content = response;
+      } else {
+        content = response;
+      }
+    });
+  } else {
+    await http.get(url, headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }).then((response) async {
+      if (response.statusCode == 200){
+        content = response;
+      } else {
+        content = response;
+      }
+    });
   }
-  var content;
 
-  await http.get(url, headers: {
-    'Accept': 'application/json',
-    'Authorization':'Bearer $token'
-  }).then((response) async {
-    if (response.statusCode == 200){
-      content = response;
-    } else {
-      content = response;
-    }
-  });
   return content;
 }
