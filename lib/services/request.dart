@@ -832,3 +832,24 @@ activity(String id) async {
   });
   return content;
 }
+
+approval(String id) async {
+  String token = await getToken();
+  String url = '${baseUrl}api/bb-status-app/';
+  if (id != null) {
+    url = '${baseUrl}api/bb-status-app/$id/';
+  }
+  var content;
+
+  await http.get(url, headers: {
+    'Accept': 'application/json',
+    'Authorization':'Bearer $token'
+  }).then((response) async {
+    if (response.statusCode == 200){
+      content = response;
+    } else {
+      content = response;
+    }
+  });
+  return content;
+}
