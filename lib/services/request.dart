@@ -193,8 +193,10 @@ Future<Map> pnkp(int pnkpId, var input) async {
     Map<String, String> headers = { 'Authorization':'Bearer $token'};
     var request = http.MultipartRequest('PUT', Uri.parse('${baseUrl}api/pnkp/$pnkpId/'));
     request.headers.addAll(headers);
-
-    if (["", null].contains(input['dokumen_penangkapan'])) {
+    bool _validURL = Uri.parse(input['dokumen_penangkapan']).isAbsolute;
+    bool _validURLts = Uri.parse(input['dokumen_sp_jangkap']).isAbsolute;
+   
+    if (["", null].contains(input['dokumen_penangkapan']) || _validURL) {
       print('dokumen_penangkapan kosong');
     } else {
       request.files.add(
@@ -202,7 +204,7 @@ Future<Map> pnkp(int pnkpId, var input) async {
       );
     }
 
-    if (["", null].contains(input['dokumen_sp_jangkap'])) {
+    if (["", null].contains(input['dokumen_sp_jangkap']) || _validURLts) {
       print('dokumen_sp_jangkap kosong');
     } else {
       request.files.add(
@@ -327,8 +329,12 @@ Future<Map> bb(int bbId, var input) async {
     Map<String, String> headers = { 'Authorization':'Bearer $token'};
     var request = http.MultipartRequest('PUT', Uri.parse('${baseUrl}api/bb-edit/$bbId/'));
     request.headers.addAll(headers);
+    bool _validURL = Uri.parse(input['sp_sita_doc']).isAbsolute;
+    bool _validURLts = Uri.parse(input['tap_sita_doc']).isAbsolute;
+    bool _validURLtsd = Uri.parse(input['tap_status_doc']).isAbsolute;
+    bool _validURLnl = Uri.parse(input['nomor_lab_doc']).isAbsolute;
 
-    if (["", null].contains(input['sp_sita_doc'])) {
+    if (["", null].contains(input['sp_sita_doc']) || _validURL) {
       print('sp_sita kosong');
     } else {
       request.files.add(
@@ -336,7 +342,7 @@ Future<Map> bb(int bbId, var input) async {
       );
     }
 
-    if (["", null].contains(input['tap_sita_doc'])) {
+    if (["", null].contains(input['tap_sita_doc']) || _validURLts) {
       print('tap_sita_doc kosong');
     } else {
       request.files.add(
@@ -344,7 +350,7 @@ Future<Map> bb(int bbId, var input) async {
       );
     }
 
-     if (["", null].contains(input['tap_status_doc'])) {
+     if (["", null].contains(input['tap_status_doc']) || _validURLtsd) {
       print('tap_status_doc kosong');
     } else {
       request.files.add(
@@ -352,7 +358,7 @@ Future<Map> bb(int bbId, var input) async {
       );
     }
 
-    if (["", null].contains(input['nomor_lab_doc'])) {
+    if (["", null].contains(input['nomor_lab_doc']) || _validURLnl) {
       print('nomor_lab_doc kosong');
     } else {
       request.files.add(
@@ -453,6 +459,26 @@ Future<Map> bbStatusSingleData(int bbId) async {
       if (response.statusCode == 200){
         content = json.decode(response.body);
       } else {
+        content = json.decode(response.body);
+      }
+    });
+
+    return Future.value(content);
+}
+
+Future<Map> bbStatusEditData(int bbId, input) async {
+  String token = await getToken();
+  Map content;
+
+  await http.put('${baseUrl}api/bb-status/$bbId/', headers: {
+      'Accept': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token'
+    }, body: input).then((response) async {
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+      } else {
+        print(response.body);
+        print(json.encode(response.body));
         content = json.decode(response.body);
       }
     });
@@ -625,10 +651,11 @@ Future<Map> tsk(int tskId, var input) async {
   else if (tskId!=null && input!=null)
   {
     Map<String, String> headers = { 'Authorization':'Bearer $token'};
-    var request = http.MultipartRequest('PUT', Uri.parse('${baseUrl}api/tsk-edit/$tskId'));
+    var request = http.MultipartRequest('PUT', Uri.parse('${baseUrl}api/tsk-edit/$tskId/'));
+     bool _validURL = Uri.parse(input['foto']).isAbsolute;
     request.headers.addAll(headers);
 
-    if (["", null].contains(input['foto'])) {
+    if (["", null].contains(input['foto']) || _validURL) {
       print('foto kosong');
     } else {
       request.files.add(
@@ -724,6 +751,66 @@ Future<Map> tskProses(int tskId, var input) async {
     }
 
     request.fields['proses_tersangka'] = input['proses_tersangka'];
+    request.fields['keterangan'] = input['keterangan'];
+    request.fields['jenis_proses'] = input['jenis_proses'].toString();
+    request.fields['tanggal_mulai_proses'] = input['tanggal_mulai_proses'];
+    request.fields['tanggal_akhir_proses'] = input['tanggal_akhir_proses'];
+    request.fields['sp_han'] = input['sp_han'];
+    request.fields['tap_han'] = input['tap_han'];
+    request.fields['surat_perpanjangan_han'] = input['surat_perpanjangan_han'];
+
+    
+    await request.send().then((result) async {
+      await http.Response.fromStream(result)
+          .then((response) async {
+        if (response.statusCode == 201)
+        {
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        } else {
+          print(response.statusCode);
+          content = json.decode(response.body);
+          print("content");
+          print(content);
+        }
+      });
+    }).catchError((err) => print('error : '+err.toString()))
+        .whenComplete(()
+    {});
+  } else if(tskId!=null) {
+     Map<String, String> headers = { 'Authorization':'Bearer $token'};
+    var request = http.MultipartRequest('PUT', Uri.parse('${baseUrl}api/tsk-proses/$tskId/'));
+    request.headers.addAll(headers);
+    bool _validURL = Uri.parse(input['sp_han_doc']).isAbsolute;
+    bool _validURLTH = Uri.parse(input['tap_han_doc']).isAbsolute;
+    bool _validURLSPHAN = Uri.parse(input['surat_perpanjangan_han_doc']).isAbsolute;
+
+    if (["", null].contains(input['sp_han_doc']) || _validURL) {
+      print('sp han doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('sp_han_doc', input['sp_han_doc'])
+      );
+    }
+
+    if (["", null].contains(input['tap_han_doc']) || _validURLTH) {
+      print('tap han doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('tap_han_doc', input['tap_han_doc'])
+      );
+    }
+
+    if (["", null].contains(input['surat_perpanjangan_han_doc']) || _validURLSPHAN) {
+      print('surat_perpanjangan_han_doc kosong');
+    } else {
+      request.files.add(
+        await http.MultipartFile.fromPath('surat_perpanjangan_han_doc', input['surat_perpanjangan_han_doc'])
+      );
+    }
+
+    request.fields['proses_tersangka'] = input['proses_tersangka'].toString();
     request.fields['keterangan'] = input['keterangan'];
     request.fields['jenis_proses'] = input['jenis_proses'].toString();
     request.fields['tanggal_mulai_proses'] = input['tanggal_mulai_proses'];

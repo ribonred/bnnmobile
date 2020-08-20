@@ -100,28 +100,55 @@ class _MainMenuState extends State<MainMenu>{
               SizedBox(height: 30),
           GFCarousel(
             viewportFraction: 1.0,
-    items: imageList.map(
-     (url) {
-     return Container(
-         margin: EdgeInsets.only(top: 1.0, bottom: 1.0, right: 1.0, left: 1.0),
-         child: ClipRRect(
-           borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            child: Image.asset(
-               url,
-               fit: BoxFit.cover,
-                width: 1000.0,
-             ),
+            items: imageList.map(
+            (url) {
+            return Container(
+                margin: EdgeInsets.only(top: 1.0, bottom: 1.0, right: 1.0, left: 1.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    child: Image.asset(
+                      url,
+                      fit: BoxFit.cover,
+                        width: 1000.0,
+                    ),
+                  ),
+                );
+                },
+            ).toList(),
+            onPageChanged: (index) {
+                setState(() {
+                  
+                });
+            },
+        ),
+          Padding(
+                padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
+                child:  TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Input Pencarian',
+                        fillColor: Colors.black.withOpacity(0.6),
+                        filled: true,
+                      ),
+                      style: TextStyle(
+                  color: Colors.white,
+              ),
+                    ),
           ),
-        );
-        },
-     ).toList(),
-    onPageChanged: (index) {
-        setState(() {
-          
-        });
-    },
- ),
-
+          FlatButton(
+            color: Colors.blue,
+            textColor: Colors.white,
+            disabledColor: Colors.grey,
+            disabledTextColor: Colors.black,
+            padding: EdgeInsets.all(8.0),
+            splashColor: Colors.blueAccent,
+            onPressed: () {
+              /*...*/
+            },
+            child: Text(
+              "Cari Data",
+              style: TextStyle(fontSize: 12.0),
+            ),
+          ),
           Container(
           height:600,
           child: CustomScrollView(
@@ -129,9 +156,9 @@ class _MainMenuState extends State<MainMenu>{
             SliverList(
           delegate: SliverChildListDelegate([
           GridView.count(
-            padding: const EdgeInsets.only(top: 50, right: 5, left: 5),
+            padding: const EdgeInsets.only(top: 20, right: 5, left: 5),
             shrinkWrap: true,
-            crossAxisCount: 4,
+            crossAxisCount: 3,
             crossAxisSpacing: 10.0,
             mainAxisSpacing: 10.0,
             children: <Widget>[
@@ -216,38 +243,6 @@ class _MainMenuState extends State<MainMenu>{
                         ),
                       ),
                     ),
-                    // Container(
-                    //    decoration: BoxDecoration(
-                    //      boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.grey.withOpacity(0.8),
-                    //         spreadRadius: 3,
-                    //         blurRadius: 3,
-                    //         offset: Offset(0, 0), // changes position of shadow
-                    //       ),
-                    //     ],
-                    //      color: Colors.blue[800],
-                    //      borderRadius: BorderRadius.circular(1000),
-                    //      border: Border.all(
-                    //       color: Colors.blue[800],
-                    //       width: 5,
-                    //      ),
-                    //   ),
-                    //   child: new IconButton(icon: new Icon(Icons.search),
-                    //     color: Colors.white,
-                    //     iconSize: 25,
-                    //     onPressed: () {
-                    //       pnkp(null, null).then((response){
-                    //         if (response['results'] != null){
-                    //           setState(() {
-                    //           data = response['results'];
-                    //            });
-                    //           Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan', title:'PENANGKAPAN')));
-                    //         }
-                    //       });
-                    //     }
-                    //   ),
-                    // ),
                     SizedBox(height: 15),
                     AutoSizeText('SP KAP',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
                   ]
@@ -291,38 +286,6 @@ class _MainMenuState extends State<MainMenu>{
                         ),
                       ),
                     ),
-                    // Container(
-                    //    decoration: BoxDecoration(
-                    //      boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.grey.withOpacity(0.8),
-                    //         spreadRadius: 3,
-                    //         blurRadius: 3,
-                    //         offset: Offset(0, 0), // changes position of shadow
-                    //       ),
-                    //     ],
-                    //      color: Colors.blue[800],
-                    //      borderRadius: BorderRadius.circular(1000),
-                    //      border: Border.all(
-                    //       color: Colors.blue[800],
-                    //       width: 5,
-                    //      ),
-                    //   ),
-                    //   child: new IconButton(icon: new Icon(Icons.business_center),
-                    //     color: Colors.white,
-                    //     iconSize: 25,
-                    //     onPressed: () {
-                    //       bb(null, null).then((response){
-                    //         if (response['results'] != null){
-                    //           setState(() {
-                    //           data = response['results'];
-                    //            });
-                    //           Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang', title:'BARANG BUKTI')));
-                    //         }
-                    //       });
-                    //     }
-                    //   ),
-                    // ),
                     SizedBox(height: 15),
                     AutoSizeText('BB',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
                   ]
