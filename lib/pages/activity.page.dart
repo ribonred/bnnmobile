@@ -75,11 +75,11 @@ class _ActivityListView extends State <ActivityListView>{
                 child: Column(
                   mainAxisSize: MainAxisSize.min, children: <Widget>[
                     ListTile(
-                      title: Text(activities[index]['message'].toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
+                      title: Text(activities[index]['message'].toString(), style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
                       subtitle: Column(children: <Widget>[
                         Row(children: <Widget>[
                           Text('di buat : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                          Text(activities[index]['created'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                          Text(activities[index]['created'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12.0),),
                         ],)
                       ],)
                     ),

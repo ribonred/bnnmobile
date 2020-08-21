@@ -88,17 +88,14 @@ class _ApprovalPageState extends State<ApprovalPageState> {
   }
 
   Widget _buildPanel() {
-    return ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
-        setState(() {
-          _books[index].isExpanded = !isExpanded;
-        });
-      },
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: ExpansionPanelList(
       children: _books.map<ExpansionPanel>((Item item) {
         return ExpansionPanel(
           headerBuilder: (BuildContext context, bool isExpanded) {
             return ListTile(
-              title: Text('LKN: ${item.lkn}, BB: ${item.barang_bukti}', style: new TextStyle(fontWeight: FontWeight.bold)),
+              title: Text('LKN: ${item.lkn}, BB: ${item.barang_bukti}', style: new TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic, color: Colors.black.withOpacity(0.8))),
             );
           },
           body: Container(
@@ -106,7 +103,7 @@ class _ApprovalPageState extends State<ApprovalPageState> {
               border: null,
               color: Colors.grey[100],
               borderRadius: BorderRadius.all(Radius.circular(8))),
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
@@ -197,9 +194,10 @@ class _ApprovalPageState extends State<ApprovalPageState> {
               ]
             )
           ),
-          isExpanded: item.isExpanded,
+          isExpanded: true,
         );
       }).toList(),
+    )
     );
   }
 }
