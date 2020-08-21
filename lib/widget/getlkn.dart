@@ -46,6 +46,7 @@ class LknState extends State<GetLkn> {
  
   Widget build(context){
     print('ke get lkn dooong');
+    print(widget.next);
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title.toString())
@@ -132,27 +133,28 @@ class LknState extends State<GetLkn> {
                               Text(widget.data[index][widget.created].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
                             ],
                           ),
+                          
                         ],),
                       ),
                       //TERAKHIR, MEMBUAT BUTTON
-                      ButtonTheme.bar(
-                        child: ButtonBar(
-                          children: <Widget>[
-                            // BUTTON PERTAMA f
-                            FlatButton(
-                              //DENGAN TEXT LIHAT DETAIL
-                              child: const Text('LIHAT DETAIL'),
-                              onPressed: () { print(widget.data[index]['id']); },
-                            ),
-                            //BUTTON KEDUA
-                            FlatButton(
-                              //DENGAN TEXT DENGARKAN
-                              child: const Text('EDIT'),
-                              onPressed: () { /* ... */ },
-                            ),
-                          ],
-                        ),
-                      ),
+                      // ButtonTheme.bar(
+                      //   child: ButtonBar(
+                      //     children: <Widget>[
+                      //       // BUTTON PERTAMA f
+                      //       FlatButton(
+                      //         //DENGAN TEXT LIHAT DETAIL
+                      //         child: const Text('LIHAT DETAIL'),
+                      //         onPressed: () { print(widget.data[index]['id']); },
+                      //       ),
+                      //       //BUTTON KEDUA
+                      //       FlatButton(
+                      //         //DENGAN TEXT DENGARKAN
+                      //         child: const Text('EDIT'),
+                      //         onPressed: () { /* ... */ },
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],),
                   )
                 ),

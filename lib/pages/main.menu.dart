@@ -50,6 +50,7 @@ class ChoiceCard extends StatelessWidget {
 }
 class _MainMenuState extends State<MainMenu>{
   var data;
+  String next;
 
   void _select(Choice choice) async {
     final response = await verifyToken();
@@ -192,8 +193,9 @@ class _MainMenuState extends State<MainMenu>{
                               if (response['results'] != null){
                                 setState(() {
                                 data = response['results'];
+                                next = response['next'];
                                 });
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'LKN',created:'created', title:'LKN')));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'LKN',created:'created', title:'LKN', next: next)));
                               }
                             });
                           }
