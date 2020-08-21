@@ -10,7 +10,8 @@ class GetLkn extends StatefulWidget {
   final judul;
   final created;
   final title;
-  const GetLkn({Key key,this.data,this.judul, this.created, this.title}) : super(key: key);
+  final next;
+  const GetLkn({Key key,this.data,this.judul, this.created, this.title, this.next}) : super(key: key);
   @override
   LknState createState() => LknState();
 }
@@ -44,7 +45,7 @@ class LknState extends State<GetLkn> {
   // }
  
   Widget build(context){
-    print(data);
+    print('ke get lkn dooong');
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title.toString())
