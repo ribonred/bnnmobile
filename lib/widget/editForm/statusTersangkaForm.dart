@@ -206,7 +206,6 @@ void getStatusList(tskId) async {
                      if (response.containsKey('id')){
                         print(response);
                         setState(() {
-                           form['tersangka_id'] = response['tersangka_id'] ?? '';
                            form['status_penahanan'] = response['status_penahanan'] ?? '';
                            form['rekam_jejak'] = response['rekam_jejak'] ?? '';
                            form['tanggal'] = response['tanggal'] ?? '';
@@ -223,7 +222,7 @@ void getStatusList(tskId) async {
                   });
                   setState(() {
                     searchTextFieldStatusTSK.textField.controller.text = item.id.toString();
-                    form['tersangka_id'] = item.id.toString();
+                    form['status_id'] = item.id.toString();
                   });
                 },
                 itemBuilder: (context, item){
@@ -407,7 +406,7 @@ void getStatusList(tskId) async {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(form);
-                  tskStatus(form['tersangka_id'], form).then((response) async {
+                  tskStatus(int.parse(form['status_id']), form).then((response) async {
                      if (response.containsKey('id')){
                       final snackBar = SnackBar(content: Text('Status Tersangka Berhasil Disimpan'));
                       Scaffold.of(context).showSnackBar(snackBar);

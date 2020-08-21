@@ -859,6 +859,18 @@ Future<Map> tskStatus(int tskId, var input) async {
     });
   } else if (tskId!=null && input!=null) {
     //do put request
+    await http.put('${baseUrl}api/tsk-status/$tskId/', headers: {
+      'Accept': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token'
+    }, body: input).then((response) async {
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+      } else {
+        print(response.body);
+        print(json.encode(response.body));
+        content = json.decode(response.body);
+      }
+    });
   }
 
   return Future.value(content);
