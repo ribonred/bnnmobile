@@ -876,7 +876,7 @@ suggestionList(String target, {int id = 12}) async {
   } else if (target == 'TSKProses'){
     url = '${baseUrl}api/tsk-proses/?proses_tersangka=$id';
   } else if (target == 'TSKStatus'){
-    url = '${baseUrl}api//tsk-status/?tersangka_id=$id';
+    url = '${baseUrl}api/tsk-status/?tersangka_id=$id';
   } else if(target == 'BBStatus'){
     url = '${baseUrl}api/bb-status/?barang_bukti_id=$id';
   }

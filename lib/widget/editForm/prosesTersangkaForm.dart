@@ -114,6 +114,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String tanggal_mulai_proses = "Atur Tanggal Mulai Proses";
   String tanggal_akhir_proses = "Atur Tanggal Akhir Proses";
   var form = {
+    'id': null,
     'proses_tersangka': '',
     'jenis_proses': 1,
     'tap_han': '',
@@ -218,9 +219,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                   return a.id.compareTo(b.id);
                 },
                 itemSubmitted: (item){
+                  print(item);
                    prosesTersangkaSingleData(item.id).then((response) async {
                      if (response.containsKey('id')){
                         setState(() {
+                           form['id'] = response['id'] ?? null;
                            form['proses_tersangka'] = response['proses_tersangka'] ?? '';
                            form['jenis_proses'] = response['jenis_proses'] ?? '';
                            form['tap_han'] = response['tap_han'] ?? '';
@@ -522,7 +525,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(form);
-                  tskProses(form['proses_tersangka'], form).then((response) async {
+                  if (form['id'] == null) {
+                    final snackBar = SnackBar(content: Text('Tolong pilih id status tersangka!'));
+                    Scaffold.of(context).showSnackBar(snackBar);
+                  }
+                  tskProses(form['id'], form).then((response) async {
                      if (response.containsKey('id')){
                       final snackBar = SnackBar(content: Text('Proses Tersangka Berhasil Disimpan'));
                       Scaffold.of(context).showSnackBar(snackBar);
