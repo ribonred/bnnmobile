@@ -51,7 +51,7 @@ class ChoiceCard extends StatelessWidget {
 class _MainMenuState extends State<MainMenu>{
   var data;
   String next;
-  var keyword;
+  String keyword;
   var lknCount;
   var pnkpCount;
   var tskCount;
@@ -157,27 +157,27 @@ class _MainMenuState extends State<MainMenu>{
             padding: EdgeInsets.all(8.0),
             splashColor: Colors.blueAccent,
             onPressed: () {
-              lkn(null, null, keyword: keyword).then((response){
+              lkn(null, null, keyword: keyword ?? '').then((response){
                  if (response['results'] != null){
                     setState(() {
                       lknCount = response['count']; 
                     });
                  }
               });
-              pnkp(null, null, keyword: keyword).then((response){
+              pnkp(null, null, keyword: keyword ?? '').then((response){
                 if (response['results'] != null){
                   setState(() {
                     pnkpCount = response['count'];
                   });                }
               });
-              bb(null, null, keyword: keyword).then((response){
+              bb(null, null, keyword: keyword ?? '').then((response){
                  if (response['results'] != null){
                     setState(() {
                       bbCount = response['count']; 
                     });
                  }
               });
-              tsk(null, null, keyword: keyword).then((response){
+              tsk(null, null, keyword: keyword ?? '').then((response){
                  if (response['results'] != null){
                     setState(() {
                       tskCount = response['count']; 
@@ -237,7 +237,7 @@ class _MainMenuState extends State<MainMenu>{
                           color: Colors.white,
                           iconSize: 25,
                           onPressed: () {
-                            lkn(null, null, keyword: keyword).then((response){
+                            lkn(null, null, keyword: keyword ?? '').then((response){
                               if (response['results'] != null){
                                 setState(() {
                                   data = response['results'];
@@ -283,7 +283,7 @@ class _MainMenuState extends State<MainMenu>{
                           color: Colors.white,
                           iconSize: 25,
                           onPressed: () {
-                            pnkp(null, null, keyword: keyword).then((response){
+                            pnkp(null, null, keyword: keyword ?? '').then((response){
                               if (response['results'] != null){
                                 setState(() {
                                 data = response['results'];
@@ -329,7 +329,7 @@ class _MainMenuState extends State<MainMenu>{
                           color: Colors.white,
                           iconSize: 25,
                           onPressed: () {
-                            bb(null, null, keyword: keyword).then((response){
+                            bb(null, null, keyword: keyword ?? '').then((response){
                               if (response['results'] != null){
                                 setState(() {
                                   data = response['results'];
@@ -375,7 +375,7 @@ class _MainMenuState extends State<MainMenu>{
                           color: Colors.white,
                           iconSize: 25,
                           onPressed: () {
-                            tsk(null, null, keyword: keyword).then((response){
+                            tsk(null, null, keyword: keyword ?? '').then((response){
                               if (response['results'] != null){
                                 setState(() {
                                 data = response['results'];

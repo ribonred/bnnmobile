@@ -254,38 +254,38 @@ class _MainEditState extends State<MainEdit>{
                   ]
                 ),
               ),
-              Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:<Widget>[
-                    Container(
-                       decoration: BoxDecoration(
-                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.8),
-                            spreadRadius: 3,
-                            blurRadius: 5,
-                            offset: Offset(0, 0), // changes position of shadow
-                          ),
-                        ],
-                         color: Colors.blue[800],
-                         borderRadius: BorderRadius.circular(1000),
-                         border: Border.all(
-                          color: Colors.blue[800],
-                          width: 10,
-                         ),
-                      ),
-                      child: new IconButton(icon: new Icon(Icons.swap_horiz),
-                        color: Colors.white,
-                        iconSize: 40,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => statusBbForm()));}
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Text('STATUS BB'),
-                  ]
-                ),
-              ),
+              // Container(
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children:<Widget>[
+              //       Container(
+              //          decoration: BoxDecoration(
+              //            boxShadow: [
+              //             BoxShadow(
+              //               color: Colors.grey.withOpacity(0.8),
+              //               spreadRadius: 3,
+              //               blurRadius: 5,
+              //               offset: Offset(0, 0), // changes position of shadow
+              //             ),
+              //           ],
+              //            color: Colors.blue[800],
+              //            borderRadius: BorderRadius.circular(1000),
+              //            border: Border.all(
+              //             color: Colors.blue[800],
+              //             width: 10,
+              //            ),
+              //         ),
+              //         child: new IconButton(icon: new Icon(Icons.swap_horiz),
+              //           color: Colors.white,
+              //           iconSize: 40,
+              //           onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => statusBbForm()));}
+              //         ),
+              //       ),
+              //       SizedBox(height: 15),
+              //       Text('STATUS BB'),
+              //     ]
+              //   ),
+              // ),
             ],
           )  
         ])

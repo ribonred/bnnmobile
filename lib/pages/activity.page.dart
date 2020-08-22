@@ -15,13 +15,15 @@ class ActivityListView extends StatefulWidget{
 class _ActivityListView extends State <ActivityListView>{
   bool loading = true;
   List activities = [];
+  String urlNext = '';
+  String urlPrev = '';
 
   void getActivities() async {
     try {
       final response = await activity(null);
       if(response.statusCode == 200){
-        activities = json.decode(response.body);
-        print(activities);
+        activities = json.decode(response.body)['results'];
+        urlNext = json.decode(response.body)['next'];
         setState(() {
           loading = false;
         });
@@ -33,6 +35,7 @@ class _ActivityListView extends State <ActivityListView>{
         print("Error getting activity list");
       }
     } catch (e) {
+      print(e);
       setState(() {
         loading = false;
       });
@@ -114,6 +117,53 @@ class _ActivityListView extends State <ActivityListView>{
           },
         )
       ),
+      bottomNavigationBar: Material(
+        color: Colors.blue,
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: RaisedButton(
+                  onPressed: urlPrev == null || urlPrev == '' ? null : () async {
+                    final newData = await loadData(urlPrev);
+                    print('url prev');
+                    print(urlPrev);
+                    setState(() {
+                      activities = newData['results'];
+                      urlNext = newData['next'];
+                      urlPrev = newData['previous'];
+                    });
+                  },
+                  color: Colors.white,
+                  textColor: Colors.blue,
+                  disabledColor: Colors.grey,
+                  child: Text('Prev'),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: RaisedButton(
+                  onPressed: urlNext == null || urlNext == '' ? null : () async {
+                    final newData = await loadData(urlNext);
+                    print('url next');
+                    print(urlNext);
+                    setState(() {
+                      activities = newData['results'];
+                      urlNext = newData['next'];
+                      urlPrev = newData['previous'];
+                    });
+                  },
+                  color: Colors.white,
+                  textColor: Colors.lightBlue,
+                  disabledColor: Colors.grey,
+                  child: Text('Next'),
+                ),
+              )
+            ],
+          )
+        ),
+      )
     );
   }
 }

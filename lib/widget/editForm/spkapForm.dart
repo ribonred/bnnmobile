@@ -543,19 +543,19 @@ class MyCustomFormState extends State<MyCustomForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () async {
-                  if (form['id']==null) {
-                    Scaffold.of(context).showSnackBar(SnackBar(content: Text('Tolong pilih penangkapan')));
-                  }
-                  if (await File(form['dokumen_penangkapan']).exists()){
-                    print('is a file');
-                  } else {
-                    form.remove('dokumen_penangkapan');
-                  }
-                  if (await File(form['dokumen_sp_jangkap']).exists()){
-                    print('is a file');
-                  } else {
-                    form.remove('dokumen_sp_jangkap');
-                  }
+                  // if (form['id']==null) {
+                  //   Scaffold.of(context).showSnackBar(SnackBar(content: Text('Tolong pilih penangkapan')));
+                  // }
+                  // if (await File(form['dokumen_penangkapan']).exists()){
+                  //   print('is a file');
+                  // } else {
+                  //   form.remove('dokumen_penangkapan');
+                  // }
+                  // if (await File(form['dokumen_sp_jangkap']).exists()){
+                  //   print('is a file');
+                  // } else {
+                  //   form.remove('dokumen_sp_jangkap');
+                  // }
                   print(form);
                   pnkp(int.parse(form['id']), form).then((response) async {
                     if (response.containsKey('id')){
