@@ -48,7 +48,6 @@ class LknState extends State<GetLkn> {
   // }
  
   Widget build(context){
-    print('ke get lkn dooong');
     print(widget.next);
     if (list.length == 0) {
       list = widget.data;
@@ -117,53 +116,22 @@ class LknState extends State<GetLkn> {
                         }
                       });
                     } 
-                    else if (widget.title.toString()=='PROSES TERSANGKA')
-                    {
-
-                    }  
-                    else if (widget.title.toString()=='STATUS BB')
-                    {
-
-                    } 
-                    else
-                    {
-                      print('WEIRD');
-                    }
                    },
                   child: Card(
                     child: Column(
                       mainAxisSize: MainAxisSize.min, children: <Widget>[
                       ListTile(
-                        title: Text(list[index][widget.judul].toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
+                        title: Text(list[index][widget.judul].toString(), style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400),),
                         subtitle: Column(children: <Widget>[
                           Row(
                             children: <Widget>[
                               Text('di buat : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text(list[index][widget.created].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                              Text(list[index][widget.created].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12.0),),
                             ],
                           ),
                           
                         ],),
                       ),
-                      //TERAKHIR, MEMBUAT BUTTON
-                      // ButtonTheme.bar(
-                      //   child: ButtonBar(
-                      //     children: <Widget>[
-                      //       // BUTTON PERTAMA f
-                      //       FlatButton(
-                      //         //DENGAN TEXT LIHAT DETAIL
-                      //         child: const Text('LIHAT DETAIL'),
-                      //         onPressed: () { print(widget.data[index]['id']); },
-                      //       ),
-                      //       //BUTTON KEDUA
-                      //       FlatButton(
-                      //         //DENGAN TEXT DENGARKAN
-                      //         child: const Text('EDIT'),
-                      //         onPressed: () { /* ... */ },
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],),
                   )
                 ),
@@ -180,10 +148,12 @@ class LknState extends State<GetLkn> {
                 child: RaisedButton(
                   onPressed: urlPrev == null || urlPrev == '' ? null : () async {
                     final newData = await loadData(urlPrev);
+                    print('url prev');
+                    print(urlPrev);
                     setState(() {
                       list = newData['results'];
-                      urlNext = newData['previous'];
-                      urlPrev = newData['next'];
+                      urlNext = newData['next'];
+                      urlPrev = newData['previous'];
                     });
                   },
                   color: Colors.blue,
@@ -196,10 +166,12 @@ class LknState extends State<GetLkn> {
                 child: RaisedButton(
                   onPressed: urlNext == null || urlNext == '' ? null : () async {
                     final newData = await loadData(urlNext);
+                    print('url next');
+                    print(urlNext);
                     setState(() {
                       list = newData['results'];
-                      urlNext = newData['previous'];
-                      urlPrev = newData['next'];
+                      urlNext = newData['next'];
+                      urlPrev = newData['previous'];
                     });
                   },
                   color: Colors.blue,

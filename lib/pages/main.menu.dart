@@ -51,14 +51,12 @@ class ChoiceCard extends StatelessWidget {
 class _MainMenuState extends State<MainMenu>{
   var data;
   String next;
+  var keyword;
 
   void _select(Choice choice) async {
     final response = await verifyToken();
     data = response['data']['user'];
     Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileView(data: data,)));
-
-    print('choice');
-    print(choice);
   }
 
    @override
@@ -125,6 +123,11 @@ class _MainMenuState extends State<MainMenu>{
           Padding(
                 padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
                 child:  TextFormField(
+                       onChanged: (val) {
+                        setState(() {
+                          keyword = val.toString();
+                        });
+                      },
                       decoration: InputDecoration(
                         labelText: 'Input Pencarian',
                         fillColor: Colors.black.withOpacity(0.6),
@@ -189,11 +192,11 @@ class _MainMenuState extends State<MainMenu>{
                           color: Colors.white,
                           iconSize: 25,
                           onPressed: () {
-                            lkn(null, null).then((response){
+                            lkn(null, null, keyword: keyword).then((response){
                               if (response['results'] != null){
                                 setState(() {
-                                data = response['results'];
-                                next = response['next'];
+                                  data = response['results'];
+                                  next = response['next'];
                                 });
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'LKN',created:'created', title:'LKN', next: next)));
                               }

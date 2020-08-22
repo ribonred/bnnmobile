@@ -59,7 +59,7 @@ Future<Map> verifyToken() async {
   return Future.value(result);
 }
 
-Future<Map> lkn(int lknId, var input) async {
+Future<Map> lkn(int lknId, var input, { keyword: '' }) async {
   String token = await getToken();
   Map content;
   if (lknId==null && input!=null) {
@@ -75,7 +75,11 @@ Future<Map> lkn(int lknId, var input) async {
       }
     });
   } else if (lknId==null) {
-    await http.get('${baseUrl}mobile-api/lkn/', headers: {
+    var url = '${baseUrl}api/lkn/?LKN=$keyword&paginate&page_size=8';
+    if(keyword == ''){
+      url = '${baseUrl}api/lkn/?LKN=''&paginate&page_size=8';
+    }
+    await http.get(url, headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     }).then((response) async {
