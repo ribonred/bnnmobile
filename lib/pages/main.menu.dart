@@ -125,22 +125,29 @@ class _MainMenuState extends State<MainMenu>{
             },
         ),
           Padding(
-                padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
+                padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 4.0),
                 child:  TextFormField(
                        onChanged: (val) {
                         setState(() {
                           keyword = val.toString();
                         });
                       },
+                      focusNode: null,
                       decoration: InputDecoration(
-                        labelText: 'Input Pencarian',
-                        fillColor: Colors.black.withOpacity(0.6),
+                        border: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(30.0),
+                          ),
+                        ),
+                        // labelText: '    Input Pencarian',
+                        hintText: '    Input Pencarian',
+                        fillColor: Colors.white.withOpacity(0.7),
                         filled: true,
                       ),
                       style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
               ),
-                    ),
+            ),
           ),
           FlatButton(
             color: Colors.blue,
@@ -162,6 +169,20 @@ class _MainMenuState extends State<MainMenu>{
                   setState(() {
                     pnkpCount = response['count'];
                   });                }
+              });
+              bb(null, null, keyword: keyword).then((response){
+                 if (response['results'] != null){
+                    setState(() {
+                      bbCount = response['count']; 
+                    });
+                 }
+              });
+              tsk(null, null, keyword: keyword).then((response){
+                 if (response['results'] != null){
+                    setState(() {
+                      tskCount = response['count']; 
+                    });
+                 }
               });
 
               if(keyword==''){
@@ -209,7 +230,7 @@ class _MainMenuState extends State<MainMenu>{
                           borderRadius: BorderRadius.circular(1000),
                           border: Border.all(
                             color: Colors.blue[800],
-                            width: 5,
+                            width: lknCount!=null ? 0 : 7
                           ),
                         ),
                         child: new IconButton(icon: new Icon(Icons.assignment),
@@ -255,7 +276,7 @@ class _MainMenuState extends State<MainMenu>{
                           borderRadius: BorderRadius.circular(1000),
                           border: Border.all(
                             color: Colors.blue[800],
-                            width: 5,
+                            width: pnkpCount!=null ? 0 : 7
                           ),
                         ),
                         child: new IconButton(icon: new Icon(Icons.search),
@@ -266,8 +287,9 @@ class _MainMenuState extends State<MainMenu>{
                               if (response['results'] != null){
                                 setState(() {
                                 data = response['results'];
+                                next = response['next'];
                                 });
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan', title:'PENANGKAPAN')));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'no_penangkapan', created:'tanggal_penangkapan', title:'PENANGKAPAN', next: next)));
                               }
                             });
                           }
@@ -300,7 +322,7 @@ class _MainMenuState extends State<MainMenu>{
                           borderRadius: BorderRadius.circular(1000),
                           border: Border.all(
                             color: Colors.blue[800],
-                            width: 5,
+                            width: bbCount!=null ? 0 : 7
                           ),
                         ),
                         child: new IconButton(icon: new Icon(Icons.business_center),
@@ -311,8 +333,9 @@ class _MainMenuState extends State<MainMenu>{
                               if (response['results'] != null){
                                 setState(() {
                                   data = response['results'];
+                                  next = response['next'];
                                 });
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang', title:'BARANG BUKTI')));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang', title:'BARANG BUKTI', next: next,)));
                               }
                             });
                           }
@@ -321,7 +344,8 @@ class _MainMenuState extends State<MainMenu>{
                     ),
                     SizedBox(height: 15),
                     AutoSizeText('BB',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 1,),
-                    AutoSizeText('10 Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 1,),
+                    if(bbCount!=null)
+                    AutoSizeText('$bbCount Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 1,),
                   ]
                 ),
               ),
@@ -344,7 +368,7 @@ class _MainMenuState extends State<MainMenu>{
                           borderRadius: BorderRadius.circular(1000),
                           border: Border.all(
                             color: Colors.blue[800],
-                            width: 5,
+                            width: tskCount!=null ? 0 : 7
                           ),
                         ),
                         child: new IconButton(icon: new Icon(Icons.person_pin),
@@ -355,8 +379,9 @@ class _MainMenuState extends State<MainMenu>{
                               if (response['results'] != null){
                                 setState(() {
                                 data = response['results'];
+                                next = response['next'];
                                 });
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_tersangka', created:'jenis_kelamin', title:'TERSANGKA')));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_tersangka', created:'jenis_kelamin', title:'TERSANGKA', next: next,)));
                               }
                             });
                           }
@@ -365,7 +390,8 @@ class _MainMenuState extends State<MainMenu>{
                     ),
                     SizedBox(height: 15),
                     AutoSizeText('Tersangka',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 1,),
-                    AutoSizeText('10 Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 1,),
+                    if(tskCount!=null)
+                    AutoSizeText('$tskCount Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 1,),
                   ]
                 ),
               ),
