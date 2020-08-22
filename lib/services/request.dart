@@ -963,3 +963,20 @@ approval(int id, var input) async {
 
   return content;
 }
+
+loadData(String url) async {
+  String token = await getToken();
+  var content;
+
+  await http.get(url, headers: {
+    'Accept': 'application/json',
+    'Authorization':'Bearer $token'
+  }).then((response) async {
+    if (response.statusCode == 200){
+      content = json.decode(response.body);
+    } else {
+      content = json.decode(response.body);
+    }
+  });
+  return content;
+}

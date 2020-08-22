@@ -19,6 +19,9 @@ class GetLkn extends StatefulWidget {
 
 class LknState extends State<GetLkn> {
   var data;
+  List list = [];
+  String urlNext = '';
+  String urlPrev = '';
   //DEFINE VARIABLE url UNTUK MENAMPUNG END POINT
   // final String url = 'http://178.128.80.233:8000/mobile-api/lkn/';
   // Map data; //DEFINE VARIABLE data DENGAN TYPE List AGAR DAPAT MENAMPUNG COLLECTION / ARRAY
@@ -47,6 +50,12 @@ class LknState extends State<GetLkn> {
   Widget build(context){
     print('ke get lkn dooong');
     print(widget.next);
+    if (list.length == 0) {
+      list = widget.data;
+    }
+    if (urlNext == '' && widget.next != null) {
+      urlNext = widget.next;
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title.toString())
@@ -54,7 +63,7 @@ class LknState extends State<GetLkn> {
         body: Container(
           margin: EdgeInsets.all(10.0), //SET MARGIN DARI CONTAINER
           child: ListView.builder( //MEMBUAT LISTVIEW
-            itemCount: widget.data == null ? 0:widget.data.length, //KETIKA DATANYA KOSONG KITA ISI DENGAN 0 DAN APABILA ADA MAKA KITA COUNT JUMLAH DATA YANG ADA
+            itemCount: list == null ? 0:list.length, //KETIKA DATANYA KOSONG KITA ISI DENGAN 0 DAN APABILA ADA MAKA KITA COUNT JUMLAH DATA YANG ADA
             itemBuilder: (BuildContext context, int index) { 
               return Container(
                 child: GestureDetector(
@@ -62,7 +71,7 @@ class LknState extends State<GetLkn> {
                     if (widget.title.toString()=='LKN')
                     {
                       // print(widget.data[index]['id']);
-                      lkn(widget.data[index]['id'], null).then((response){
+                      lkn(list[index]['id'], null).then((response){
                         if (response != null){
                           setState(() {
                           data = response;
@@ -74,7 +83,7 @@ class LknState extends State<GetLkn> {
                     }
                     else if (widget.title.toString()=='PENANGKAPAN')
                     {
-                      pnkp(widget.data[index]['id'], null).then((response){
+                      pnkp(list[index]['id'], null).then((response){
                         if (response != null){
                           setState(() {
                           data = response;
@@ -86,7 +95,7 @@ class LknState extends State<GetLkn> {
                     }
                     else if (widget.title.toString()=='BARANG BUKTI')
                     {
-                      bb(widget.data[index]['id'], null).then((response){
+                      bb(list[index]['id'], null).then((response){
                         if (response != null){
                           setState(() {
                           data = response;
@@ -98,7 +107,7 @@ class LknState extends State<GetLkn> {
                     } 
                     else if (widget.title.toString()=='TERSANGKA')
                     {
-                      tsk(widget.data[index]['id'], null).then((response){
+                      tsk(list[index]['id'], null).then((response){
                         if (response != null){
                           setState(() {
                           data = response;
@@ -125,12 +134,12 @@ class LknState extends State<GetLkn> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min, children: <Widget>[
                       ListTile(
-                        title: Text(widget.data[index][widget.judul].toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
+                        title: Text(list[index][widget.judul].toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
                         subtitle: Column(children: <Widget>[
                           Row(
                             children: <Widget>[
                               Text('di buat : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text(widget.data[index][widget.created].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                              Text(list[index][widget.created].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
                             ],
                           ),
                           
@@ -161,8 +170,46 @@ class LknState extends State<GetLkn> {
               );
             },
           ),
-        )
+        ),
+        
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: RaisedButton(
+                  onPressed: urlPrev == null || urlPrev == '' ? null : () async {
+                    final newData = await loadData(urlPrev);
+                    setState(() {
+                      list = newData['results'];
+                      urlNext = newData['previous'];
+                      urlPrev = newData['next'];
+                    });
+                  },
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  child: Text('Prev'),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: RaisedButton(
+                  onPressed: urlNext == null || urlNext == '' ? null : () async {
+                    final newData = await loadData(urlNext);
+                    setState(() {
+                      list = newData['results'];
+                      urlNext = newData['previous'];
+                      urlPrev = newData['next'];
+                    });
+                  },
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  child: Text('Next'),
+                ),
+              )
+            ],
+          )
+        ),
       );
-   
 }
 }
