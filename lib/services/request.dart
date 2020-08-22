@@ -125,7 +125,7 @@ Future<Map> lkn(int lknId, var input, { keyword: '' }) async {
   return Future.value(content);
 }
 
-Future<Map> pnkp(int pnkpId, var input) async {
+Future<Map> pnkp(int pnkpId, var input, { keyword: '' }) async {
   String token = await getToken();
   Map content;
   if (pnkpId==null && input!=null)
@@ -177,7 +177,7 @@ Future<Map> pnkp(int pnkpId, var input) async {
   } 
   else if (pnkpId==null) 
   {
-    await http.get('${baseUrl}mobile-api/penangkapan/', headers: {
+    await http.get('${baseUrl}api/pnkp/?no_penangkapan=$keyword&paginate&page_size=8', headers: {
       'Accept': 'application/json',
       'Authorization':'Bearer $token'
     }).then((response) async {
@@ -262,7 +262,7 @@ Future<Map> pnkp(int pnkpId, var input) async {
   return Future.value(content);
 }
 
-Future<Map> bb(int bbId, var input) async {
+Future<Map> bb(int bbId, var input, { keyword: '' }) async {
   String token = await getToken();
   Map content;
   if (bbId==null && input!=null)
@@ -396,7 +396,7 @@ Future<Map> bb(int bbId, var input) async {
   }
   else if (bbId==null)
   {
-    await http.get('${baseUrl}mobile-api/barangbukti/', headers: {
+    await http.get('${baseUrl}api/bb-edit/?sp-sita=$keyword&paginate&page_size=8', headers: {
       'Accept': 'application/json',
       'Authorization':'Bearer $token'
     }).then((response) async {
@@ -613,7 +613,7 @@ Future<Map> bbStatus(int bbId, var input) async {
   return Future.value(content);
 }
 
-Future<Map> tsk(int tskId, var input) async {
+Future<Map> tsk(int tskId, var input, { keyword: '' }) async {
   String token = await getToken();
   Map content;
   if (tskId==null && input!=null)
@@ -691,7 +691,7 @@ Future<Map> tsk(int tskId, var input) async {
   }
   else if (tskId==null)
   {
-    await http.get('${baseUrl}mobile-api/tersangka/', headers: {
+    await http.get('${baseUrl}api/tsk-edit/?nama_tersangka=$keyword&paginate&page_size=8', headers: {
       'Accept': 'application/json',
       'Authorization':'Bearer $token'
     }).then((response) async {

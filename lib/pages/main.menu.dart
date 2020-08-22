@@ -52,6 +52,10 @@ class _MainMenuState extends State<MainMenu>{
   var data;
   String next;
   var keyword;
+  var lknCount;
+  var pnkpCount;
+  var tskCount;
+  var bbCount;
 
   void _select(Choice choice) async {
     final response = await verifyToken();
@@ -146,7 +150,27 @@ class _MainMenuState extends State<MainMenu>{
             padding: EdgeInsets.all(8.0),
             splashColor: Colors.blueAccent,
             onPressed: () {
-              /*...*/
+              lkn(null, null, keyword: keyword).then((response){
+                 if (response['results'] != null){
+                    setState(() {
+                      lknCount = response['count']; 
+                    });
+                 }
+              });
+              pnkp(null, null, keyword: keyword).then((response){
+                if (response['results'] != null){
+                  setState(() {
+                    pnkpCount = response['count'];
+                  });                }
+              });
+
+              if(keyword==''){
+                final snackBar = SnackBar(content: Text('reset keyword'));
+                Scaffold.of(context).showSnackBar(snackBar);
+              } else {
+                final snackBar = SnackBar(content: Text('set $keyword sebagai keyword'));
+                Scaffold.of(context).showSnackBar(snackBar);
+              }
             },
             child: Text(
               "Cari Data",
@@ -207,6 +231,8 @@ class _MainMenuState extends State<MainMenu>{
                     ),
                     SizedBox(height: 15),
                     AutoSizeText('LKN',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
+                    if(lknCount!=null)
+                    AutoSizeText('$lknCount Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 2,),
                   ]
                 ),
               ),
@@ -236,7 +262,7 @@ class _MainMenuState extends State<MainMenu>{
                           color: Colors.white,
                           iconSize: 25,
                           onPressed: () {
-                            pnkp(null, null).then((response){
+                            pnkp(null, null, keyword: keyword).then((response){
                               if (response['results'] != null){
                                 setState(() {
                                 data = response['results'];
@@ -250,6 +276,8 @@ class _MainMenuState extends State<MainMenu>{
                     ),
                     SizedBox(height: 15),
                     AutoSizeText('SP KAP',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
+                    if(pnkpCount!=null)
+                    AutoSizeText('$pnkpCount berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 2,),
                   ]
                 ),
               ),
@@ -279,10 +307,10 @@ class _MainMenuState extends State<MainMenu>{
                           color: Colors.white,
                           iconSize: 25,
                           onPressed: () {
-                            bb(null, null).then((response){
+                            bb(null, null, keyword: keyword).then((response){
                               if (response['results'] != null){
                                 setState(() {
-                                data = response['results'];
+                                  data = response['results'];
                                 });
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_barang', created:'jenis_barang', title:'BARANG BUKTI')));
                               }
@@ -293,6 +321,7 @@ class _MainMenuState extends State<MainMenu>{
                     ),
                     SizedBox(height: 15),
                     AutoSizeText('BB',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
+                    AutoSizeText('10 Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 2,),
                   ]
                 ),
               ),
@@ -322,7 +351,7 @@ class _MainMenuState extends State<MainMenu>{
                           color: Colors.white,
                           iconSize: 25,
                           onPressed: () {
-                            tsk(null, null).then((response){
+                            tsk(null, null, keyword: keyword).then((response){
                               if (response['results'] != null){
                                 setState(() {
                                 data = response['results'];
@@ -334,40 +363,9 @@ class _MainMenuState extends State<MainMenu>{
                         ),
                       ),
                     ),
-                    // Container(
-                    //    decoration: BoxDecoration(
-                    //      boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.grey.withOpacity(0.8),
-                    //         spreadRadius: 3,
-                    //         blurRadius: 3,
-                    //         offset: Offset(0, 0), // changes position of shadow
-                    //       ),
-                    //     ],
-                    //      color: Colors.blue[800],
-                    //      borderRadius: BorderRadius.circular(1000),
-                    //      border: Border.all(
-                    //       color: Colors.blue[800],
-                    //       width: 5,
-                    //      ),
-                    //   ),
-                    //   child: new IconButton(icon: new Icon(Icons.person_pin),
-                    //     color: Colors.white,
-                    //     iconSize: 25,
-                    //     onPressed: () {
-                    //       tsk(null, null).then((response){
-                    //         if (response['results'] != null){
-                    //           setState(() {
-                    //           data = response['results'];
-                    //            });
-                    //           Navigator.push(context, MaterialPageRoute(builder: (context) => GetLkn( data: data, judul:'nama_tersangka', created:'jenis_kelamin', title:'TERSANGKA')));
-                    //         }
-                    //       });
-                    //     }
-                    //   ),
-                    // ),
                     SizedBox(height: 15),
-                    AutoSizeText('TERSANGKA',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
+                    AutoSizeText('Tersangka',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
+                    AutoSizeText('10 Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 2,),
                   ]
                 ),
               ),
