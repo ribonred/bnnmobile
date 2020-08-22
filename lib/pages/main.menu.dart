@@ -186,7 +186,7 @@ class _MainMenuState extends State<MainMenu>{
           GridView.count(
             padding: const EdgeInsets.only(top: 20, right: 5, left: 5),
             shrinkWrap: true,
-            crossAxisCount: 3,
+            crossAxisCount: 4,
             crossAxisSpacing: 10.0,
             mainAxisSpacing: 10.0,
             children: <Widget>[
@@ -230,9 +230,9 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    AutoSizeText('LKN',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
+                    AutoSizeText('LKN',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 1,),
                     if(lknCount!=null)
-                    AutoSizeText('$lknCount Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 2,),
+                    AutoSizeText('$lknCount Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 1,),
                   ]
                 ),
               ),
@@ -275,9 +275,9 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    AutoSizeText('SP KAP',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
+                    AutoSizeText('SP KAP',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 1,),
                     if(pnkpCount!=null)
-                    AutoSizeText('$pnkpCount berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 2,),
+                    AutoSizeText('$pnkpCount berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 1,),
                   ]
                 ),
               ),
@@ -320,8 +320,8 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    AutoSizeText('BB',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
-                    AutoSizeText('10 Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 2,),
+                    AutoSizeText('BB',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 1,),
+                    AutoSizeText('10 Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 1,),
                   ]
                 ),
               ),
@@ -364,8 +364,8 @@ class _MainMenuState extends State<MainMenu>{
                       ),
                     ),
                     SizedBox(height: 15),
-                    AutoSizeText('Tersangka',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
-                    AutoSizeText('10 Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 2,),
+                    AutoSizeText('Tersangka',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 1,),
+                    AutoSizeText('10 Berkas',style: TextStyle(fontWeight: FontWeight.w300),maxLines: 1,),
                   ]
                 ),
               ),
