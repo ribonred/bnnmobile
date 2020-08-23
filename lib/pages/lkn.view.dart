@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/request.dart';
 import '../pages/pnkp.view.dart';
+import 'dart:convert';
+import 'tsk.view.dart';
 
 class LknView extends StatefulWidget {
   final data;
@@ -31,11 +33,11 @@ class LknViewState extends State<LknView> {
                     subtitle: Column(children: <Widget>[
                       Row(children: <Widget>[
                         Text('No LKN : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text(widget.data['LKN'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                        Text(widget.data['LKN'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),),
                       ],),
                       Row(children: <Widget>[
                         Text('Tanggal dibuat : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text(widget.data['tgl_dibuat'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                        Text(widget.data['tgl_dibuat'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),),
                       ],)
                     ],)
                   )
@@ -87,8 +89,20 @@ class LknViewState extends State<LknView> {
                             children: <Widget>[
                               for ( var i in widget.data['penangkapan'][index]['penangkapan_tersangka'] ) Container(
                                 child: GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
                                     print(i['id']);
+                                    var tskProses = await suggestionList('TSKProses', id:i['id']);
+                                    tskProses = json.decode(tskProses.body);
+
+                                    tsk(i['id'], null).then((response){
+                                      if (response != null){
+                                        setState(() {
+                                          dataTsk = response;
+                                        });
+                                        // print(data);
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TskView( data: dataTsk, proses: tskProses)));
+                                      }
+                                    });
                                     // print('enaak');
                                   },
                                   child: new Card(

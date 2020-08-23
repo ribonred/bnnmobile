@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../services/request.dart';
 import '../pages/lkn.view.dart';
 import '../pages/pnkp.view.dart';
 import '../pages/tsk.view.dart';
 import '../pages/bb.view.dart';
+import 'dart:convert';
 
 class GetLkn extends StatefulWidget {
   final data;
@@ -66,7 +69,7 @@ class LknState extends State<GetLkn> {
             itemBuilder: (BuildContext context, int index) { 
               return Container(
                 child: GestureDetector(
-                  onTap: () { 
+                  onTap: () async { 
                     if (widget.title.toString()=='LKN')
                     {
                       // print(widget.data[index]['id']);
@@ -94,25 +97,31 @@ class LknState extends State<GetLkn> {
                     }
                     else if (widget.title.toString()=='BARANG BUKTI')
                     {
+                      var bbStatus = await suggestionList('BBStatus', id:list[index]['id']);
+                      bbStatus = json.decode(bbStatus.body);
+
                       bb(list[index]['id'], null).then((response){
                         if (response != null){
                           setState(() {
                           data = response;
                             });
                           // print(data);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => BbView( data: data)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => BbView( data: data, status: bbStatus,)));
                         }
                       });
                     } 
                     else if (widget.title.toString()=='TERSANGKA')
                     {
+                      var tskProses = await suggestionList('TSKProses', id:list[index]['id']);
+                      tskProses = json.decode(tskProses.body);
+
                       tsk(list[index]['id'], null).then((response){
                         if (response != null){
                           setState(() {
                           data = response;
                             });
                           // print(data);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => TskView( data: data)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => TskView( data: data, proses: tskProses)));
                         }
                       });
                     } 

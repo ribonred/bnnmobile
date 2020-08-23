@@ -244,7 +244,6 @@ Future<Map> pnkp(int pnkpId, var input, { keyword: '' }) async {
           print("content");
           print(content);
         } else {
-          print(response.statusCode);
           content = json.decode(response.body);
         }
       });
@@ -813,7 +812,7 @@ Future<Map> tskProses(int tskId, var input) async {
     }).catchError((err) => print('error : '+err.toString()))
         .whenComplete(()
     {});
-  } else if(tskId!=null) {
+  } else if(tskId!=null && input!=null) {
      Map<String, String> headers = { 'Authorization':'Bearer $token'};
     var request = http.MultipartRequest('PUT', Uri.parse('${baseUrl}api/tsk-proses/$tskId/'));
     request.headers.addAll(headers);
@@ -885,6 +884,18 @@ Future<Map> tskProses(int tskId, var input) async {
     }).catchError((err) => print('error : '+err.toString()))
         .whenComplete(()
     {});
+  } else {
+    await http.get('${baseUrl}api/tsk-proses/$tskId/', headers: {
+      'Accept': 'application/json',
+      'Authorization':'Bearer $token'
+    }).then((response) async {
+      print(response.statusCode);
+      if (response.statusCode == 200){
+        content = json.decode(response.body);
+      } else {
+        content = json.decode(response.body);
+      }
+    });
   }
   return Future.value(content);
 }
@@ -946,9 +957,6 @@ suggestionList(String target, {int id = 12}) async {
     'Accept': 'application/json',
     'Authorization':'Bearer $token'
   }).then((response) async {
-    print('give response');
-    print(response);
-    print(response.statusCode);
     if (response.statusCode == 200){
       content = response;
     } else {

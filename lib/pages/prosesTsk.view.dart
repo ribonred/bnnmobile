@@ -3,38 +3,36 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 
-class BbView extends StatefulWidget {
+class ProsesTskView extends StatefulWidget {
   final data;
-  final status;
-  const BbView({Key key,this.data,this.status}) : super(key: key);
+  const ProsesTskView({Key key,this.data}) : super(key: key);
   @override
-  BbViewState createState() => BbViewState();
+  ProsesTskViewState createState() => ProsesTskViewState();
 }
 
-class BbViewState extends State<BbView> {
+class ProsesTskViewState extends State<ProsesTskView> {
+  final List optionList = ['Penyidik', 'Kejati', 'Pengadilan 1', 'Pengadilan 2'];
+
   @override
-  Widget build(BuildContext context) {
-    print(widget.status);
+  Widget build(context) {
     List<Map<String, dynamic>> files=[] ;
     // var files = [
     //   {'title':'dokumen penangkapan', 'url':widget.data['dokumen_penangkapan']},
     //   {'title':'dokumen sp jangkap', 'url':widget.data['dokumen_sp_jangkap']}
     // ];
-    if (widget.data['sp_sita_doc'] != null) {
-      files.add({'title':'dokumen sp sita', 'url':widget.data['dokumen_penangkapan']});
+    if (widget.data['sp_han_doc'] != null) {
+      files.add({'title':'SP HAN DOC', 'url':widget.data['sp_han_doc']});
     }
-    if (widget.data['tap_sita_doc'] != null) {
-      files.add({'title':'dokumen tap sita', 'url':widget.data['dokumen_sp_jangkap']});
+    if (widget.data['tap_han_doc'] != null) {
+      files.add({'title':'TAP HAN DOC', 'url':widget.data['tap_han_doc']});
     }
-    if (widget.data['tap_status_doc'] != null) {
-      files.add({'title':'dokumen tap status', 'url':widget.data['dokumen_penangkapan']});
+    if (widget.data['surat_perpanjangan_han_doc'] != null) {
+      files.add({'title':'Perpanjangan HAN DOC', 'url':widget.data['surat_perpanjangan_han_doc']});
     }
-    if (widget.data['nomor_lab_doc'] != null) {
-      files.add({'title':'dokumen nomor lab', 'url':widget.data['dokumen_sp_jangkap']});
-    }
+    
     return Scaffold(
       appBar: AppBar(
-        title: Text('BARANG BUKTI'),
+        title: Text('PROSES TERSANGKA'),
       ),
       body: Container(
         margin: EdgeInsets.all(10.0),
@@ -48,28 +46,32 @@ class BbViewState extends State<BbView> {
                     // title: Text(widget.data['LKN'].toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
                     subtitle: Column(children: <Widget>[
                       Row(children: <Widget>[
-                        Text('Nama Barang : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text(widget.data['nama_barang'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                        Text('Tanggal Mulai : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(widget.data['tanggal_mulai_proses'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
                       ],),
                       Row(children: <Widget>[
-                        Text('Jenis Barang : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text(widget.data['jenis_barang'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                        Text('Tanggal Berakhir : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(widget.data['tanggal_akhir_proses'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
                       ],),
                       Row(children: <Widget>[
-                        Text('SP Sita : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text(widget.data['sp_sita'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                        Text('SP HAN : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(widget.data['sp_han'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
                       ],),
                       Row(children: <Widget>[
-                        Text('Tap Sita : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text(widget.data['tap_sita'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                        Text('TAP HAN : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(widget.data['tap_han'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
                       ],),
                       Row(children: <Widget>[
-                        Text('Tap Status : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text(widget.data['tap_status'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                        Text('Perpanjangan HAN : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(widget.data['surat_perpanjangan_han'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
                       ],),
                       Row(children: <Widget>[
-                        Text('Nomor Lab : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text(widget.data['nomor_lab'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                        Text('Jenis Proses : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(optionList[widget.data['jenis_proses']].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                      ],),
+                      Row(children: <Widget>[
+                        Text('Keterangan : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(widget.data['keterangan'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
                       ],),
                     ],)
                   )
@@ -115,7 +117,7 @@ class BbViewState extends State<BbView> {
                                 if(status.isGranted){
                                   final externalDir = await getExternalStorageDirectory();
                                   final id = FlutterDownloader.enqueue(
-                                    url: "$i['url']",
+                                    url: "${i['url']}",
                                     savedDir: externalDir.path,
                                     fileName: "download",
                                     showNotification: true,
@@ -149,56 +151,6 @@ class BbViewState extends State<BbView> {
                   },
                 );
               }
-            ),
-            Card(
-              child: ExpansionTile(
-                title: Text('Lihat Status'),
-                children: <Widget>[
-                  for ( var i in widget.status ) Container(
-                    child: GestureDetector(
-                      onTap: () {
-                        print(i['id']);
-                        // print('enaak');
-                      },
-                      child: new Card(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              // leading: CircleAvatar(
-                              //   backgroundImage: NetworkImage(i['foto'].toString()), // no matter how big it is, it won't overflow
-                              // ),
-                              title: Text("Tanggal  :  " + i['tanggal_status'].toString() + ", Jam  :  " + i['waktu_status'].toString()),
-                              subtitle: Column(
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Text('Status : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                                      Text(i['status'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text('Jumlah : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                                      Text(i['jumlah'].toString() + ' ' + i['satuan'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text('Keterangan : ', style: TextStyle(fontWeight: FontWeight.bold),),
-                                      Text(i['keterangan'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
-                                    ],
-                                  ),
-                                ]
-                              ),
-                            ),
-                          ],
-                        )
-                      ),
-                    ),
-                  )
-                ],
-              ),
             ),
           ],
         ),

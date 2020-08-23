@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import '../services/request.dart';
 import '../pages/bb.view.dart';
+import 'dart:convert';
+import 'prosesTsk.view.dart';
 
 class TskView extends StatefulWidget {
   final data;
-  const TskView({Key key,this.data}) : super(key: key);
+  final proses;
+  const TskView({Key key,this.data,this.proses}) : super(key: key);
   @override
   TskViewState createState() => TskViewState();
 }
 
 class TskViewState extends State<TskView> {
   var dataBb;
+  var dataProses;
+  final List optionList = ['Penyidik', 'Kejati', 'Pengadilan 1', 'Pengadilan 2'];
+
   @override
   Widget build(context) {
-    print(widget.data);
     return Scaffold(
       appBar: AppBar(
         title: Text('TERSANGKA'),
@@ -115,19 +120,125 @@ class TskViewState extends State<TskView> {
               ),
               Card(
                 child: ExpansionTile(
+                  title: Text('Lihat Proses'),
+                  children: <Widget>[
+                    for ( var i in widget.proses ) Container(
+                      child: GestureDetector(
+                        onTap: () {
+                          print(i['id']);
+                          tskProses(i['id'], null).then((response){
+                            if (response != null){
+                              setState(() {
+                                dataProses = response;
+                              });
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ProsesTskView( data: dataProses)));
+                            }
+                          });
+                          // print('enaak');
+                        },
+                        child: new Card(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListTile(
+                                // leading: CircleAvatar(
+                                //   backgroundImage: NetworkImage(i['foto'].toString()), // no matter how big it is, it won't overflow
+                                // ),
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    Text("Tanggal Mulai :  " + i['tanggal_mulai_proses'].toString()),
+                                    Text("Tanggal Berakhir :  " + i['tanggal_akhir_proses'].toString()),
+                                  ]
+                                ),
+                                subtitle: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text('SP HAN : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                                        Text(i['sp_han'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                                      ],
+                                    ),
+                                    // Row(
+                                    //   children: <Widget>[
+                                    //     Text('SP HAN Doc : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                                    //     Text(i['sp_han_doc'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                                    //   ],
+                                    // ),
+                                    // Row(
+                                    //   children: <Widget>[
+                                    //     Text('TAP HAN : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                                    //     Text(i['tap_han'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                                    //   ],
+                                    // ),
+                                    // Row(
+                                    //   children: <Widget>[
+                                    //     Text('TAP HAN Doc : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                                    //     Text(i['tap_han_doc'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                                    //   ],
+                                    // ),
+                                    // Row(
+                                    //   children: <Widget>[
+                                    //     Text('Perpanjangan HAN : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                                    //     Text(i['surat_perpanjangan_han'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                                    //   ],
+                                    // ),
+                                    // Row(
+                                    //   children: <Widget>[
+                                    //     Text('Perpanjangan HAN Doc : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                                    //     Text(i['surat_perpanjangan_han_doc'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                                    //   ],
+                                    // ),
+                                    // Row(
+                                    //   children: <Widget>[
+                                    //     Text('Jenis Proses : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                                    //     Text(optionList[i['jenis_proses']].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                                    //   ],
+                                    // ),
+                                    // Row(
+                                    //   children: <Widget>[
+                                    //     Text('Keterangan : ', style: TextStyle(fontWeight: FontWeight.bold),),
+                                    //     Text(i['keterangan'].toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15.0),),
+                                    //   ],
+                                    // ),
+                                  ]
+                                ),
+                              ),
+                            ],
+                          )
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              // if(widget.data['barangbuktitersangka'].length==0) {
+              //   Card(
+              //     child : ListTile(
+              //       title: Text('Tidak Ada Barang - Bukti'),
+              //     )
+              //   ),
+              // } else 
+              Card(
+                child: ExpansionTile(
                   title: Text('Lihat Barang - Bukti'),
                   children: <Widget>[
                     for ( var i in widget.data['barangbuktitersangka'] ) Container(
                       child: GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           print(i['id']);
+                          var bbStatus = await suggestionList('BBStatus', id:i['id']);
+                          bbStatus = json.decode(bbStatus.body);
+
                           bb(i['id'], null).then((response){
                             if (response != null){
                               setState(() {
                               dataBb = response;
                                 });
                               // print(data);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => BbView( data: dataBb)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => BbView( data: dataBb, status: bbStatus,)));
                             }
                           });
                           // print('enaak');
